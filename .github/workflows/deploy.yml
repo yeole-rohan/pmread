@@ -1,0 +1,111 @@
+name: Deploy
+
+on:
+  push:
+    branches: [stage, main]
+
+# Allow pushing stage → main in the promote job
+permissions:
+  contents: write
+
+jobs:
+  # ── Stage deploy ─────────────────────────────────────────────────────────────
+  stage-deploy:
+    name: Deploy to Staging
+    if: github.ref == 'refs/heads/stage'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to pmread-stage via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            set -e
+            cd ${{ secrets.APP_DIR_STAGE }}
+
+            echo "--- Pulling stage ---"
+            git pull origin stage
+
+            echo "--- Installing Python dependencies ---"
+            source api/venv/bin/activate
+            pip install -q -r api/requirements.txt
+
+            echo "--- Running DB migrations ---"
+            cd api && alembic upgrade head && cd ..
+
+            echo "--- Building frontend ---"
+            cd app && npm ci --silent && npm run build && cd ..
+
+            echo "--- Restarting staging services ---"
+            sudo systemctl restart pmread-stage-api
+            sudo systemctl restart pmread-stage-worker
+            sudo systemctl restart pmread-stage-frontend
+
+            echo "--- Stage deploy complete ---"
+
+  # ── Auto-promote stage → main ─────────────────────────────────────────────
+  promote:
+    name: Promote stage → main
+    if: github.ref == 'refs/heads/stage'
+    needs: [stage-deploy]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge stage into main
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout main
+          git merge --ff-only origin/stage
+          git push origin main
+
+  # ── Prod deploy ───────────────────────────────────────────────────────────
+  prod-deploy:
+    name: Deploy to Production
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy to pmread-prod via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          port: ${{ secrets.VPS_PORT || 22 }}
+          script: |
+            set -e
+            cd ${{ secrets.APP_DIR_PROD }}
+
+            echo "--- Pulling main ---"
+            git pull origin main
+
+            echo "--- Installing Python dependencies ---"
+            source api/venv/bin/activate
+            pip install -q -r api/requirements.txt
+
+            echo "--- Running DB migrations ---"
+            cd api && alembic upgrade head && cd ..
+
+            echo "--- Building frontend ---"
+            cd app && npm ci --silent && npm run build && cd ..
+
+            echo "--- Restarting production services ---"
+            sudo systemctl restart pmread-prod-api
+            sudo systemctl restart pmread-prod-worker
+            sudo systemctl restart pmread-prod-frontend
+
+            echo "--- Prod deploy complete ---"
