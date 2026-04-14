@@ -39,7 +39,7 @@ async def razorpay_create_subscription(
         "plan_id": settings.RAZORPAY_PRO_PLAN_ID,
         "customer_notify": 1,
         "quantity": 1,
-        "total_count": 0,   # infinite recurring
+        "total_count": 120,  # 120 months (Razorpay requires >= 1; use large number for open-ended)
         "notes": {
             "pmread_user_id": str(current_user.id),
             "email": current_user.email,
