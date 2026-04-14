@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
 from app.routers import auth, projects, analyses, stream, export, billing, waitlist
-from app.routers import uploads, insights, share
+from app.routers import uploads, insights, share, feedback
 if settings.SENTRY_DSN:
     import sentry_sdk
     from sentry_sdk.integrations.fastapi import FastApiIntegration
@@ -41,6 +41,7 @@ app.include_router(export.router, prefix="/api/export", tags=["export"])
 app.include_router(billing.router, prefix="/api/billing", tags=["billing"])
 app.include_router(waitlist.router, prefix="/api/waitlist", tags=["waitlist"])
 app.include_router(share.router, prefix="/api/share", tags=["share"])
+app.include_router(feedback.router, prefix="/api/feedback", tags=["feedback"])
 
 
 @app.get("/api/health")

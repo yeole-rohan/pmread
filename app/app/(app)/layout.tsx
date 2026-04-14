@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
+import FeedbackButton from "@/components/FeedbackButton";
 import { useUser } from "@/lib/useUser";
 import { apiFetch } from "@/lib/api";
 import { Project } from "@/lib/types";
@@ -46,6 +47,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         }
       />
       <main className="flex-1 overflow-y-auto">{children}</main>
+      <FeedbackButton />
     </div>
   );
 }
