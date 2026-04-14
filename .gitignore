@@ -1,0 +1,27 @@
+# Python
+api/venv/
+api/__pycache__/
+api/**/__pycache__/
+api/.env
+*.pyc
+*.pyo
+.Python
+api/.pytest_cache/
+
+# Next.js
+app/.next/
+app/node_modules/
+app/.env.local
+app/out/
+
+# Misc
+.DS_Store
+*.log
+.env
+
+# Local-only docs (not for repo)
+deploy.md
+call.md
+planning/
+samples/
+.claude

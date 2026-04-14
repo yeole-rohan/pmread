@@ -1,0 +1,47 @@
+from pydantic_settings import BaseSettings
+
+
+class Settings(BaseSettings):
+    # Database
+    DATABASE_URL: str = "postgresql://pmread_user:password@localhost/pmread"
+
+    # Auth
+    JWT_SECRET: str = "change-me-in-production-use-openssl-rand-hex-32"
+    JWT_ALGORITHM: str = "HS256"
+    ACCESS_TOKEN_EXPIRE_HOURS: int = 24
+    REMEMBER_ME_EXPIRE_DAYS: int = 30
+
+    # Claude
+    ANTHROPIC_API_KEY: str = ""
+
+    # Email (SMTP)
+    SMTP_HOST: str = ""
+    SMTP_PORT: int = 587
+    SMTP_USER: str = ""
+    SMTP_PASSWORD: str = ""
+    SMTP_TLS: bool = True        # STARTTLS on port 587; set False for SSL-only port 465
+    EMAIL_FROM: str = "hello@rohanyeole.com"
+    EMAIL_FROM_NAME: str = "PMRead"
+
+    # Razorpay
+    RAZORPAY_KEY_ID: str = ""
+    RAZORPAY_KEY_SECRET: str = ""
+    RAZORPAY_PRO_PLAN_ID: str = ""  # create a recurring plan in Razorpay dashboard
+
+    # App
+    ENVIRONMENT: str = "development"
+    FRONTEND_URL: str = "https://pmread.rohanyeole.com"
+    SENTRY_DSN: str = ""
+
+    # Celery
+    REDIS_URL: str = "redis://127.0.0.1:6379/0"
+
+    # Storage
+    EXPORTS_DIR: str = "./exports"
+
+    class Config:
+        env_file = ".env"
+        extra = "ignore"
+
+
+settings = Settings()
