@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+:root {
+  --purple: #7F77DD;
+  --green: #1D9E75;
+}
+
+html, body {
+  height: 100%;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
