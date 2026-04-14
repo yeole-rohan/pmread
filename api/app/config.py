@@ -33,6 +33,10 @@ class Settings(BaseSettings):
     FRONTEND_URL: str = "https://pmread.rohanyeole.com"
     SENTRY_DSN: str = ""
 
+    # Admin
+    ADMIN_USERNAME: str = "admin"
+    ADMIN_PASSWORD: str = "change-me"
+
     # Celery
     REDIS_URL: str = "redis://127.0.0.1:6379/0"
 
