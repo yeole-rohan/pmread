@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Copy, Check } from "lucide-react";
+import { Copy, Check, ChevronDown } from "lucide-react";
 import { PRD } from "@/lib/types";
 
 interface BriefRendererProps {
@@ -18,14 +18,53 @@ export function useCopy(text: string) {
   return { copied, copy };
 }
 
-function SectionHeader({ title, copyText }: { title: string; copyText: string }) {
+function Section({
+  title,
+  copyText,
+  children,
+  defaultCollapsed = false,
+  noPadding = false,
+}: {
+  title: string;
+  copyText: string;
+  children: React.ReactNode;
+  defaultCollapsed?: boolean;
+  noPadding?: boolean;
+}) {
+  const [collapsed, setCollapsed] = useState(defaultCollapsed);
   const { copied, copy } = useCopy(copyText);
+
   return (
-    <div className="flex items-center justify-between mb-3">
-      <h3 className="text-xs font-semibold text-[#7F77DD] uppercase tracking-wider">{title}</h3>
-      <button onClick={copy} className="text-gray-300 hover:text-gray-500 transition-colors">
-        {copied ? <Check size={13} className="text-green-500" /> : <Copy size={13} />}
-      </button>
+    <div className="bg-white rounded-xl border border-gray-100">
+      {/* Header row */}
+      <div className="flex items-center justify-between px-5 py-3.5">
+        <button
+          onClick={() => setCollapsed((v) => !v)}
+          className="flex items-center gap-2 flex-1 text-left group"
+        >
+          <ChevronDown
+            size={14}
+            className={`text-gray-300 group-hover:text-gray-400 transition-transform flex-shrink-0 ${collapsed ? "-rotate-90" : ""}`}
+          />
+          <h3 className="text-xs font-semibold text-[#7F77DD] uppercase tracking-wider">{title}</h3>
+        </button>
+        <button
+          onClick={(e) => { e.stopPropagation(); copy(); }}
+          className="flex items-center gap-1 text-xs font-semibold text-gray-400 hover:text-gray-700 transition-colors ml-3"
+        >
+          {copied
+            ? <><Check size={12} className="text-green-500" /><span className="text-green-500">Copied</span></>
+            : <><Copy size={12} /><span>Copy</span></>
+          }
+        </button>
+      </div>
+
+      {/* Collapsible body */}
+      {!collapsed && (
+        <div className={noPadding ? "pb-5" : "px-5 pb-5"}>
+          {children}
+        </div>
+      )}
     </div>
   );
 }
@@ -108,8 +147,7 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
   return (
     <div className="space-y-4">
       {/* Problem */}
-      <div className="bg-white rounded-xl border border-gray-100 p-5">
-        <SectionHeader title="Problem" copyText={brief.problem} />
+      <Section title="Problem" copyText={brief.problem}>
         <ProseBlock text={brief.problem} />
         {brief.problem_quotes?.length > 0 && (
           <div className="mt-3 space-y-2">
@@ -120,44 +158,39 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
             ))}
           </div>
         )}
-      </div>
+      </Section>
 
       {/* Proposed Feature */}
-      <div className="bg-white rounded-xl border border-gray-100 p-5">
-        <SectionHeader title="Proposed Feature" copyText={brief.proposed_feature} />
+      <Section title="Proposed Feature" copyText={brief.proposed_feature}>
         <div className="bg-emerald-50 border-l-4 border-[#1D9E75] px-4 py-3 rounded-r-lg">
           <ProseBlock text={brief.proposed_feature} />
         </div>
-      </div>
+      </Section>
 
       {/* Why Build */}
-      <div className="bg-white rounded-xl border border-gray-100 p-5">
-        <SectionHeader title="Why It's Worth Building" copyText={brief.why_worth_building} />
+      <Section title="Why It's Worth Building" copyText={brief.why_worth_building}>
         <ProseBlock text={brief.why_worth_building} />
-      </div>
+      </Section>
 
       {/* Goals + Non-Goals side by side */}
       {(brief.goals?.length > 0 || brief.non_goals?.length > 0) && (
         <div className="grid grid-cols-2 gap-4">
           {brief.goals?.length > 0 && (
-            <div className="bg-white rounded-xl border border-gray-100 p-5">
-              <SectionHeader title="Goals" copyText={brief.goals.join("\n")} />
+            <Section title="Goals" copyText={brief.goals.join("\n")}>
               <BulletList items={brief.goals} />
-            </div>
+            </Section>
           )}
           {brief.non_goals?.length > 0 && (
-            <div className="bg-white rounded-xl border border-gray-100 p-5">
-              <SectionHeader title="Non-Goals" copyText={brief.non_goals.join("\n")} />
+            <Section title="Non-Goals" copyText={brief.non_goals.join("\n")}>
               <BulletList items={brief.non_goals} />
-            </div>
+            </Section>
           )}
         </div>
       )}
 
       {/* User Stories */}
       {brief.user_stories?.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-100 p-5">
-          <SectionHeader title="User Stories" copyText={brief.user_stories.join("\n")} />
+        <Section title="User Stories" copyText={brief.user_stories.join("\n")}>
           <ul className="space-y-1.5">
             {brief.user_stories.map((s, i) => (
               <li key={i} className="text-sm text-gray-700 bg-gray-50 rounded-lg px-3 py-2 leading-relaxed">
@@ -165,15 +198,14 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
               </li>
             ))}
           </ul>
-        </div>
+        </Section>
       )}
 
       {/* What Needs to Change */}
-      <div className="bg-white rounded-xl border border-gray-100 p-5">
-        <SectionHeader
-          title="What Needs to Change"
-          copyText={`UI: ${brief.what_needs_to_change?.ui}\n\nData Model: ${brief.what_needs_to_change?.data_model}\n\nWorkflows: ${brief.what_needs_to_change?.workflows}`}
-        />
+      <Section
+        title="What Needs to Change"
+        copyText={`UI: ${brief.what_needs_to_change?.ui}\n\nData Model: ${brief.what_needs_to_change?.data_model}\n\nWorkflows: ${brief.what_needs_to_change?.workflows}`}
+      >
         <div className="space-y-3">
           {[
             { label: "UI Changes", value: brief.what_needs_to_change?.ui },
@@ -186,14 +218,13 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
             </div>
           ))}
         </div>
-      </div>
+      </Section>
 
       {/* Engineering Tasks */}
-      <div className="bg-white rounded-xl border border-gray-100 p-5">
-        <SectionHeader
-          title="Engineering Tasks"
-          copyText={brief.engineering_tasks?.map((t) => `- ${t.title} [${t.estimate}]: ${t.description}`).join("\n")}
-        />
+      <Section
+        title="Engineering Tasks"
+        copyText={brief.engineering_tasks?.map((t) => `- ${t.title} [${t.estimate}]: ${t.description}`).join("\n")}
+      >
         <div className="space-y-2">
           {brief.engineering_tasks?.map((task, i) => (
             <div key={i} className="flex gap-3 border border-gray-100 rounded-lg p-3">
@@ -210,20 +241,18 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
             </div>
           ))}
         </div>
-      </div>
+      </Section>
 
       {/* Edge Cases */}
       {brief.edge_cases?.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-100 p-5">
-          <SectionHeader title="Edge Cases" copyText={brief.edge_cases.join("\n")} />
+        <Section title="Edge Cases" copyText={brief.edge_cases.join("\n")}>
           <BulletList items={brief.edge_cases} />
-        </div>
+        </Section>
       )}
 
       {/* Analytics Events */}
       {brief.analytics_events?.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-100 p-5">
-          <SectionHeader title="Analytics Events" copyText={brief.analytics_events.join("\n")} />
+        <Section title="Analytics Events" copyText={brief.analytics_events.join("\n")}>
           <div className="space-y-1.5">
             {brief.analytics_events.map((e, i) => (
               <div key={i} className="flex gap-2 text-sm">
@@ -234,18 +263,15 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
               </div>
             ))}
           </div>
-        </div>
+        </Section>
       )}
 
       {/* Open Questions */}
       {brief.open_questions?.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-100 p-5">
-          <SectionHeader title="Open Questions" copyText={brief.open_questions.join("\n")} />
+        <Section title="Open Questions" copyText={brief.open_questions.join("\n")}>
           <BulletList items={brief.open_questions} />
-        </div>
+        </Section>
       )}
-
-      
     </div>
   );
 }
