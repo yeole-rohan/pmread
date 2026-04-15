@@ -16,6 +16,7 @@ class UserOut(BaseModel):
     prds_reset_at: datetime | None
     email_verified: bool
     digest_enabled: bool
+    github_connected: bool
     created_at: datetime
 
     model_config = {"from_attributes": True}

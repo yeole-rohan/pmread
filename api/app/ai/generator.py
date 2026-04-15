@@ -1,7 +1,13 @@
-"""Claude streaming PRD generator and SSE queue infrastructure."""
-import asyncio
+"""
+PRD generator with multi-model support.
 
-import anthropic
+Generation order (configured in llm_providers.GEN_PROVIDERS):
+  1. Anthropic Claude Sonnet — best quality
+  2. xAI Grok               — fallback on rate-limit / outage
+
+SSE queues are in-process only — breaks with multiple workers (see KNOWN_ISSUES.md).
+"""
+import asyncio
 
 from app.config import settings
 from app.ai.prompts import (
@@ -11,9 +17,9 @@ from app.ai.prompts import (
 )
 from app.ai.context import build_insight_context
 from app.ai.parser import parse_prd_response, prd_to_markdown
+from app.services.llm_providers import stream_generation
 
 # Per-analysis SSE queues: analysis_id -> asyncio.Queue
-# NOTE: in-process only — breaks with multiple workers. See KNOWN_ISSUES.md.
 _streams: dict[str, asyncio.Queue] = {}
 
 
@@ -43,14 +49,18 @@ async def run_analysis(
     days_back: int | None = None,
     date_from: str | None = None,
     date_to: str | None = None,
+    user_id: str | None = None,
 ) -> None:
     """
     Generate a PRD from project insights, optionally filtered by type and recency.
+    Tries Claude first, falls back to Grok if Claude is rate-limited or unavailable.
     Called as a FastAPI background task.
     """
     from datetime import datetime, timezone, timedelta
     from app.models.analysis import Analysis
     from app.models.insight import Insight
+    from app.models.project import Project
+    from app.models.user import User
 
     db = db_factory()
     try:
@@ -61,7 +71,7 @@ async def run_analysis(
         analysis.status = "processing"
         db.commit()
 
-        # Build filtered insight query
+        # ── Filter insights ────────────────────────────────────────────────────
         q = db.query(Insight).filter(Insight.project_id == analysis.project_id)
 
         if insight_types:
@@ -70,7 +80,6 @@ async def run_analysis(
         if starred_only:
             q = q.filter(Insight.starred == True)  # noqa: E712
 
-        # Custom date range takes priority over days_back
         if date_from:
             q = q.filter(Insight.created_at >= datetime.fromisoformat(date_from).replace(tzinfo=timezone.utc))
         if date_to:
@@ -93,40 +102,56 @@ async def run_analysis(
             return
 
         context = build_insight_context(insights)
-        user_message = build_prd_user_message(analysis.question, context)
+
+        # ── GitHub codebase context ────────────────────────────────────────────
+        code_context = ""
+        project = db.query(Project).filter(Project.id == analysis.project_id).first()
+        if project and project.github_repo:
+            if project.github_index_status == "ready":
+                from app.services.github_indexer import search_code_chunks
+                await emit_sse(analysis_id, {"type": "status", "message": "Searching codebase for relevant context..."})
+                code_context = search_code_chunks(str(analysis.project_id), analysis.question, db)
+            if not code_context and user_id:
+                # Fallback: README + open issues + merged PRs (no embeddings needed)
+                user = db.query(User).filter(User.id == user_id).first()
+                if user and user.github_access_token:
+                    from app.routers.github import fetch_github_context
+                    try:
+                        code_context = await fetch_github_context(project.github_repo, user.github_access_token)
+                    except Exception:
+                        pass
+
+        user_message = build_prd_user_message(analysis.question, context, code_context)
 
         await emit_sse(analysis_id, {"type": "status", "message": "Reading your customer evidence..."})
 
-        client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+        # ── Streaming generation (Claude → Grok fallback) ─────────────────────
         full_response = ""
         current_section = None
-        buffer = ""
 
-        with client.messages.stream(
-            model="claude-sonnet-4-6",
+        async def on_chunk(text: str) -> None:
+            nonlocal full_response, current_section
+            full_response += text
+
+            # Section detection for progress updates
+            section = detect_section(full_response)
+            if section and section != current_section:
+                current_section = section
+                msg = SECTION_STATUS_MESSAGES.get(section, "Thinking...")
+                await emit_sse(analysis_id, {"type": "status", "message": msg})
+
+            await emit_sse(analysis_id, {"type": "chunk", "content": text})
+
+        result = await stream_generation(
+            system_prompt=PRD_SYSTEM_PROMPT,
+            user_message=user_message,
             max_tokens=4096,
-            system=PRD_SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": user_message}],
-        ) as stream:
-            for text in stream.text_stream:
-                full_response += text
-                buffer += text
+            on_chunk=on_chunk,
+        )
 
-                section = detect_section(full_response)
-                if section and section != current_section:
-                    current_section = section
-                    msg = SECTION_STATUS_MESSAGES.get(section, "Thinking...")
-                    await emit_sse(analysis_id, {"type": "status", "message": msg})
-
-                if len(buffer) >= 50:
-                    await emit_sse(analysis_id, {"type": "chunk", "content": buffer})
-                    buffer = ""
-
-            if buffer:
-                await emit_sse(analysis_id, {"type": "chunk", "content": buffer})
-
-            final_message = stream.get_final_message()
-            tokens_used = (final_message.usage.input_tokens or 0) + (final_message.usage.output_tokens or 0)
+        # on_chunk already accumulated full_response, but use result.full_text
+        # as the canonical copy (handles edge cases where chunks were buffered)
+        full_response = result.full_text
 
         brief = parse_prd_response(full_response)
         brief_markdown = prd_to_markdown(brief)
@@ -134,7 +159,7 @@ async def run_analysis(
         analysis.status = "complete"
         analysis.brief = brief
         analysis.brief_markdown = brief_markdown
-        analysis.tokens_used = tokens_used
+        analysis.tokens_used = result.tokens_used
 
         if used_insight_ids:
             db.query(Insight).filter(Insight.id.in_(used_insight_ids)).update(

@@ -55,6 +55,7 @@ def _user_response(user: User) -> UserOut:
         prds_reset_at=user.prds_reset_at,
         email_verified=user.email_verified,
         digest_enabled=user.digest_enabled,
+        github_connected=bool(user.github_access_token),
         created_at=user.created_at,
     )
 

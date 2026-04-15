@@ -63,14 +63,30 @@ def extract_insights_task(self, doc_id: str) -> None:
                     content_hash=fingerprint,
                 ))
 
+        insight_count = db.query(Insight).filter(Insight.project_id == doc.project_id).count()
         doc.insight_status = "done"
         db.commit()
+
+        from app.services.project_events import publish_project_event
+        publish_project_event(str(doc.project_id), {
+            "type": "extraction",
+            "doc_id": str(doc.id),
+            "status": "done",
+            "insight_count": insight_count,
+        })
 
     except Exception as exc:
         if doc:
             try:
                 doc.insight_status = "failed"
                 db.commit()
+                from app.services.project_events import publish_project_event
+                publish_project_event(str(doc.project_id), {
+                    "type": "extraction",
+                    "doc_id": str(doc.id),
+                    "status": "failed",
+                    "insight_count": 0,
+                })
             except Exception:
                 pass
         raise self.retry(exc=exc)

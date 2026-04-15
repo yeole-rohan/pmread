@@ -9,12 +9,15 @@ import { PLAN_PRD_LIMITS } from "@/lib/constants";
 import { InsightType } from "@/lib/types";
 import InsightsBoard from "@/components/InsightsBoard";
 import PrdList from "@/components/PrdList";
+import AskTab from "@/components/AskTab";
+import FilesTab from "@/components/FilesTab";
 import UploadModal from "@/components/UploadModal";
 import GeneratePRDModal from "@/components/GeneratePRDModal";
 import UpgradeModal from "@/components/UpgradeModal";
 import { trackEvent } from "@/lib/analytics";
+import GithubRepoPicker from "@/components/GithubRepoPicker";
 
-type Tab = "insights" | "prds";
+type Tab = "insights" | "prds" | "ask" | "files";
 
 export default function ProjectPage() {
   const params = useParams();
@@ -39,7 +42,7 @@ export default function ProjectPage() {
     refreshing,
     extracting,
     refreshInsights,
-    pollInsights,
+    startExtracting,
     handleDeleteInsight,
     handleStarInsight,
   } = useProjectData(projectId);
@@ -49,7 +52,7 @@ export default function ProjectPage() {
   async function handleUploaded() {
     setShowUpload(false);
     trackEvent("upload_files");
-    pollInsights();
+    startExtracting();
   }
 
   async function handlePRDCreated(analysisId: string) {
@@ -182,10 +185,34 @@ export default function ProjectPage() {
               </span>
             )}
           </button>
+          <button
+            onClick={() => setTab("ask")}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+              tab === "ask"
+                ? "bg-white text-gray-900 shadow-sm"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            Ask
+          </button>
+          <button
+            onClick={() => setTab("files")}
+            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+              tab === "files"
+                ? "bg-white text-gray-900 shadow-sm"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            Files
+          </button>
         </div>
 
         <div className="flex items-center gap-2">
-          {tab === "insights" ? (
+          <GithubRepoPicker
+            projectId={projectId}
+            githubConnected={!!user?.github_connected}
+          />
+          {tab === "insights" && (
             <>
               <button
                 onClick={refreshInsights}
@@ -203,7 +230,8 @@ export default function ProjectPage() {
                 Upload files
               </button>
             </>
-          ) : (
+          )}
+          {tab === "prds" && (
             <button
               onClick={() => {
                 if (prdsUsed >= prdLimit) setShowUpgrade(true);
@@ -218,14 +246,21 @@ export default function ProjectPage() {
         </div>
       </div>
 
-      {tab === "insights" ? (
+      {tab === "insights" && (
         <InsightsBoard
           grouped={insights}
           onDelete={handleDeleteInsight}
           onStar={handleStarInsight}
         />
-      ) : (
+      )}
+      {tab === "prds" && (
         <PrdList projectId={projectId} prds={prds} />
+      )}
+      {tab === "ask" && (
+        <AskTab projectId={projectId} hasInsights={insightTotal > 0} />
+      )}
+      {tab === "files" && (
+        <FilesTab projectId={projectId} />
       )}
 
       <UploadModal

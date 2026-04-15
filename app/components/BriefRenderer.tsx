@@ -19,12 +19,14 @@ export function useCopy(text: string) {
 }
 
 function Section({
+  id,
   title,
   copyText,
   children,
   defaultCollapsed = false,
   noPadding = false,
 }: {
+  id?: string;
   title: string;
   copyText: string;
   children: React.ReactNode;
@@ -35,7 +37,7 @@ function Section({
   const { copied, copy } = useCopy(copyText);
 
   return (
-    <div className="bg-white rounded-xl border border-gray-100">
+    <div id={id} className="bg-white rounded-xl border border-gray-100 scroll-mt-16">
       {/* Header row */}
       <div className="flex items-center justify-between px-5 py-3.5">
         <button
@@ -147,7 +149,7 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
   return (
     <div className="space-y-4">
       {/* Problem */}
-      <Section title="Problem" copyText={brief.problem}>
+      <Section id="prd-problem" title="Problem" copyText={brief.problem}>
         <ProseBlock text={brief.problem} />
         {brief.problem_quotes?.length > 0 && (
           <div className="mt-3 space-y-2">
@@ -161,14 +163,14 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
       </Section>
 
       {/* Proposed Feature */}
-      <Section title="Proposed Feature" copyText={brief.proposed_feature}>
+      <Section id="prd-feature" title="Proposed Feature" copyText={brief.proposed_feature}>
         <div className="bg-emerald-50 border-l-4 border-[#1D9E75] px-4 py-3 rounded-r-lg">
           <ProseBlock text={brief.proposed_feature} />
         </div>
       </Section>
 
       {/* Why Build */}
-      <Section title="Why It's Worth Building" copyText={brief.why_worth_building}>
+      <Section id="prd-why" title="Why It's Worth Building" copyText={brief.why_worth_building}>
         <ProseBlock text={brief.why_worth_building} />
       </Section>
 
@@ -176,12 +178,12 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
       {(brief.goals?.length > 0 || brief.non_goals?.length > 0) && (
         <div className="grid grid-cols-2 gap-4">
           {brief.goals?.length > 0 && (
-            <Section title="Goals" copyText={brief.goals.join("\n")}>
+            <Section id="prd-goals" title="Goals" copyText={brief.goals.join("\n")}>
               <BulletList items={brief.goals} />
             </Section>
           )}
           {brief.non_goals?.length > 0 && (
-            <Section title="Non-Goals" copyText={brief.non_goals.join("\n")}>
+            <Section id="prd-nongoals" title="Non-Goals" copyText={brief.non_goals.join("\n")}>
               <BulletList items={brief.non_goals} />
             </Section>
           )}
@@ -190,7 +192,7 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
 
       {/* User Stories */}
       {brief.user_stories?.length > 0 && (
-        <Section title="User Stories" copyText={brief.user_stories.join("\n")}>
+        <Section id="prd-stories" title="User Stories" copyText={brief.user_stories.join("\n")}>
           <ul className="space-y-1.5">
             {brief.user_stories.map((s, i) => (
               <li key={i} className="text-sm text-gray-700 bg-gray-50 rounded-lg px-3 py-2 leading-relaxed">
@@ -203,6 +205,7 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
 
       {/* What Needs to Change */}
       <Section
+        id="prd-changes"
         title="What Needs to Change"
         copyText={`UI: ${brief.what_needs_to_change?.ui}\n\nData Model: ${brief.what_needs_to_change?.data_model}\n\nWorkflows: ${brief.what_needs_to_change?.workflows}`}
       >
@@ -222,6 +225,7 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
 
       {/* Engineering Tasks */}
       <Section
+        id="prd-tasks"
         title="Engineering Tasks"
         copyText={brief.engineering_tasks?.map((t) => `- ${t.title} [${t.estimate}]: ${t.description}`).join("\n")}
       >
@@ -245,14 +249,14 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
 
       {/* Edge Cases */}
       {brief.edge_cases?.length > 0 && (
-        <Section title="Edge Cases" copyText={brief.edge_cases.join("\n")}>
+        <Section id="prd-edge" title="Edge Cases" copyText={brief.edge_cases.join("\n")}>
           <BulletList items={brief.edge_cases} />
         </Section>
       )}
 
       {/* Analytics Events */}
       {brief.analytics_events?.length > 0 && (
-        <Section title="Analytics Events" copyText={brief.analytics_events.join("\n")}>
+        <Section id="prd-analytics" title="Analytics Events" copyText={brief.analytics_events.join("\n")}>
           <div className="space-y-1.5">
             {brief.analytics_events.map((e, i) => (
               <div key={i} className="flex gap-2 text-sm">
@@ -268,7 +272,7 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
 
       {/* Open Questions */}
       {brief.open_questions?.length > 0 && (
-        <Section title="Open Questions" copyText={brief.open_questions.join("\n")}>
+        <Section id="prd-questions" title="Open Questions" copyText={brief.open_questions.join("\n")}>
           <BulletList items={brief.open_questions} />
         </Section>
       )}

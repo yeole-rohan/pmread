@@ -37,6 +37,16 @@ class Settings(BaseSettings):
     ADMIN_USERNAME: str = "admin"
     ADMIN_PASSWORD: str = "change-me"
 
+    # GitHub OAuth
+    GITHUB_CLIENT_ID: str = ""
+    GITHUB_CLIENT_SECRET: str = ""
+    # xAI / Grok — primary for embeddings (free tier) + generation fallback
+    XAI_API_KEY: str = ""
+    # OpenAI — fallback embedding provider if XAI_API_KEY not set
+    OPENAI_API_KEY: str = ""
+    # Backend public URL (used for OAuth callbacks — same as FRONTEND_URL in prod behind Nginx)
+    BACKEND_URL: str = "http://localhost:8000"
+
     # Celery
     REDIS_URL: str = "redis://127.0.0.1:6379/0"
 

@@ -42,3 +42,5 @@ class User(Base):
     # Password reset
     password_reset_token: Mapped[str | None] = mapped_column(String, nullable=True)
     password_reset_exp: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    # GitHub OAuth
+    github_access_token: Mapped[str | None] = mapped_column(String, nullable=True)

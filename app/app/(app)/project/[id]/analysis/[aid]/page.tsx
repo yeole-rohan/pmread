@@ -5,6 +5,10 @@ import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, AlertTriangle, RefreshCw, Check, Link2, Copy } from "lucide-react";
 import Link from "next/link";
 import BriefRenderer, { buildMarkdown, useCopy, useDownload } from "@/components/BriefRenderer";
+import CoveragePanel from "@/components/CoveragePanel";
+import DocWriterPanel from "@/components/DocWriterPanel";
+import JiraExportPanel from "@/components/JiraExportPanel";
+import PrdTableOfContents from "@/components/PrdTableOfContents";
 import StatusRotator from "@/components/StatusRotator";
 import UpgradeModal from "@/components/UpgradeModal";
 import { useAnalysisStream } from "@/lib/useAnalysisStream";
@@ -126,10 +130,21 @@ export default function AnalysisPage() {
   if (!analysis || !user) return null;
 
   return (
-    <div className="min-h-full bg-gray-50">
+    <div className="min-h-full bg-gray-50 flex">
+      {/* Far-left ToC — fixed within the scroll container, only when complete */}
+      {isComplete && brief && (
+        <aside className="hidden xl:flex flex-col w-52 flex-shrink-0 border-r border-gray-100 bg-white">
+          <div className="sticky top-0 h-screen overflow-y-auto py-8 px-4">
+            <PrdTableOfContents brief={brief} />
+          </div>
+        </aside>
+      )}
+
+      {/* Main column */}
+      <div className="flex-1 min-w-0">
       {/* Top nav bar */}
       <div className="sticky top-0 z-10 bg-white border-b border-gray-100">
-        <div className="max-w-5xl mx-auto px-6 h-12 flex items-center justify-between">
+        <div className="mx-auto px-6 h-12 flex items-center justify-between">
           <Link
             href={`/project/${projectId}?tab=prds`}
             className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-800 transition-colors"
@@ -155,7 +170,7 @@ export default function AnalysisPage() {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-8">
+      <div className="mx-auto px-6 py-8">
         {/* PRD header */}
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-3">
@@ -290,9 +305,24 @@ export default function AnalysisPage() {
 
         {/* PRD content */}
         {isComplete && brief && (
-          <BriefRenderer brief={brief} />
+          <div className="space-y-4">
+            <CoveragePanel
+              analysisId={analysisId}
+              cachedValidation={(brief as any).validation ?? null}
+            />
+            <BriefRenderer brief={brief} />
+            <DocWriterPanel
+              analysisId={analysisId}
+              cachedDocs={brief as unknown as Record<string, string>}
+            />
+            <JiraExportPanel
+              tasks={brief.engineering_tasks ?? []}
+              prdTitle={analysis.question}
+            />
+          </div>
         )}
       </div>
+      </div> {/* end main column */}
 
       <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />
     </div>
