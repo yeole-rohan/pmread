@@ -40,12 +40,16 @@ jobs:
             cd api && alembic upgrade head && cd ..
 
             echo "--- Building frontend ---"
-            cd app && npm ci --silent && npm run build && cd ..
+            cd app
+            npm ci --silent && npm run build
+            cp -r .next/static .next/standalone/.next/static
+            cp -r public .next/standalone/public
+            cd ..
 
             echo "--- Restarting staging services ---"
             sudo systemctl restart pmread-stage-api
             sudo systemctl restart pmread-stage-worker
-            sudo systemctl restart pmread-stage-frontend
+            pm2 restart pmread-stage-frontend
 
             echo "--- Stage deploy complete ---"
 
@@ -102,11 +106,15 @@ jobs:
             cd api && alembic upgrade head && cd ..
 
             echo "--- Building frontend ---"
-            cd app && npm ci --silent && npm run build && cd ..
+            cd app
+            npm ci --silent && npm run build
+            cp -r .next/static .next/standalone/.next/static
+            cp -r public .next/standalone/public
+            cd ..
 
             echo "--- Restarting production services ---"
             sudo systemctl restart pmread-prod-api
             sudo systemctl restart pmread-prod-worker
-            sudo systemctl restart pmread-prod-frontend
+            pm2 restart pmread-prod-frontend
 
             echo "--- Prod deploy complete ---"
