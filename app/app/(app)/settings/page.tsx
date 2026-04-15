@@ -4,7 +4,7 @@ import { Suspense, useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle, AlertCircle } from "lucide-react";
 import { useUser } from "@/lib/useUser";
-import { apiFetch } from "@/lib/api";
+import { apiFetch, getToken } from "@/lib/api";
 import { logout } from "@/lib/auth";
 import UpgradeModal from "@/components/UpgradeModal";
 
@@ -22,6 +22,7 @@ function SettingsContent() {
   const [confirmCancelRazorpay, setConfirmCancelRazorpay] = useState(false);
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [disconnectingGithub, setDisconnectingGithub] = useState(false);
   // Password change
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -33,6 +34,8 @@ function SettingsContent() {
 
   const upgraded = searchParams.get("upgraded") === "true";
   const upgradeIntent = searchParams.get("upgrade") === "true";
+  const githubConnected = searchParams.get("github") === "connected";
+  const githubError = searchParams.get("github") === "error";
 
   useEffect(() => {
     if (user) setDisplayName(user.display_name || "");
@@ -103,6 +106,16 @@ function SettingsContent() {
       await mutate();
     } finally {
       setCancellingRazorpay(false);
+    }
+  }
+
+  async function disconnectGithub() {
+    setDisconnectingGithub(true);
+    try {
+      await apiFetch("/github/disconnect", { method: "DELETE" });
+      await mutate();
+    } finally {
+      setDisconnectingGithub(false);
     }
   }
 
@@ -337,6 +350,52 @@ function SettingsContent() {
               user.digest_enabled ? "translate-x-6" : "translate-x-1"
             }`} />
           </button>
+        </div>
+      </section>
+
+      {/* Integrations */}
+      <section className="bg-white border border-gray-100 rounded-xl p-6 mb-4">
+        <h2 className="text-sm font-semibold text-gray-700 mb-4">Integrations</h2>
+
+        {githubConnected && (
+          <div className="mb-3 flex items-center gap-2 text-xs text-emerald-600 bg-emerald-50 px-3 py-2 rounded-lg">
+            <CheckCircle size={13} />
+            GitHub connected successfully
+          </div>
+        )}
+        {githubError && (
+          <div className="mb-3 flex items-center gap-2 text-xs text-red-600 bg-red-50 px-3 py-2 rounded-lg">
+            <AlertCircle size={13} />
+            GitHub connection failed. Try again.
+          </div>
+        )}
+
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-900">GitHub</p>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Embed your codebase so PRDs reference real implementation context
+            </p>
+          </div>
+          {user.github_connected ? (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full font-medium">Connected</span>
+              <button
+                onClick={disconnectGithub}
+                disabled={disconnectingGithub}
+                className="text-xs text-gray-400 hover:text-gray-600 hover:underline cursor-pointer"
+              >
+                {disconnectingGithub ? "Disconnecting..." : "Disconnect"}
+              </button>
+            </div>
+          ) : (
+            <a
+              href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"}/github/connect?token=${getToken() ?? ""}`}
+              className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+            >
+              Connect GitHub →
+            </a>
+          )}
         </div>
       </section>
 

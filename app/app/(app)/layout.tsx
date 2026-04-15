@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import FeedbackButton from "@/components/FeedbackButton";
+import SearchModal from "@/components/SearchModal";
 import { useUser } from "@/lib/useUser";
 import { apiFetch } from "@/lib/api";
 import { Project } from "@/lib/types";
@@ -14,6 +15,18 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, loading } = useUser();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  useEffect(() => {
+    function handleKeydown(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen((v) => !v);
+      }
+    }
+    window.addEventListener("keydown", handleKeydown);
+    return () => window.removeEventListener("keydown", handleKeydown);
+  }, []);
 
   useEffect(() => {
     if (!loading && !user && !getToken()) {
@@ -45,9 +58,11 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         onProjectRenamed={(id, name) =>
           setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, name } : p)))
         }
+        onSearchOpen={() => setSearchOpen(true)}
       />
       <main className="flex-1 overflow-y-auto">{children}</main>
       <FeedbackButton />
+      <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   );
 }

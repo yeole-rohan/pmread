@@ -23,3 +23,5 @@ class Project(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=text("NOW()")
     )
+    github_repo: Mapped[str | None] = mapped_column(String, nullable=True)  # "owner/repo"
+    github_index_status: Mapped[str | None] = mapped_column(String, nullable=True)  # null | "indexing" | "ready" | "failed"

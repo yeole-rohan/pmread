@@ -13,7 +13,7 @@ from app.models.analysis import Analysis
 from app.models.feedback import Feedback
 from app.models.insight import Insight
 from app.routers import auth, projects, analyses, stream, export, billing, waitlist
-from app.routers import uploads, insights, share, feedback as feedback_router
+from app.routers import uploads, insights, share, feedback as feedback_router, chat, search, ingest, github, events
 if settings.SENTRY_DSN:
     import sentry_sdk
     from sentry_sdk.integrations.fastapi import FastApiIntegration
@@ -141,6 +141,11 @@ app.include_router(billing.router, prefix="/api/billing", tags=["billing"])
 app.include_router(waitlist.router, prefix="/api/waitlist", tags=["waitlist"])
 app.include_router(share.router, prefix="/api/share", tags=["share"])
 app.include_router(feedback_router.router, prefix="/api/feedback", tags=["feedback"])
+app.include_router(chat.router, prefix="/api/projects", tags=["chat"])
+app.include_router(search.router, prefix="/api/search", tags=["search"])
+app.include_router(ingest.router, prefix="/api/ingest", tags=["ingest"])
+app.include_router(github.router, prefix="/api/github", tags=["github"])
+app.include_router(events.router, prefix="/api/projects", tags=["events"])
 
 
 @app.get("/api/health")

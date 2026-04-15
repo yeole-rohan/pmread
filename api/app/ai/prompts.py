@@ -67,7 +67,25 @@ SECTION_STATUS_MESSAGES = {
 }
 
 
-def build_prd_user_message(question: str, insight_context: str) -> str:
+CLARIFY_SYSTEM_PROMPT = """You are a senior product manager helping another PM write a better PRD.
+Given their question and the available customer insights, generate 3 short clarifying questions that would make the resulting PRD significantly more specific and accurate.
+
+Rules:
+- Each question must be answerable in 1–2 sentences by the PM.
+- Only ask questions that are NOT already answered by the insights.
+- Focus on: target persona, success metric, rollout scope, constraint, or known dependency.
+- Output JSON only:
+
+{
+  "questions": [
+    "Question 1?",
+    "Question 2?",
+    "Question 3?"
+  ]
+}"""
+
+
+def build_clarify_user_message(question: str, insight_context: str) -> str:
     return f"""## Customer research insights
 
 {insight_context}
@@ -80,4 +98,147 @@ def build_prd_user_message(question: str, insight_context: str) -> str:
 
 ---
 
-Based on the customer insights above, generate a complete PRD answering this question."""
+Generate 3 clarifying questions."""
+
+
+CHAT_SYSTEM_PROMPT = """You are a product research assistant embedded inside PMRead.
+You have access to a project's extracted customer insights: pain points, feature requests, decisions, and action items.
+
+Your job is to answer the PM's question directly, grounded only in the provided insights.
+
+Rules:
+- Answer conversationally but concisely. 2–5 sentences max unless detail is needed.
+- Ground every claim in the insights. Mention frequency counts where relevant ("mentioned 6 times").
+- If the insights don't contain enough information to answer, say so honestly. Do not hallucinate.
+- After your answer, list 1–3 direct quotes from the insights that best support your answer.
+- Output JSON only, no prose outside the JSON:
+
+{
+  "answer": "your answer here",
+  "quotes": ["quote 1", "quote 2"]
+}"""
+
+
+def build_chat_user_message(question: str, insight_context: str) -> str:
+    return f"""## Project insights
+
+{insight_context}
+
+---
+
+## PM's question
+
+{question}"""
+
+
+VALIDATE_SYSTEM_PROMPT = """You are a senior product manager reviewing a PRD for completeness and insight coverage.
+
+Given a PRD summary and the project's top customer insights, assess how well the PRD addresses the evidence.
+
+Rules:
+- Base gaps/strengths ONLY on what the insights say. Do not invent problems.
+- Be specific — name the theme and its frequency count.
+- coverage_score: 0-100. 100 = all high-frequency themes addressed, 0 = nothing addressed.
+- gaps: themes with 3+ mentions that the PRD does not address. Max 3 items.
+- strengths: things the PRD does well relative to the insights. Max 2 items.
+- Output JSON only:
+
+{
+  "coverage_score": 82,
+  "gaps": ["Authentication/SSO concerns not mentioned (6 times)", "Mobile performance issues ignored (4 mentions)"],
+  "strengths": ["Directly addresses the top billing pain point (8 mentions)", "Feature request for CSV export is included"]
+}"""
+
+
+def build_validate_user_message(problem: str, proposed_feature: str, insight_context: str) -> str:
+    return f"""## PRD Summary
+
+**Problem:** {problem}
+
+**Proposed Feature:** {proposed_feature}
+
+---
+
+## Project's top customer insights
+
+{insight_context}
+
+---
+
+Assess coverage of this PRD against the insights above."""
+
+
+DOC_WRITER_PROMPTS = {
+    "release_notes": """You are a product writer turning a PRD into polished release notes.
+
+Rules:
+- Lead with the user benefit, not the technical change.
+- Format: one headline, one 2-sentence summary, then 3-5 bullet points of what's new.
+- Tone: confident, clear, no marketing fluff.
+- Do NOT mention internal ticket numbers, estimates, or engineering details.
+- Output plain text only — no JSON, no markdown headers, just the release notes copy.""",
+
+    "faq": """You are a product writer turning a PRD into a customer-facing FAQ.
+
+Rules:
+- Write 5-7 Q&A pairs a customer or support team would actually need.
+- Each question starts with "Q:" and answer with "A:".
+- Answers max 2 sentences. Plain language, no jargon.
+- Cover: what it does, who it's for, what changes for existing users, any limits/gotchas.
+- Output plain text only — no JSON, no markdown headers.""",
+
+    "announcement": """You are a product writer turning a PRD into a short internal announcement (Slack/email).
+
+Rules:
+- Format: 3 short paragraphs. What shipped, why it matters, what to do next.
+- Tone: energetic but not hype. Written for a cross-functional team (sales, support, design).
+- Max 150 words total.
+- End with one clear CTA (e.g. "Try it at [link]" or "Reply with feedback").
+- Output plain text only — no JSON, no markdown headers.""",
+}
+
+
+def build_doc_writer_message(doc_type: str, brief: dict) -> str:
+    proposed_feature = brief.get("proposed_feature", "")
+    problem = brief.get("problem", "")
+    goals = "\n".join(f"- {g}" for g in (brief.get("goals") or []))
+    user_stories = "\n".join(f"- {s}" for s in (brief.get("user_stories") or []))
+    tasks = "\n".join(
+        f"- {t['title']}: {t['description']}"
+        for t in (brief.get("engineering_tasks") or [])
+    )
+    return f"""## PRD Summary
+
+**Problem:** {problem}
+
+**Proposed Feature:** {proposed_feature}
+
+**Goals:**
+{goals}
+
+**User Stories:**
+{user_stories}
+
+**What's being built:**
+{tasks}
+
+---
+
+Generate the {doc_type.replace("_", " ")} now."""
+
+
+def build_prd_user_message(question: str, insight_context: str, code_context: str = "") -> str:
+    code_block = f"\n\n---\n\n{code_context}" if code_context.strip() else ""
+    return f"""## Customer research insights
+
+{insight_context}{code_block}
+
+---
+
+## PM's question
+
+{question}
+
+---
+
+Based on the customer insights above{' and the relevant codebase context' if code_context.strip() else ''}, generate a complete PRD answering this question."""

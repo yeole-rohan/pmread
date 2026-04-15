@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Loader2, Check } from "lucide-react";
+import { X, Loader2, Check, ChevronRight } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { APIError, Insight, InsightType } from "@/lib/types";
 import { trackEvent } from "@/lib/analytics";
@@ -16,6 +16,7 @@ const TYPE_META: Record<InsightType, { label: string; badge: string }> = {
 const TYPES: InsightType[] = ["pain_point", "feature_request", "decision", "action_item"];
 
 type WindowPreset = "all" | "7" | "30" | "90" | "custom";
+type Step = "filter" | "clarify" | "generating";
 
 const PRESETS: { label: string; value: WindowPreset }[] = [
   { label: "All time", value: "all" },
@@ -57,6 +58,7 @@ export default function GeneratePRDModal({
   onUpgradeNeeded,
   grouped,
 }: GeneratePRDModalProps) {
+  const [step, setStep] = useState<Step>("filter");
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -65,6 +67,10 @@ export default function GeneratePRDModal({
   const [preset, setPreset] = useState<WindowPreset>("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState(todayISO());
+
+  // Clarify step state
+  const [clarifyQuestions, setClarifyQuestions] = useState<string[]>([]);
+  const [clarifyAnswers, setClarifyAnswers] = useState<string[]>(["", "", ""]);
 
   if (!open) return null;
 
@@ -81,6 +87,27 @@ export default function GeneratePRDModal({
   const customValid = preset !== "custom" || (dateFrom.length > 0 && dateTo.length > 0 && dateFrom <= dateTo);
   const canSubmit = question.trim().length > 5 && !loading && selectedTypes.size > 0 && customValid && totalSelected > 0;
 
+  function buildFilterPayload() {
+    let daysBack: number | null = null;
+    let dateFromPayload: string | null = null;
+    let dateToPayload: string | null = null;
+
+    if (preset === "custom") {
+      dateFromPayload = dateFrom || null;
+      dateToPayload = dateTo || null;
+    } else if (preset !== "all") {
+      daysBack = Number(preset);
+    }
+
+    return {
+      insight_types: starredOnly ? null : Array.from(selectedTypes),
+      starred_only: starredOnly,
+      days_back: starredOnly ? null : daysBack,
+      date_from: starredOnly ? null : dateFromPayload,
+      date_to: starredOnly ? null : dateToPayload,
+    };
+  }
+
   function toggleType(type: InsightType) {
     setSelectedTypes((prev) => {
       const next = new Set(prev);
@@ -94,39 +121,66 @@ export default function GeneratePRDModal({
     });
   }
 
-  async function handleSubmit() {
+  async function handleNextStep() {
     if (!canSubmit) return;
     setLoading(true);
     setError("");
 
-    let daysBack: number | null = null;
-    let dateFromPayload: string | null = null;
-    let dateToPayload: string | null = null;
+    try {
+      const filter = buildFilterPayload();
+      const res = await apiFetch<{ questions: string[] }>(
+        `/projects/${projectId}/clarify`,
+        {
+          method: "POST",
+          body: JSON.stringify({ question: question.trim(), ...filter }),
+        }
+      );
 
-    if (preset === "custom") {
-      dateFromPayload = dateFrom || null;
-      dateToPayload = dateTo || null;
-    } else if (preset !== "all") {
-      daysBack = Number(preset);
+      const qs = res.questions ?? [];
+      if (qs.length === 0) {
+        // No clarifying questions — skip straight to generate
+        await submitPRD(buildClarifiedQuestion(""));
+        return;
+      }
+
+      setClarifyQuestions(qs);
+      setClarifyAnswers(qs.map(() => ""));
+      setStep("clarify");
+    } catch {
+      setError("Failed to load clarifying questions. You can still generate the PRD.");
+      // Don't block the user — let them generate without clarification
+    } finally {
+      setLoading(false);
     }
+  }
+
+  function buildClarifiedQuestion(answers: string) {
+    return answers.trim()
+      ? `${question.trim()}\n\nAdditional context:\n${answers.trim()}`
+      : question.trim();
+  }
+
+  async function submitPRD(finalQuestion: string) {
+    setStep("generating");
+    setLoading(true);
+    setError("");
+
+    const filter = buildFilterPayload();
 
     try {
       const result = await apiFetch<{ analysis_id: string }>("/analyses/", {
         method: "POST",
         body: JSON.stringify({
           project_id: projectId,
-          question: question.trim(),
-          insight_types: starredOnly ? null : Array.from(selectedTypes),
-          starred_only: starredOnly,
-          days_back: starredOnly ? null : daysBack,
-          date_from: starredOnly ? null : dateFromPayload,
-          date_to: starredOnly ? null : dateToPayload,
+          question: finalQuestion,
+          ...filter,
         }),
       });
       trackEvent("generate_prd", {
         starred_only: starredOnly,
         insight_count: totalSelected,
-        question_length: question.trim().length,
+        question_length: finalQuestion.length,
+        had_clarify: clarifyQuestions.length > 0,
       });
       setQuestion("");
       onCreated(result.analysis_id);
@@ -136,25 +190,131 @@ export default function GeneratePRDModal({
         onUpgradeNeeded();
       } else {
         setError(err instanceof APIError ? err.message : "Something went wrong. Try again.");
+        setStep("clarify");
       }
       setLoading(false);
     }
+  }
+
+  async function handleGenerateWithAnswers() {
+    const answersText = clarifyQuestions
+      .map((q, i) => (clarifyAnswers[i].trim() ? `Q: ${q}\nA: ${clarifyAnswers[i].trim()}` : ""))
+      .filter(Boolean)
+      .join("\n\n");
+
+    await submitPRD(buildClarifiedQuestion(answersText));
   }
 
   function handleClose() {
     if (loading) return;
     setQuestion("");
     setError("");
+    setStep("filter");
+    setClarifyQuestions([]);
+    setClarifyAnswers(["", "", ""]);
     onClose();
   }
 
+  // ── Generating overlay ─────────────────────────────────────────────────────
+  if (step === "generating") {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/60 cursor-not-allowed" />
+        <div className="relative bg-white rounded-2xl shadow-xl p-8 w-full max-w-sm mx-4 text-center">
+          <Loader2 size={32} className="animate-spin text-[#7F77DD] mx-auto mb-4" />
+          <p className="text-base font-semibold text-gray-900 mb-1">Generating your PRD</p>
+          <p className="text-sm text-gray-400">This usually takes 15–30 seconds…</p>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Clarify step ───────────────────────────────────────────────────────────
+  if (step === "clarify") {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/40" onClick={handleClose} />
+        <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg mx-4">
+          <button
+            onClick={handleClose}
+            disabled={loading}
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 disabled:opacity-40 cursor-pointer"
+          >
+            <X size={18} />
+          </button>
+
+          <div className="mb-1 flex items-center gap-2">
+            <button
+              onClick={() => setStep("filter")}
+              className="text-xs text-gray-400 hover:text-gray-600 cursor-pointer"
+            >
+              ← Back
+            </button>
+          </div>
+
+          <h2 className="text-lg font-semibold text-gray-900 mb-1">A few quick questions</h2>
+          <p className="text-sm text-gray-400 mb-5">
+            Optional — answering these will make your PRD more specific. Skip any you don&apos;t need.
+          </p>
+
+          <div className="space-y-4">
+            {clarifyQuestions.map((q, i) => (
+              <div key={i}>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  {q}
+                </label>
+                <textarea
+                  value={clarifyAnswers[i]}
+                  onChange={(e) => {
+                    const next = [...clarifyAnswers];
+                    next[i] = e.target.value;
+                    setClarifyAnswers(next);
+                  }}
+                  placeholder="Optional answer…"
+                  rows={2}
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7F77DD]/40 resize-none"
+                />
+              </div>
+            ))}
+          </div>
+
+          {error && <p className="mt-3 text-xs text-red-600">{error}</p>}
+
+          <div className="mt-5 flex gap-2">
+            <button
+              onClick={() => submitPRD(question.trim())}
+              disabled={loading}
+              className="flex-1 py-2.5 border border-gray-200 rounded-lg text-sm text-gray-600 hover:bg-gray-50 disabled:opacity-40 cursor-pointer"
+            >
+              Skip &amp; Generate
+            </button>
+            <button
+              onClick={handleGenerateWithAnswers}
+              disabled={loading}
+              className="flex-1 py-2.5 bg-[#7F77DD] hover:bg-[#6b64c4] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold rounded-lg text-sm flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={14} className="animate-spin" />
+                  Starting...
+                </>
+              ) : (
+                <>
+                  Generate PRD
+                  <ChevronRight size={14} />
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Filter step (default) ──────────────────────────────────────────────────
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* When submitting, use a fully opaque backdrop that blocks all interaction */}
-      <div
-        className={`absolute inset-0 transition-colors ${loading ? "bg-black/60 cursor-not-allowed" : "bg-black/40"}`}
-        onClick={handleClose}
-      />
+      <div className="absolute inset-0 bg-black/40" onClick={handleClose} />
       <div className="relative bg-white rounded-2xl shadow-xl p-6 w-full max-w-lg mx-4">
         <button
           onClick={handleClose}
@@ -165,16 +325,9 @@ export default function GeneratePRDModal({
         </button>
 
         <h2 className="text-lg font-semibold text-gray-900 mb-1">Generate PRD</h2>
-        {loading ? (
-          <div className="flex items-center gap-2 mb-5">
-            <Loader2 size={14} className="animate-spin text-[#7F77DD]" />
-            <p className="text-sm text-[#7F77DD] font-medium">Starting generation — please wait...</p>
-          </div>
-        ) : (
-          <p className="text-sm text-gray-500 mb-5">
-            PMRead answers using your filtered insights.
-          </p>
-        )}
+        <p className="text-sm text-gray-500 mb-5">
+          PMRead answers using your filtered insights.
+        </p>
 
         {/* Insight scope */}
         <div className="mb-5 p-3.5 bg-gray-50 rounded-xl border border-gray-100">
@@ -182,7 +335,7 @@ export default function GeneratePRDModal({
             Use insights from
           </p>
 
-          {/* Starred toggle — global across all types */}
+          {/* Starred toggle */}
           <button
             onClick={() => starredCount > 0 && setStarredOnly((v) => !v)}
             className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border mb-3 transition-all ${
@@ -198,7 +351,7 @@ export default function GeneratePRDModal({
             Starred only ({starredCount})
           </button>
 
-          {/* Type filters — disabled when starred only */}
+          {/* Type filters */}
           <div className={`flex flex-wrap gap-1.5 mb-3 transition-opacity ${starredOnly ? "opacity-30 pointer-events-none" : ""}`}>
             {TYPES.map((type) => {
               const meta = TYPE_META[type];
@@ -224,7 +377,7 @@ export default function GeneratePRDModal({
             })}
           </div>
 
-          {/* Time window — disabled when starred only */}
+          {/* Time window */}
           <div className={`space-y-2 transition-opacity ${starredOnly ? "opacity-30 pointer-events-none" : ""}`}>
             <div className="flex items-center gap-1 flex-wrap">
               <span className="text-xs text-gray-400 mr-1">Time window:</span>
@@ -288,7 +441,7 @@ export default function GeneratePRDModal({
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleSubmit();
+            if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleNextStep();
           }}
           placeholder="e.g. What should I build next for the billing experience?"
           rows={3}
@@ -296,7 +449,7 @@ export default function GeneratePRDModal({
         />
 
         {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
-        <p className="mt-1.5 text-xs text-gray-400">⌘ + Enter to submit</p>
+        <p className="mt-1.5 text-xs text-gray-400">⌘ + Enter to continue</p>
 
         <div className="mt-4 flex gap-2">
           <button
@@ -307,17 +460,17 @@ export default function GeneratePRDModal({
             Cancel
           </button>
           <button
-            onClick={handleSubmit}
+            onClick={handleNextStep}
             disabled={!canSubmit}
             className="flex-1 py-2.5 bg-[#7F77DD] hover:bg-[#6b64c4] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold rounded-lg text-sm flex items-center justify-center gap-2 cursor-pointer"
           >
             {loading ? (
               <>
                 <Loader2 size={14} className="animate-spin" />
-                Starting...
+                Loading...
               </>
             ) : (
-              "Generate PRD →"
+              "Next →"
             )}
           </button>
         </div>

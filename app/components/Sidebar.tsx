@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { Plus, ChevronLeft, ChevronRight, Settings, LogOut, MoreHorizontal } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight, Settings, LogOut, MoreHorizontal, Search } from "lucide-react";
 import { Project, User } from "@/lib/types";
 import { apiFetch } from "@/lib/api";
 import { logout } from "@/lib/auth";
@@ -15,6 +15,7 @@ interface SidebarProps {
   onProjectCreated: (project: Project) => void;
   onProjectDeleted: (id: string) => void;
   onProjectRenamed: (id: string, name: string) => void;
+  onSearchOpen?: () => void;
 }
 
 export default function Sidebar({
@@ -23,6 +24,7 @@ export default function Sidebar({
   onProjectCreated,
   onProjectDeleted,
   onProjectRenamed,
+  onSearchOpen,
 }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -87,14 +89,22 @@ export default function Sidebar({
         </button>
       </div>
 
-      {/* New project button */}
-      <div className="px-3 py-3">
+      {/* New project + search */}
+      <div className="px-3 py-3 space-y-1.5">
         <button
           onClick={createProject}
           className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[#7F77DD] hover:bg-[#6b64c4] rounded-lg transition-colors"
         >
           <Plus size={16} />
           New Project
+        </button>
+        <button
+          onClick={onSearchOpen}
+          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
+        >
+          <Search size={14} />
+          <span className="flex-1 text-left">Search</span>
+          <span className="text-xs text-gray-300">⌘K</span>
         </button>
       </div>
 

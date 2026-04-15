@@ -11,6 +11,7 @@ export interface User {
   prds_reset_at: string | null;
   email_verified: boolean;
   digest_enabled: boolean;
+  github_connected?: boolean;
   created_at: string;
 }
 

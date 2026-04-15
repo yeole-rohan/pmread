@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { apiFetch } from "./api";
 import { Analysis, Insight, InsightType, InsightsResponse } from "./types";
-import { INSIGHT_POLL_INTERVAL_MS, INSIGHT_POLL_MAX_TICKS } from "./constants";
 import { trackEvent } from "./analytics";
+import { useProjectEvents } from "./useProjectEvents";
 
 const EMPTY_GROUPED: Record<InsightType, Insight[]> = {
   pain_point: [],
@@ -23,7 +23,8 @@ interface ProjectData {
   fetchInsights: () => Promise<void>;
   fetchPrds: () => Promise<void>;
   refreshInsights: () => Promise<void>;
-  pollInsights: () => void;
+  /** Call after upload to show the extracting banner. SSE will clear it automatically. */
+  startExtracting: () => void;
   handleDeleteInsight: (insightId: string) => Promise<void>;
   handleStarInsight: (insightId: string) => Promise<void>;
 }
@@ -67,18 +68,19 @@ export function useProjectData(projectId: string): ProjectData {
     setRefreshing(false);
   }
 
-  function pollInsights() {
+  // Called after upload — shows the extracting banner immediately.
+  // The SSE extraction event clears it and refreshes insights automatically.
+  function startExtracting() {
     setExtracting(true);
-    let ticks = 0;
-    const timer = setInterval(async () => {
-      await fetchInsights();
-      ticks++;
-      if (ticks >= INSIGHT_POLL_MAX_TICKS) {
-        clearInterval(timer);
-        setExtracting(false);
-      }
-    }, INSIGHT_POLL_INTERVAL_MS);
   }
+
+  // Real-time SSE — replaces the polling timer
+  useProjectEvents(projectId, {
+    onExtraction: async (event) => {
+      await fetchInsights();
+      setExtracting(false);
+    },
+  });
 
   async function handleDeleteInsight(insightId: string) {
     try {
@@ -114,7 +116,7 @@ export function useProjectData(projectId: string): ProjectData {
     fetchInsights,
     fetchPrds,
     refreshInsights,
-    pollInsights,
+    startExtracting,
     handleDeleteInsight,
     handleStarInsight,
   };

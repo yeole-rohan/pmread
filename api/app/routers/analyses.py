@@ -1,16 +1,22 @@
+import json
 import secrets
 from datetime import datetime, timezone
 
+import anthropic
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
 from pydantic import BaseModel
 from sqlalchemy.orm import Session as DBSession
 
 from app.auth import get_current_user
+from app.config import settings
 from app.database import get_db, SessionLocal
 from app.models.analysis import Analysis
+from app.models.insight import Insight
 from app.models.project import Project
 from app.models.user import User
 from app.ai.generator import run_analysis, get_or_create_queue
+from app.ai.context import build_insight_context
+from app.ai.prompts import VALIDATE_SYSTEM_PROMPT, build_validate_user_message, DOC_WRITER_PROMPTS, build_doc_writer_message
 from app.ai.utils import extract_project_name
 from app.services.prd_service import check_and_increment_prd_limit, PLAN_PRD_LIMITS
 from app.schemas.analysis import AnalysisListItem, AnalysisDetail, CreatePRDResponse, ShareResponse
@@ -85,6 +91,7 @@ async def create_prd(
         body.days_back,
         body.date_from,
         body.date_to,
+        str(current_user.id),
     )
 
     return CreatePRDResponse(analysis_id=str(analysis.id), status="processing")
@@ -166,6 +173,113 @@ async def create_share_link(
         db.commit()
 
     return ShareResponse(share_token=analysis.share_token)
+
+
+@router.post("/{analysis_id}/validate")
+async def validate_prd(
+    analysis_id: str,
+    current_user: User = Depends(get_current_user),
+    db: DBSession = Depends(get_db),
+):
+    """Run an LLM coverage check against the project's insights. Caches result in brief."""
+    analysis = db.query(Analysis).filter(
+        Analysis.id == analysis_id, Analysis.user_id == current_user.id
+    ).first()
+    if not analysis:
+        raise HTTPException(status_code=404, detail={"error": "PRD not found", "code": "ANALYSIS_NOT_FOUND"})
+    if analysis.status != "complete" or not analysis.brief:
+        raise HTTPException(status_code=400, detail={"error": "PRD is not complete yet.", "code": "NOT_COMPLETE"})
+
+    # Return cached result if present
+    cached = analysis.brief.get("validation") if analysis.brief else None
+    if cached:
+        return cached
+
+    # Fetch top 60 insights for this project (by frequency)
+    insights = (
+        db.query(Insight)
+        .filter(Insight.project_id == analysis.project_id)
+        .order_by(Insight.frequency.desc())
+        .limit(60)
+        .all()
+    )
+    if not insights:
+        return {"coverage_score": 0, "gaps": [], "strengths": []}
+
+    insight_context = build_insight_context(insights)
+    problem = analysis.brief.get("problem", "")
+    proposed_feature = analysis.brief.get("proposed_feature", "")
+    user_message = build_validate_user_message(problem, proposed_feature, insight_context)
+
+    client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+    message = client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=512,
+        system=VALIDATE_SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": user_message}],
+    )
+    raw = message.content[0].text.strip()
+    if raw.startswith("```"):
+        raw = raw.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
+
+    try:
+        result = json.loads(raw)
+    except json.JSONDecodeError:
+        result = {"coverage_score": 0, "gaps": [], "strengths": []}
+
+    # Cache in brief JSONB so subsequent calls are free
+    updated_brief = dict(analysis.brief)
+    updated_brief["validation"] = result
+    analysis.brief = updated_brief
+    db.commit()
+
+    return result
+
+
+@router.post("/{analysis_id}/write-doc")
+async def write_doc(
+    analysis_id: str,
+    doc_type: str,
+    current_user: User = Depends(get_current_user),
+    db: DBSession = Depends(get_db),
+):
+    """Generate release notes, FAQ, or announcement from a completed PRD."""
+    if doc_type not in DOC_WRITER_PROMPTS:
+        raise HTTPException(status_code=422, detail={"error": f"Unknown doc_type: {doc_type}", "code": "INVALID_DOC_TYPE"})
+
+    analysis = db.query(Analysis).filter(
+        Analysis.id == analysis_id, Analysis.user_id == current_user.id
+    ).first()
+    if not analysis:
+        raise HTTPException(status_code=404, detail={"error": "PRD not found", "code": "ANALYSIS_NOT_FOUND"})
+    if analysis.status != "complete" or not analysis.brief:
+        raise HTTPException(status_code=400, detail={"error": "PRD is not complete yet.", "code": "NOT_COMPLETE"})
+
+    # Return cached result if present
+    cache_key = f"doc_{doc_type}"
+    cached = analysis.brief.get(cache_key) if analysis.brief else None
+    if cached:
+        return {"doc_type": doc_type, "content": cached}
+
+    user_message = build_doc_writer_message(doc_type, analysis.brief)
+    system_prompt = DOC_WRITER_PROMPTS[doc_type]
+
+    client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
+    message = client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=1024,
+        system=system_prompt,
+        messages=[{"role": "user", "content": user_message}],
+    )
+    content = message.content[0].text.strip()
+
+    # Cache in brief JSONB
+    updated_brief = dict(analysis.brief)
+    updated_brief[cache_key] = content
+    analysis.brief = updated_brief
+    db.commit()
+
+    return {"doc_type": doc_type, "content": content}
 
 
 @router.delete("/{analysis_id}")

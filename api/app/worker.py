@@ -42,6 +42,7 @@ celery_app.autodiscover_tasks([
     "app.tasks.digest",
     "app.tasks.billing",
     "app.tasks.email_tasks",
+    "app.tasks.github_index",
 ])
 
 # Re-export tasks for backward-compat imports elsewhere in the codebase
