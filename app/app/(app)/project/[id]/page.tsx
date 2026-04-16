@@ -211,6 +211,7 @@ export default function ProjectPage() {
           <GithubRepoPicker
             projectId={projectId}
             githubConnected={!!user?.github_connected}
+            isPro={user?.plan === "pro"}
           />
           {tab === "insights" && (
             <>
@@ -268,6 +269,7 @@ export default function ProjectPage() {
         open={showUpload}
         onClose={() => setShowUpload(false)}
         onUploaded={handleUploaded}
+        isPro={user?.plan === "pro"}
       />
       <GeneratePRDModal
         projectId={projectId}

@@ -29,7 +29,10 @@ async def ingest_slack(
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
-    """Pull messages from a Slack channel and run insight extraction."""
+    """Pull messages from a Slack channel and run insight extraction. Pro only."""
+    if current_user.plan != "pro":
+        raise HTTPException(status_code=403, detail={"error": "Slack ingestion requires a Pro plan.", "code": "PRO_REQUIRED"})
+
     project = db.query(Project).filter(
         Project.id == body.project_id,
         Project.user_id == current_user.id,
@@ -122,7 +125,10 @@ async def ingest_transcript(
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
-    """Ingest a plain-text call transcript (Zoom, Fireflies, Gong copy-paste)."""
+    """Ingest a plain-text call transcript (Zoom, Fireflies, Gong copy-paste). Pro only."""
+    if current_user.plan != "pro":
+        raise HTTPException(status_code=403, detail={"error": "Transcript ingestion requires a Pro plan.", "code": "PRO_REQUIRED"})
+
     project = db.query(Project).filter(
         Project.id == body.project_id,
         Project.user_id == current_user.id,

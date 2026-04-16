@@ -146,6 +146,9 @@ async def set_project_repo(
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
 
+    if body.repo_full_name is not None and current_user.plan != "pro":
+        raise HTTPException(status_code=403, detail={"error": "GitHub repo linking requires a Pro plan.", "code": "PRO_REQUIRED"})
+
     repo_changed = project.github_repo != body.repo_full_name
     project.github_repo = body.repo_full_name
 

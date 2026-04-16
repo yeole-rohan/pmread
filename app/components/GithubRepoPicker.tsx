@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { GitBranch, ChevronDown, X, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import { GitBranch, ChevronDown, X, Loader2, CheckCircle2, AlertCircle, Lock } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { useProjectEvents } from "@/lib/useProjectEvents";
 
@@ -22,6 +22,7 @@ interface IndexStatus {
 interface Props {
   projectId: string;
   githubConnected: boolean;
+  isPro?: boolean;
 }
 
 const STATUS_LABEL: Record<string, { label: string; color: string }> = {
@@ -30,7 +31,7 @@ const STATUS_LABEL: Record<string, { label: string; color: string }> = {
   failed:   { label: "Index failed", color: "text-red-500 bg-red-50" },
 };
 
-export default function GitBranchRepoPicker({ projectId, githubConnected }: Props) {
+export default function GitBranchRepoPicker({ projectId, githubConnected, isPro = false }: Props) {
   const [open, setOpen] = useState(false);
   const [repos, setRepos] = useState<Repo[]>([]);
   const [loadingRepos, setLoadingRepos] = useState(false);
@@ -110,6 +111,19 @@ export default function GitBranchRepoPicker({ projectId, githubConnected }: Prop
   );
 
   const indexInfo = status?.github_index_status ? STATUS_LABEL[status.github_index_status] : null;
+
+  if (!isPro) {
+    return (
+      <a
+        href="/settings?upgrade=1"
+        className="flex items-center gap-1.5 px-2.5 py-1 border border-dashed border-gray-300 rounded-lg text-xs text-gray-400 hover:border-purple-300 hover:text-purple-600 transition-colors"
+        title="GitHub repo linking requires Pro"
+      >
+        <Lock size={12} />
+        Link repo
+      </a>
+    );
+  }
 
   if (!githubConnected) {
     return (

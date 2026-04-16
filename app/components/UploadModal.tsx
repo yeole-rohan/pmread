@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, AlertCircle, Loader2 } from "lucide-react";
+import { X, AlertCircle, Loader2, Lock } from "lucide-react";
 import UploadZone from "@/components/UploadZone";
 import { apiUpload, apiFetch } from "@/lib/api";
 
@@ -15,6 +15,7 @@ interface UploadModalProps {
   open: boolean;
   onClose: () => void;
   onUploaded: () => void;
+  isPro?: boolean;
 }
 
 type UploadState = "idle" | "uploading" | "extracting" | "error";
@@ -58,7 +59,7 @@ function ExtractionStatus({ onDone }: { onDone: () => void }) {
   );
 }
 
-export default function UploadModal({ projectId, open, onClose, onUploaded }: UploadModalProps) {
+export default function UploadModal({ projectId, open, onClose, onUploaded, isPro = false }: UploadModalProps) {
   const [sourceTab, setSourceTab] = useState<SourceTab>("files");
   const [files, setFiles] = useState<UploadedFile[]>([]);
   const [uploadState, setUploadState] = useState<UploadState>("idle");
@@ -147,10 +148,10 @@ export default function UploadModal({ projectId, open, onClose, onUploaded }: Up
     }
   }
 
-  const SOURCE_TABS: { id: SourceTab; label: string }[] = [
-    { id: "files",      label: "Files" },
-    { id: "slack",      label: "Slack" },
-    { id: "transcript", label: "Transcript" },
+  const SOURCE_TABS: { id: SourceTab; label: string; proOnly: boolean }[] = [
+    { id: "files",      label: "Files",       proOnly: false },
+    { id: "slack",      label: "Slack",       proOnly: true },
+    { id: "transcript", label: "Transcript",  proOnly: true },
   ];
 
   return (
@@ -174,19 +175,23 @@ export default function UploadModal({ projectId, open, onClose, onUploaded }: Up
 
             {/* Source tabs */}
             <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1 mb-5">
-              {SOURCE_TABS.map((t) => (
-                <button
-                  key={t.id}
-                  onClick={() => { setSourceTab(t.id); setErrorMsg(""); }}
-                  className={`flex-1 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-                    sourceTab === t.id
-                      ? "bg-white text-gray-900 shadow-sm"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
-                >
-                  {t.label}
-                </button>
-              ))}
+              {SOURCE_TABS.map((t) => {
+                const locked = t.proOnly && !isPro;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => { setSourceTab(t.id); setErrorMsg(""); }}
+                    className={`flex-1 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer flex items-center justify-center gap-1 ${
+                      sourceTab === t.id
+                        ? "bg-white text-gray-900 shadow-sm"
+                        : "text-gray-500 hover:text-gray-700"
+                    }`}
+                  >
+                    {locked && <Lock size={11} className="text-gray-400" />}
+                    {t.label}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Files */}
@@ -216,7 +221,17 @@ export default function UploadModal({ projectId, open, onClose, onUploaded }: Up
             )}
 
             {/* Slack */}
-            {sourceTab === "slack" && (
+            {sourceTab === "slack" && !isPro && (
+              <div className="py-8 text-center">
+                <Lock size={24} className="mx-auto mb-3 text-gray-300" />
+                <p className="text-sm font-semibold text-gray-800 mb-1">Slack ingestion is a Pro feature</p>
+                <p className="text-xs text-gray-500 mb-4">Upgrade to import messages from any Slack channel directly.</p>
+                <a href="/settings?upgrade=1" className="inline-block px-4 py-2 bg-[#7F77DD] hover:bg-[#6b64c4] text-white text-sm font-semibold rounded-lg transition-colors">
+                  Upgrade to Pro →
+                </a>
+              </div>
+            )}
+            {sourceTab === "slack" && isPro && (
               <>
                 <div className="space-y-3 mb-5">
                   <div>
@@ -279,7 +294,17 @@ export default function UploadModal({ projectId, open, onClose, onUploaded }: Up
             )}
 
             {/* Transcript */}
-            {sourceTab === "transcript" && (
+            {sourceTab === "transcript" && !isPro && (
+              <div className="py-8 text-center">
+                <Lock size={24} className="mx-auto mb-3 text-gray-300" />
+                <p className="text-sm font-semibold text-gray-800 mb-1">Transcript ingestion is a Pro feature</p>
+                <p className="text-xs text-gray-500 mb-4">Upgrade to import Zoom, Fireflies, and Gong transcripts.</p>
+                <a href="/settings?upgrade=1" className="inline-block px-4 py-2 bg-[#7F77DD] hover:bg-[#6b64c4] text-white text-sm font-semibold rounded-lg transition-colors">
+                  Upgrade to Pro →
+                </a>
+              </div>
+            )}
+            {sourceTab === "transcript" && isPro && (
               <>
                 <div className="space-y-3 mb-5">
                   <div>
