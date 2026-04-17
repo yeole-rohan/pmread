@@ -63,6 +63,51 @@ const jsonLd = {
   ],
 };
 
+const STATS = [
+  {
+    value: "4–8 hrs",
+    label: "to write a PRD manually",
+    contrast: "PMRead does it in under 15 minutes",
+    source: "Industry analysis via ChatPRD research",
+    href: null,
+  },
+  {
+    value: "⅓",
+    label: "of working hours spent in meetings",
+    contrast: "Leaving almost no time for actual spec work",
+    source: "Workplace productivity research",
+    href: null,
+  },
+  {
+    value: "$42,000",
+    label: "wasted per manager annually",
+    contrast: "In unnecessary meetings and overhead tasks",
+    source: "Organizational efficiency research",
+    href: null,
+  },
+  {
+    value: "20 min",
+    label: "re-entry cost per context switch",
+    contrast: "Fragmented tools kill deep work",
+    source: "Cited by Shreyas Doshi, PM frameworks research",
+    href: "https://www.linkedin.com/in/shreyasdoshi/",
+  },
+  {
+    value: "71%",
+    label: "of workers would skip low-value meetings",
+    contrast: "If they had high-quality async notes and action items",
+    source: "Employee workplace survey",
+    href: null,
+  },
+  {
+    value: "95%",
+    label: "of products fail",
+    contrast: "The difference is often the quality of the spec",
+    source: "Marty Cagan, Silicon Valley Product Group",
+    href: "https://www.svpg.com",
+  },
+];
+
 const HOW_IT_WORKS = [
   {
     step: "01",
@@ -283,6 +328,53 @@ export default function HomePage() {
                 )
               )}
             </div>
+          </div>
+        </section>
+
+        {/* ── Stats ────────────────────────────────────────────────────── */}
+        <section className="py-20 sm:py-28 bg-gray-950">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-14">
+              <p className="text-xs font-semibold tracking-widest text-purple-400 uppercase mb-3">
+                The overhead problem
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                Why PMs can&apos;t write good PRDs
+              </h2>
+              <p className="text-gray-400 text-lg max-w-xl mx-auto">
+                The data on where product managers actually spend their time — and why specs suffer.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-800 rounded-2xl overflow-hidden">
+              {STATS.map(({ value, label, contrast, source, href }) => (
+                <div key={value + label} className="bg-gray-950 p-8 flex flex-col">
+                  <p className="text-4xl sm:text-5xl font-bold text-white mb-2 tracking-tight">
+                    {value}
+                  </p>
+                  <p className="text-sm font-semibold text-gray-200 mb-2">{label}</p>
+                  <p className="text-xs text-gray-400 leading-relaxed mb-4 flex-1">{contrast}</p>
+                  <p className="text-xs text-gray-600 border-t border-gray-800 pt-3 mt-auto">
+                    {href ? (
+                      <a
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-gray-400 transition-colors underline underline-offset-2"
+                      >
+                        {source}
+                      </a>
+                    ) : (
+                      source
+                    )}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-center text-xs text-gray-600 mt-6">
+              Sources: Workplace productivity research, Shreyas Doshi (LNO Framework), Marty Cagan (SVPG), ChatPRD industry analysis
+            </p>
           </div>
         </section>
 
