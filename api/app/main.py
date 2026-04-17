@@ -12,8 +12,10 @@ from app.models.project import Project
 from app.models.analysis import Analysis
 from app.models.feedback import Feedback
 from app.models.insight import Insight
+from app.models.founding_member import FoundingMember
 from app.routers import auth, projects, analyses, stream, export, billing, waitlist
 from app.routers import uploads, insights, share, feedback as feedback_router, chat, search, ingest, github, events
+from app.routers import admin as admin_router
 if settings.SENTRY_DSN:
     import sentry_sdk
     from sentry_sdk.integrations.fastapi import FastApiIntegration
@@ -124,11 +126,23 @@ class FeedbackAdmin(ModelView, model=Feedback):
     can_delete = True
 
 
+class FoundingMemberAdmin(ModelView, model=FoundingMember):
+    name = "Founding Member"
+    name_plural = "Founding Members"
+    icon = "fa-solid fa-star"
+    column_list = [FoundingMember.email, FoundingMember.claimed_by, FoundingMember.claimed_at, FoundingMember.added_at]
+    column_searchable_list = [FoundingMember.email]
+    column_sortable_list = [FoundingMember.added_at, FoundingMember.claimed_at]
+    column_default_sort = [(FoundingMember.added_at, True)]
+    can_delete = True
+
+
 admin.add_view(UserAdmin)
 admin.add_view(ProjectAdmin)
 admin.add_view(AnalysisAdmin)
 admin.add_view(InsightAdmin)
 admin.add_view(FeedbackAdmin)
+admin.add_view(FoundingMemberAdmin)
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(projects.router, prefix="/api/projects", tags=["projects"])
@@ -146,6 +160,7 @@ app.include_router(search.router, prefix="/api/search", tags=["search"])
 app.include_router(ingest.router, prefix="/api/ingest", tags=["ingest"])
 app.include_router(github.router, prefix="/api/github", tags=["github"])
 app.include_router(events.router, prefix="/api/projects", tags=["events"])
+app.include_router(admin_router.router, prefix="/api/admin", tags=["admin"])
 
 
 @app.get("/api/health")
