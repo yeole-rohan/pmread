@@ -58,7 +58,6 @@ async def get_current_user(
     db: DBSession = Depends(get_db),
 ) -> User:
     raw_token = None
-    session_mode = False
 
     if credentials:
         raw_token = credentials.credentials
@@ -82,7 +81,6 @@ async def get_current_user(
         if not session:
             raise HTTPException(status_code=401, detail="Invalid or expired token")
         user = db.query(User).filter(User.id == session.user_id).first()
-        session_mode = True
 
     if not user or user.deleted_at:
         raise HTTPException(status_code=401, detail="User not found")

@@ -16,8 +16,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import AsyncIterator
-
 from app.config import settings
 
 logger = logging.getLogger(__name__)
@@ -47,7 +45,7 @@ GEN_PROVIDERS: list[dict] = [
         "name": "xai",
         "key_attr": "XAI_API_KEY",
         "base_url": "https://api.x.ai/v1",
-        "model": "grok-3-latest",  # upgrade to grok-3-mini for lower latency if needed
+        "model": "grok-3-mini",  # cheaper fallback — only fires on Claude outage/rate-limit
     },
 ]
 
