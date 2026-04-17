@@ -18,6 +18,7 @@ from app.config import settings
 from app.database import get_db
 from app.models.user import User
 from app.models.session import Session
+from app.models.founding_member import FoundingMember
 from app.schemas.user import UserOut
 
 router = APIRouter()
@@ -48,11 +49,13 @@ def _user_response(user: User) -> UserOut:
         display_name=user.display_name,
         plan=user.plan,
         billing_provider=user.billing_provider,
+        billing_period=user.billing_period,
         plan_started_at=user.plan_started_at,
         plan_expires_at=user.plan_expires_at,
         analyses_used=user.analyses_used,
         prds_generated_this_month=user.prds_generated_this_month,
         prds_reset_at=user.prds_reset_at,
+        prd_credits=user.prd_credits,
         email_verified=user.email_verified,
         digest_enabled=user.digest_enabled,
         github_connected=bool(user.github_access_token),
@@ -86,6 +89,18 @@ async def signup(
     db.add(user)
     db.commit()
     db.refresh(user)
+
+    # Grant 100 founding-member credits if this email is on the list (unclaimed)
+    founding = db.query(FoundingMember).filter(
+        FoundingMember.email == body.email.lower(),
+        FoundingMember.claimed_by.is_(None),
+    ).first()
+    if founding:
+        user.prd_credits = 100
+        founding.claimed_by = user.id
+        founding.claimed_at = datetime.now(timezone.utc)
+        db.commit()
+        db.refresh(user)
 
     send_verification_email_task.delay(user.email, verify_token, user.display_name or user.email)
 

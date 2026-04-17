@@ -32,6 +32,8 @@ class User(Base):
     razorpay_payment_id: Mapped[str | None] = mapped_column(String, nullable=True)  # last successful payment
     billing_period: Mapped[str | None] = mapped_column(String, nullable=True)  # 'monthly' | 'annual'
     analyses_used: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
+    # Founding member credits — never expire, consumed before monthly plan limit
+    prd_credits: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     # Monthly PRD counter — reset on 1st of each month
     prds_generated_this_month: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     prds_reset_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

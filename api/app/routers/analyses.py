@@ -18,7 +18,7 @@ from app.ai.generator import run_analysis, get_or_create_queue
 from app.ai.context import build_insight_context
 from app.ai.prompts import VALIDATE_SYSTEM_PROMPT, build_validate_user_message, DOC_WRITER_PROMPTS, build_doc_writer_message
 from app.ai.utils import extract_project_name
-from app.services.prd_service import check_and_increment_prd_limit, PLAN_PRD_LIMITS
+from app.services.prd_service import check_and_increment_prd_limit, try_use_prd_credit, PLAN_PRD_LIMITS
 from app.schemas.analysis import AnalysisListItem, AnalysisDetail, CreatePRDResponse, ShareResponse
 
 router = APIRouter()
@@ -51,18 +51,21 @@ async def create_prd(
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "PROJECT_NOT_FOUND"})
 
-    # PRD limit check with monthly reset (atomic — no race condition)
-    allowed = check_and_increment_prd_limit(str(current_user.id), current_user.plan, db)
-    if not allowed:
-        limit = PLAN_PRD_LIMITS.get(current_user.plan, 0)
-        raise HTTPException(
-            status_code=402,
-            detail={
-                "error": f"You've used your {limit} {'free ' if current_user.plan == 'free' else ''}PRDs this month. Resets on the 1st.",
-                "code": "PRD_LIMIT_REACHED",
-                "upgrade_url": "/settings?upgrade=true",
-            },
-        )
+    # Founding-member credits take priority — never expire, bypass monthly plan limit
+    used_credit = try_use_prd_credit(str(current_user.id), db)
+    if not used_credit:
+        # No credits — fall back to plan monthly limit
+        allowed = check_and_increment_prd_limit(str(current_user.id), current_user.plan, db)
+        if not allowed:
+            limit = PLAN_PRD_LIMITS.get(current_user.plan, 0)
+            raise HTTPException(
+                status_code=402,
+                detail={
+                    "error": f"You've used your {limit} {'free ' if current_user.plan == 'free' else ''}PRDs this month. Resets on the 1st.",
+                    "code": "PRD_LIMIT_REACHED",
+                    "upgrade_url": "/settings?upgrade=true",
+                },
+            )
 
     # Auto-name project if still default
     if project.name == "New Project":

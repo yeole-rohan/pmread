@@ -1,4 +1,4 @@
-"""PRD generation business logic: limit enforcement and monthly resets."""
+"""PRD generation business logic: limit enforcement, monthly resets, and founding-member credits."""
 from datetime import datetime, timezone
 
 from sqlalchemy import text
@@ -6,6 +6,29 @@ from sqlalchemy.orm import Session as DBSession
 
 # Free: 2 PRDs/month | Pro: 15 PRDs/month
 PLAN_PRD_LIMITS: dict[str, int] = {"free": 2, "pro": 15}
+
+
+def try_use_prd_credit(user_id: str, db: DBSession) -> bool:
+    """
+    Atomically decrement prd_credits by 1 if the user has any remaining.
+    Also increments analyses_used for tracking.
+
+    Returns True if a credit was consumed (PRD is allowed).
+    Returns False if the user has no credits.
+    """
+    result = db.execute(
+        text("""
+            UPDATE users
+            SET prd_credits   = prd_credits - 1,
+                analyses_used = analyses_used + 1
+            WHERE id = :user_id
+              AND prd_credits > 0
+            RETURNING prd_credits
+        """),
+        {"user_id": user_id},
+    ).fetchone()
+    db.commit()
+    return result is not None
 
 
 def check_and_increment_prd_limit(user_id: str, plan: str, db: DBSession) -> bool:
