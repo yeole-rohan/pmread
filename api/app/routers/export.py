@@ -65,7 +65,7 @@ async def export_pdf(
     if not os.path.exists(cache_path):
         try:
             generate_pdf(analysis.brief, cache_path)
-        except Exception as e:
+        except Exception:
             raise HTTPException(
                 status_code=500,
                 detail={"error": "PDF generation failed. Try downloading Markdown instead.", "code": "PDF_FAILED"},

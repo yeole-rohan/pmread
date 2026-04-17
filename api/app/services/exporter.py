@@ -1,4 +1,3 @@
-import re
 from fpdf import FPDF
 
 
