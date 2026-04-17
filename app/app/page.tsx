@@ -7,6 +7,11 @@ import {
   CheckCircle,
   ArrowRight,
   Play,
+  Quote,
+  GitBranch,
+  Layers,
+  BarChart2,
+  IndianRupee,
 } from "lucide-react";
 import MarketingNav from "@/components/MarketingNav";
 import MarketingFooter from "@/components/MarketingFooter";
@@ -68,7 +73,7 @@ const STATS = [
     value: "4–8 hrs",
     label: "to write a PRD manually",
     contrast: "PMRead does it in under 15 minutes",
-    source: "Industry analysis via ChatPRD research",
+    source: "PM industry research",
     href: null,
   },
   {
@@ -162,6 +167,34 @@ const FEATURES = [
       "Ask any question about your research with the Ask tab",
     ],
     placeholder: "PRD generation speed demo",
+  },
+];
+
+const DIFFERENTIATORS = [
+  {
+    icon: Quote,
+    title: "PRDs grounded in evidence, not prompts",
+    body: "Every other AI tool generates from what you type. PMRead generates from what your customers actually said — with citations. \"7 of your last 15 customers mentioned this\" is not a hallucination. It's your data.",
+  },
+  {
+    icon: GitBranch,
+    title: "GitHub codebase context",
+    body: "No other PM tool reads your codebase. When PMRead generates engineering tasks, they reference real modules, file paths, and data models — not generic placeholders that engineers have to translate.",
+  },
+  {
+    icon: Layers,
+    title: "The full chain in one tool",
+    body: "Other tools are either research repositories or spec generators. PMRead is both: upload a transcript and it automatically feeds the PRD generator. Ingest → extract → rank → generate, without leaving the tab.",
+  },
+  {
+    icon: BarChart2,
+    title: "Frequency ranking kills the loudest voice",
+    body: "Decisions made from the most recent complaint are the norm. PMRead tracks how often each problem appears across all your sources — so your roadmap reflects 20 customers, not the one who emailed last.",
+  },
+  {
+    icon: IndianRupee,
+    title: "Built for India. Priced in INR.",
+    body: "Every competing tool is priced for US teams at $30–$80/user/month. PMRead Pro is ₹2,499/month — billed in INR via Razorpay, with a free tier that actually lets you use the product.",
   },
 ];
 
@@ -354,13 +387,13 @@ export default function HomePage() {
                   </p>
                   <p className="text-sm font-semibold text-gray-200 mb-2">{label}</p>
                   <p className="text-xs text-gray-400 leading-relaxed mb-4 flex-1">{contrast}</p>
-                  <p className="text-xs text-gray-600 border-t border-gray-800 pt-3 mt-auto">
+                  <p className="text-xs text-gray-400 border-t border-gray-800 pt-3 mt-auto">
                     {href ? (
                       <a
                         href={href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="hover:text-gray-400 transition-colors underline underline-offset-2"
+                        className="hover:text-white transition-colors underline underline-offset-2"
                       >
                         {source}
                       </a>
@@ -372,8 +405,8 @@ export default function HomePage() {
               ))}
             </div>
 
-            <p className="text-center text-xs text-gray-600 mt-6">
-              Sources: Workplace productivity research, Shreyas Doshi (LNO Framework), Marty Cagan (SVPG), ChatPRD industry analysis
+            <p className="text-center text-xs text-gray-400 mt-6">
+              Sources: Workplace productivity research, Shreyas Doshi (LNO Framework), Marty Cagan (SVPG)
             </p>
           </div>
         </section>
@@ -461,6 +494,44 @@ export default function HomePage() {
                         [ Screenshot placeholder: {placeholder} ]
                       </p>
                     </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Differentiators ──────────────────────────────────────────── */}
+        <section className="py-20 sm:py-28">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-14">
+              <p className="text-xs font-semibold tracking-widest text-[#7F77DD] uppercase mb-3">
+                Why PMRead
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                What no other AI tool does
+              </h2>
+              <p className="text-gray-500 text-lg max-w-xl mx-auto">
+                These aren&apos;t feature bullets. They&apos;re gaps every other tool has — that PMRead doesn&apos;t.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              {DIFFERENTIATORS.map(({ icon: Icon, title, body }, i) => (
+                <div
+                  key={title}
+                  className={`rounded-2xl border border-gray-200 bg-white p-6 flex gap-4${
+                    i === DIFFERENTIATORS.length - 1 && DIFFERENTIATORS.length % 2 !== 0
+                      ? " md:col-span-2 md:max-w-lg md:mx-auto"
+                      : ""
+                  }`}
+                >
+                  <div className="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center shrink-0 mt-0.5">
+                    <Icon size={16} className="text-[#7F77DD]" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-900 mb-1.5">{title}</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed">{body}</p>
                   </div>
                 </div>
               ))}
