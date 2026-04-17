@@ -4,6 +4,7 @@ export interface User {
   display_name: string | null;
   plan: "free" | "pro";
   billing_provider: "stripe" | "razorpay" | null;
+  billing_period: "monthly" | "annual" | null;
   plan_started_at: string | null;
   plan_expires_at: string | null;
   analyses_used: number;

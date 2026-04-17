@@ -37,5 +37,5 @@ export async function signup(
 
 export function logout(): void {
   clearToken();
-  window.location.href = "/login";
+  window.location.href = "/";
 }
