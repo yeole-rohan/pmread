@@ -34,6 +34,7 @@ function SettingsContent() {
 
   const upgraded = searchParams.get("upgraded") === "true";
   const upgradeIntent = searchParams.get("upgrade") === "true";
+  const billingParam = (searchParams.get("billing") || "monthly") as "monthly" | "annual";
   const githubConnected = searchParams.get("github") === "connected";
   const githubError = searchParams.get("github") === "error";
 
@@ -434,7 +435,7 @@ function SettingsContent() {
         )}
       </section>
 
-      <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />
+      <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} defaultBilling={billingParam} />
     </div>
   );
 }
