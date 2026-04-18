@@ -41,8 +41,8 @@ class Settings(BaseSettings):
     # GitHub OAuth
     GITHUB_CLIENT_ID: str = ""
     GITHUB_CLIENT_SECRET: str = ""
-    # xAI / Grok — generation fallback for Claude rate-limit / outage
-    XAI_API_KEY: str = ""
+    # Groq — fast free-tier LLM (Llama via Groq cloud); free-user chat + clarify calls
+    GROQ_API_KEY: str = ""
     # VoyageAI — primary embedding provider for code (voyage-code-3, 1024-dim)
     VOYAGE_API_KEY: str = ""
     # OpenAI — fallback embedding provider if VOYAGE_API_KEY not set
