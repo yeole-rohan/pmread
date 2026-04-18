@@ -278,7 +278,8 @@ function SettingsContent() {
                 )}
                 {isCancelling && (
                   <p className="text-xs text-amber-600 mt-0.5">
-                    Access continues until {expiryDate}. No further charges.
+                    Access continues until {expiryDate}. No further charges.{" "}
+                    <span className="text-gray-400">You can resubscribe after that date.</span>
                   </p>
                 )}
                 {isExpired && (
@@ -298,16 +299,6 @@ function SettingsContent() {
                   className="flex-shrink-0 px-3 py-1.5 bg-[#7F77DD] text-white rounded-lg text-sm font-medium hover:bg-[#6b64c4] transition-colors"
                 >
                   {isExpired ? "Resubscribe to Pro →" : "Upgrade to Pro — ₹2,499/mo"}
-                </button>
-              )}
-
-              {/* Pro active + cancelling — show re-subscribe */}
-              {isCancelling && (
-                <button
-                  onClick={() => setShowUpgrade(true)}
-                  className="flex-shrink-0 px-3 py-1.5 bg-[#7F77DD] text-white rounded-lg text-sm font-medium hover:bg-[#6b64c4] transition-colors"
-                >
-                  Keep Pro →
                 </button>
               )}
 
