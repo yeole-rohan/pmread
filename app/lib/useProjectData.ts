@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import useSWR, { mutate as globalMutate } from "swr";
 import { apiFetch } from "./api";
 import { Analysis, Insight, InsightType, InsightsResponse } from "./types";
 import { trackEvent } from "./analytics";
@@ -23,61 +24,86 @@ interface ProjectData {
   fetchInsights: () => Promise<void>;
   fetchPrds: () => Promise<void>;
   refreshInsights: () => Promise<void>;
-  /** Call after upload to show the extracting banner. SSE will clear it automatically. */
   startExtracting: () => void;
   handleDeleteInsight: (insightId: string) => Promise<void>;
   handleStarInsight: (insightId: string) => Promise<void>;
 }
 
+// SWR cache keys — exported so other call sites can invalidate them
+export function insightsCacheKey(projectId: string) {
+  return `/projects/${projectId}/insights`;
+}
+export function prdsCacheKey(projectId: string) {
+  return `/analyses/?project_id=${projectId}`;
+}
+export function docsCacheKey(projectId: string) {
+  return `/projects/${projectId}/docs`;
+}
+
+/** Invalidate all project data caches after an upload or significant change. */
+export function invalidateProjectCache(projectId: string) {
+  globalMutate(insightsCacheKey(projectId));
+  globalMutate(prdsCacheKey(projectId));
+  globalMutate(docsCacheKey(projectId));
+}
+
+const SWR_OPTS = {
+  revalidateOnFocus: false,
+  // Don't re-request within 60s — covers tab switching back and forth
+  dedupingInterval: 60_000,
+};
+
 export function useProjectData(projectId: string): ProjectData {
-  const [insights, setInsights] = useState<Record<InsightType, Insight[]>>(EMPTY_GROUPED);
-  const [insightTotal, setInsightTotal] = useState(0);
-  const [prds, setPrds] = useState<Analysis[]>([]);
-  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [extracting, setExtracting] = useState(false);
 
+  const {
+    data: insightsData,
+    isLoading: insightsLoading,
+    mutate: mutateInsights,
+  } = useSWR<InsightsResponse>(
+    insightsCacheKey(projectId),
+    (key: string) => apiFetch<InsightsResponse>(key),
+    SWR_OPTS,
+  );
+
+  const {
+    data: prdsData,
+    isLoading: prdsLoading,
+    mutate: mutatePrds,
+  } = useSWR<Analysis[]>(
+    prdsCacheKey(projectId),
+    (key: string) => apiFetch<Analysis[]>(key),
+    SWR_OPTS,
+  );
+
+  const loading = insightsLoading || prdsLoading;
+  const insights = insightsData?.grouped ?? EMPTY_GROUPED;
+  const insightTotal = insightsData?.total ?? 0;
+  const prds = prdsData ?? [];
+
   const fetchInsights = useCallback(async () => {
-    try {
-      const data = await apiFetch<InsightsResponse>(`/projects/${projectId}/insights`);
-      setInsights(data.grouped);
-      setInsightTotal(data.total);
-    } catch {}
-  }, [projectId]);
+    await mutateInsights();
+  }, [mutateInsights]);
 
   const fetchPrds = useCallback(async () => {
-    try {
-      const data = await apiFetch<Analysis[]>(`/analyses/?project_id=${projectId}`);
-      setPrds(data);
-    } catch {}
-  }, [projectId]);
-
-  // Initial load
-  useEffect(() => {
-    async function load() {
-      setLoading(true);
-      await Promise.all([fetchInsights(), fetchPrds()]);
-      setLoading(false);
-    }
-    load();
-  }, [fetchInsights, fetchPrds]);
+    await mutatePrds();
+  }, [mutatePrds]);
 
   async function refreshInsights() {
     setRefreshing(true);
-    await fetchInsights();
+    await mutateInsights();
     setRefreshing(false);
   }
 
-  // Called after upload — shows the extracting banner immediately.
-  // The SSE extraction event clears it and refreshes insights automatically.
   function startExtracting() {
     setExtracting(true);
   }
 
-  // Real-time SSE — replaces the polling timer
+  // Real-time SSE — revalidates cache when extraction finishes
   useProjectEvents(projectId, {
-    onExtraction: async (event) => {
-      await fetchInsights();
+    onExtraction: async () => {
+      await mutateInsights();
       setExtracting(false);
     },
   });
@@ -85,7 +111,7 @@ export function useProjectData(projectId: string): ProjectData {
   async function handleDeleteInsight(insightId: string) {
     try {
       await apiFetch(`/projects/${projectId}/insights/${insightId}`, { method: "DELETE" });
-      await fetchInsights();
+      await mutateInsights();
     } catch {}
   }
 
@@ -93,16 +119,20 @@ export function useProjectData(projectId: string): ProjectData {
     try {
       await apiFetch(`/projects/${projectId}/insights/${insightId}/star`, { method: "PATCH" });
       trackEvent("star_insight");
-      // Optimistic update — flip locally without full refetch
-      setInsights((prev) => {
-        const next = { ...prev };
-        for (const type of Object.keys(next) as InsightType[]) {
-          next[type] = next[type].map((ins) =>
-            ins.id === insightId ? { ...ins, starred: !ins.starred } : ins
-          );
-        }
-        return next;
-      });
+      // Optimistic update — flip locally, revalidate in background
+      await mutateInsights(
+        (prev) => {
+          if (!prev) return prev;
+          const next = { ...prev, grouped: { ...prev.grouped } };
+          for (const type of Object.keys(next.grouped) as InsightType[]) {
+            next.grouped[type] = next.grouped[type].map((ins) =>
+              ins.id === insightId ? { ...ins, starred: !ins.starred } : ins
+            );
+          }
+          return next;
+        },
+        { revalidate: false },
+      );
     } catch {}
   }
 

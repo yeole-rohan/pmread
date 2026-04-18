@@ -196,6 +196,14 @@ export default function InsightsBoard({ grouped, onDelete, onStar }: InsightsBoa
         <p className="text-sm text-gray-400 max-w-xs">
           Upload customer interviews, feedback, or meeting notes to start extracting insights.
         </p>
+        <a
+          href="/templates/user-interview-script"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 text-xs text-[#7F77DD] hover:underline"
+        >
+          How to run a customer interview →
+        </a>
       </div>
     );
   }
@@ -264,6 +272,21 @@ export default function InsightsBoard({ grouped, onDelete, onStar }: InsightsBoa
           </select>
         )}
       </div>
+
+      {/* Low-data nudge — show when board has fewer than 5 insights total */}
+      {total < 5 && total > 0 && (
+        <div className="mb-4 flex items-center gap-2 text-xs text-gray-400">
+          <span>Still gathering research?</span>
+          <a
+            href="/templates/user-interview-script"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#7F77DD] hover:underline"
+          >
+            Customer interview script →
+          </a>
+        </div>
+      )}
 
       {/* Cards */}
       {rawItems.length === 0 ? (

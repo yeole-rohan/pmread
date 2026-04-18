@@ -102,15 +102,16 @@ Generate 3 clarifying questions."""
 
 
 CHAT_SYSTEM_PROMPT = """You are a product research assistant embedded inside PMRead.
-You have access to a project's extracted customer insights: pain points, feature requests, decisions, and action items.
-
-Your job is to answer the PM's question directly, grounded only in the provided insights.
+You answer questions for product managers using two sources of evidence:
+1. Customer insights — extracted pain points, feature requests, decisions, and action items.
+2. Codebase context — relevant source code chunks from the linked GitHub repository (when provided).
 
 Rules:
 - Answer conversationally but concisely. 2–5 sentences max unless detail is needed.
-- Ground every claim in the insights. Mention frequency counts where relevant ("mentioned 6 times").
-- If the insights don't contain enough information to answer, say so honestly. Do not hallucinate.
-- After your answer, list 1–3 direct quotes from the insights that best support your answer.
+- Ground every claim in the evidence. Mention frequency counts where relevant ("mentioned 6 times").
+- For code-related answers, cite what you found in the codebase — be specific about what exists vs. what doesn't.
+- If the evidence doesn't contain enough information to answer, say so honestly. Do not hallucinate.
+- After your answer, list 1–3 direct quotes from customer insights that best support your answer (empty array if none relevant).
 - Output JSON only, no prose outside the JSON:
 
 {
@@ -119,16 +120,16 @@ Rules:
 }"""
 
 
-def build_chat_user_message(question: str, insight_context: str) -> str:
-    return f"""## Project insights
-
-{insight_context}
-
----
-
-## PM's question
-
-{question}"""
+def build_chat_user_message(
+    question: str,
+    insight_context: str,
+    code_context: str = "",
+) -> str:
+    parts = [f"## Customer insights\n\n{insight_context}"]
+    if code_context:
+        parts.append(f"## Codebase context\n\n{code_context}")
+    parts.append(f"## PM's question\n\n{question}")
+    return "\n\n---\n\n".join(parts)
 
 
 VALIDATE_SYSTEM_PROMPT = """You are a senior product manager reviewing a PRD for completeness and insight coverage.
@@ -225,6 +226,37 @@ def build_doc_writer_message(doc_type: str, brief: dict) -> str:
 ---
 
 Generate the {doc_type.replace("_", " ")} now."""
+
+
+EXTEND_PRD_SYSTEM_PROMPT = """You are updating an existing PRD with newly collected customer insights.
+The PM has cherry-picked specific insights they want incorporated.
+
+Your job:
+- Identify which existing themes are now strengthened or need revision based on new evidence.
+- Write a concise update section in clean markdown (200–400 words).
+- Reference new insights by their actual content — be specific, not vague.
+- If new insights contradict existing non-goals, assumptions, or priorities, call that out explicitly.
+- Do NOT repeat what is already in the PRD. Only add what is new or changed.
+
+Output clean markdown only. Start directly with the content — no preamble, no meta-commentary."""
+
+
+def build_extend_prd_user_message(existing_markdown: str, new_insights_context: str) -> str:
+    # Truncate existing PRD to avoid exceeding context limits
+    truncated = existing_markdown[:3000] + ("..." if len(existing_markdown) > 3000 else "")
+    return f"""## Existing PRD
+
+{truncated}
+
+---
+
+## New Insights to Incorporate
+
+{new_insights_context}
+
+---
+
+Write the PRD update section now."""
 
 
 def build_prd_user_message(question: str, insight_context: str, code_context: str = "") -> str:

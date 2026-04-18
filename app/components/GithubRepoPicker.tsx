@@ -38,6 +38,7 @@ export default function GitBranchRepoPicker({ projectId, githubConnected, isPro 
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<IndexStatus | null>(null);
   const [saving, setSaving] = useState(false);
+  const [confirmRepo, setConfirmRepo] = useState<Repo | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Load current status on mount
@@ -86,7 +87,8 @@ export default function GitBranchRepoPicker({ projectId, githubConnected, isPro 
     }
   }
 
-  async function selectRepo(repo: Repo | null) {
+  async function confirmAndLink(repo: Repo | null) {
+    setConfirmRepo(null);
     setSaving(true);
     try {
       const result = await apiFetch<{ github_repo: string | null; github_index_status: string | null }>(
@@ -102,6 +104,17 @@ export default function GitBranchRepoPicker({ projectId, githubConnected, isPro 
     setSaving(false);
     setOpen(false);
     setSearch("");
+  }
+
+  function selectRepo(repo: Repo | null) {
+    if (repo === null) {
+      // Unlinking — no confirmation needed
+      confirmAndLink(null);
+      return;
+    }
+    // Show confirmation before indexing
+    setOpen(false);
+    setConfirmRepo(repo);
   }
 
   const filtered = repos.filter(
@@ -139,6 +152,40 @@ export default function GitBranchRepoPicker({ projectId, githubConnected, isPro 
   }
 
   return (
+    <>
+    {/* Confirmation modal */}
+    {confirmRepo && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+        <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full mx-4">
+          <div className="flex items-center gap-2 mb-3">
+            <GitBranch size={16} className="text-[#7F77DD]" />
+            <h3 className="text-sm font-bold text-gray-900">Link repository?</h3>
+          </div>
+          <p className="text-sm text-gray-600 mb-2">
+            <span className="font-semibold text-gray-800">{confirmRepo.full_name}</span> will be indexed for codebase context.
+          </p>
+          <p className="text-xs text-gray-400 mb-5">
+            PMRead will read up to 120 source files. This takes 1–2 minutes.
+            You can change the linked repo later — re-indexing will replace the current context.
+          </p>
+          <div className="flex items-center gap-2 justify-end">
+            <button
+              onClick={() => setConfirmRepo(null)}
+              className="px-3 py-1.5 text-sm text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => confirmAndLink(confirmRepo)}
+              className="px-4 py-1.5 bg-[#7F77DD] hover:bg-[#6b64c4] text-white text-sm font-semibold rounded-lg transition-colors"
+            >
+              Index repo →
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={openPicker}
@@ -249,5 +296,6 @@ export default function GitBranchRepoPicker({ projectId, githubConnected, isPro 
         </div>
       )}
     </div>
+    </>
   );
 }

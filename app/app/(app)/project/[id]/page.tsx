@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Upload, FileText, RefreshCw, X, Loader2 } from "lucide-react";
 import { useUser } from "@/lib/useUser";
-import { useProjectData, useEmptyProjectCleanup } from "@/lib/useProjectData";
+import { useProjectData, useEmptyProjectCleanup, invalidateProjectCache } from "@/lib/useProjectData";
 import { PLAN_PRD_LIMITS } from "@/lib/constants";
 import { InsightType } from "@/lib/types";
 import InsightsBoard from "@/components/InsightsBoard";
@@ -53,6 +53,8 @@ export default function ProjectPage() {
     setShowUpload(false);
     trackEvent("upload_files");
     startExtracting();
+    // Invalidate all project caches so files tab, insights, and PRDs refetch fresh data
+    invalidateProjectCache(projectId);
   }
 
   async function handlePRDCreated(analysisId: string) {
@@ -255,10 +257,15 @@ export default function ProjectPage() {
         />
       )}
       {tab === "prds" && (
-        <PrdList projectId={projectId} prds={prds} />
+        <PrdList projectId={projectId} prds={prds} isPro={user?.plan === "pro"} />
       )}
       {tab === "ask" && (
-        <AskTab projectId={projectId} hasInsights={insightTotal > 0} />
+        <AskTab
+          projectId={projectId}
+          hasInsights={insightTotal > 0}
+          isPro={user?.plan === "pro"}
+          githubConnected={!!user?.github_connected}
+        />
       )}
       {tab === "files" && (
         <FilesTab projectId={projectId} />

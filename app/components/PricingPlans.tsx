@@ -22,6 +22,7 @@ export const FEATURE_ROWS: FeatureRow[] = [
   { name: "Slack channel ingestion", free: false, pro: true },
   { name: "Call transcript import (Zoom, Fireflies, Gong)", free: false, pro: true },
   { name: "GitHub codebase context", free: false, pro: true },
+  { name: "PRD updates with new insights (3× per PRD)", free: false, pro: true },
   { name: "PDF export", free: false, pro: true },
   { name: "Priority support", free: false, pro: true },
 ];

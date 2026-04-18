@@ -17,22 +17,22 @@ import MarketingNav from "@/components/MarketingNav";
 import MarketingFooter from "@/components/MarketingFooter";
 
 export const metadata: Metadata = {
-  title: "PMRead — AI PRD Generator from Customer Feedback",
+  title: "PMRead — Customer Evidence to Engineering Spec, With Citations",
   description:
-    "Upload customer interviews, Slack threads, and docs. AI extracts insights and generates production-ready PRDs your engineers can build from.",
+    "Upload customer interviews, transcripts, and feedback. PMRead extracts insights, ranks them by frequency, and generates a PRD where every requirement is traced back to real customer evidence.",
   keywords: [
     "prd generator",
-    "ai prd generator",
+    "evidence-backed prd",
     "customer feedback analysis tool",
-    "prd software",
-    "feedback synthesis",
     "product requirements document",
+    "feedback synthesis",
+    "customer evidence to spec",
   ],
   alternates: { canonical: "https://pmread.rohanyeole.com" },
   openGraph: {
-    title: "PMRead — AI PRD Generator from Customer Feedback",
+    title: "PMRead — Customer Evidence to Engineering Spec, With Citations",
     description:
-      "Upload customer interviews, Slack threads, and docs. AI extracts insights and generates production-ready PRDs your engineers can build from.",
+      "Upload customer interviews, transcripts, and feedback. PMRead extracts insights, ranks them by frequency, and generates a PRD where every requirement is traced back to real customer evidence.",
     url: "https://pmread.rohanyeole.com",
     type: "website",
   },
@@ -48,7 +48,7 @@ const jsonLd = {
       operatingSystem: "Web",
       url: "https://pmread.rohanyeole.com",
       description:
-        "AI-powered PRD generator that turns customer feedback into production-ready product requirements documents",
+        "Customer evidence to engineering spec, with citations. PMRead extracts insights from interviews and feedback, then generates PRDs where every requirement traces back to real customer data.",
       offers: [
         { "@type": "Offer", price: "0", priceCurrency: "INR", name: "Free plan" },
         { "@type": "Offer", price: "999", priceCurrency: "INR", name: "Pro plan" },
@@ -128,8 +128,8 @@ const HOW_IT_WORKS = [
   },
   {
     step: "03",
-    title: "Generate your PRD",
-    desc: "Star your key insights, pick a focus area, and get a complete PRD — with user stories, engineering tasks, and real customer quotes.",
+    title: "Generate a cited spec",
+    desc: "Star your key insights, pick a focus area, and get a complete PRD — every requirement traced back to real customer quotes. Not AI-filled templates. Cited evidence.",
     icon: FileCheck,
   },
 ];
@@ -220,9 +220,14 @@ const FREE_TOOLS = [
     desc: "Feature idea → acceptance criteria + user stories",
   },
   {
-    name: "Persona Generator",
-    href: "/tools/persona-generator",
-    desc: "Bullet points → structured user persona card",
+    name: "PM Interview Prep",
+    href: "/tools/interview-prep",
+    desc: "Paste a JD + resume → get likely questions with answers from your real experience",
+  },
+  {
+    name: "Metric Story Generator",
+    href: "/tools/metric-story-generator",
+    desc: "Raw metrics → narrative: what changed, why, and what to do next",
   },
 ];
 
@@ -241,6 +246,7 @@ const PRO_PLAN_FEATURES = [
   "Slack channel ingestion",
   "Call transcript import",
   "GitHub codebase context",
+  "PRD updates — extend with new insights (up to 3×/PRD)",
   "PDF export",
   "Priority support",
 ];
@@ -279,19 +285,21 @@ export default function HomePage() {
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-xs font-semibold text-purple-700 mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#7F77DD]" />
-              AI-Powered PRD Generator
+              Evidence-Backed PRD Workflow
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight tracking-tight mb-6">
-              Turn Customer Feedback
+              Customer Evidence
               <br className="hidden sm:block" />
-              <span className="text-[#7F77DD]"> Into PRDs in Minutes</span>
+              <span className="text-[#7F77DD]"> to Engineering Spec</span>
+              <br className="hidden sm:block" />
+              <span className="text-gray-400 text-3xl sm:text-4xl lg:text-5xl font-semibold">With Every Claim Cited.</span>
             </h1>
 
             <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Upload calls, Slack threads, and docs. AI extracts insights and
-              generates production-ready PRDs your engineers will actually build
-              from.
+              Upload interviews, transcripts, and feedback. PMRead extracts insights,
+              tracks frequency across all your sources, and generates a spec where
+              every requirement links back to what customers actually said.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -451,8 +459,7 @@ export default function HomePage() {
                 Built for how PMs actually work
               </h2>
               <p className="text-gray-500 text-lg max-w-xl mx-auto">
-                Every feature is designed around one goal: from customer signal
-                to shipped feature, faster.
+                Every feature is designed around one chain: customer evidence → extracted insight → cited requirement → shipped feature.
               </p>
             </div>
 
@@ -695,11 +702,11 @@ export default function HomePage() {
         <section className="py-20 sm:py-28 bg-[#7F77DD]">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
-              Start writing better PRDs today
+              Build specs your engineers can trust
             </h2>
             <p className="text-purple-200 text-lg mb-10">
-              Join product managers who spend less time writing and more time
-              shipping.
+              Every requirement backed by evidence. Every claim traced to a real customer.
+              Stop writing from memory — start writing from proof.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link

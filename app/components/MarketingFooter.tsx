@@ -4,14 +4,16 @@ const FOOTER_LINKS = {
   Product: [
     { label: "Pricing", href: "/pricing" },
     { label: "Free Tools", href: "/tools" },
+    { label: "Interview Prep", href: "/tools/interview-prep" },
     { label: "Templates", href: "/templates" },
+    { label: "Integrations", href: "/integrations" },
     { label: "Changelog", href: "/changelog" },
   ],
   Resources: [
     { label: "Blog", href: "/blog" },
     { label: "Glossary", href: "/glossary" },
-    { label: "Compare", href: "/compare/pmread-vs-dovetail" },
-    { label: "Use Cases", href: "/use-cases/india-startups" },
+    { label: "Compare", href: "/compare" },
+    { label: "Use Cases", href: "/use-cases" },
   ],
   Company: [
     { label: "About", href: "/about" },

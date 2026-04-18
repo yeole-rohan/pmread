@@ -50,9 +50,12 @@ const TOOL_PAGES: MetadataRoute.Sitemap = [
   "/tools/feature-prioritization",
   "/tools/user-story-generator",
   "/tools/persona-generator",
+  "/tools/meeting-cost-calculator",
+  "/tools/metric-story-generator",
+  "/tools/interview-prep",
 ].map((path) => ({
   url: `${BASE}${path}`,
-  lastModified: new Date("2026-04-25"),
+  lastModified: new Date("2026-04-18"),
   changeFrequency: "monthly" as const,
   priority: 0.9,
 }));
@@ -211,7 +214,7 @@ const INTEGRATION_PAGES: MetadataRoute.Sitemap = [
   "/integrations",
   "/integrations/slack",
   "/integrations/github",
-  "/integrations/jira",
+  // /integrations/jira — not built yet, added when Jira integration ships
 ].map((path) => ({
   url: `${BASE}${path}`,
   lastModified: new Date("2026-04-25"),

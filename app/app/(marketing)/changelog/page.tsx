@@ -45,6 +45,28 @@ const BADGE: Record<ChangeType, { label: string; className: string }> = {
 
 const RELEASES: Release[] = [
   {
+    version: "v0.5",
+    date: "18 Apr 2026",
+    title: "PRD extensions, sharing, Ask tab, SWR caching & marketing refresh",
+    summary:
+      "Living PRDs that grow with new research, a fully rebuilt Ask tab with chat persistence, SWR caching across the dashboard, an Interview Prep SEO tool, and a repositioned home page leading with evidence-chain messaging.",
+    changes: [
+      { type: "new",      text: "PRD extensions (Pro) — cherry-pick new insights and append an Update section to any existing PRD; max 3 extensions per PRD, no PRD credit deducted" },
+      { type: "new",      text: "ExtendPRDModal — shows new insights with type badges and frequency counts; pre-selects all, supports select/deselect all" },
+      { type: "new",      text: "PrdList — amber '✦ N new' badge per PRD when new insights exist since generation; disabled for free users or after 3 extensions" },
+      { type: "new",      text: "Interview Prep tool — paste a JD and resume, get 5–10 likely questions with answers strictly from your own experience (Grok, no project data)" },
+      { type: "new",      text: "Ask tab rebuilt — sticky context bar, AI avatar pill, ReactMarkdown rendering, localStorage chat persistence (max 20 messages), clear button, research framework links in empty state" },
+      { type: "new",      text: "SWR caching for insights, PRDs, and files — dedupingInterval 60s, invalidateProjectCache() blows all three keys on upload" },
+      { type: "improved", text: "Home page repositioned — hero now leads with 'Customer Evidence to Engineering Spec, With Every Claim Cited' instead of 'AI PRD Generator'" },
+      { type: "improved", text: "InsightsBoard — date-bucketed sections (Today / This week / Earlier), sort dropdown (Most mentioned / Newest), collapsible quote toggle, delete button always visible, tabs wrap instead of scroll" },
+      { type: "improved", text: "InsightsBoard empty state links to customer interview script; low-data nudge (< 5 insights) links to interview script template" },
+      { type: "improved", text: "FilesTab migrated to SWR — no repeated network calls on tab switch" },
+      { type: "improved", text: "GeneratePRD modal — custom date range (From / To date pickers) alongside existing presets" },
+      { type: "improved", text: "Pricing features table updated — PRD extensions row added" },
+      { type: "new",      text: "Sitemap updated — interview-prep tool page added" },
+    ],
+  },
+  {
     version: "v0.4",
     date: "16 Apr 2026",
     title: "Pro plan & feature gating",

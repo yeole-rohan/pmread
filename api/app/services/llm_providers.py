@@ -23,8 +23,17 @@ logger = logging.getLogger(__name__)
 # ── Provider registries ────────────────────────────────────────────────────────
 
 EMBED_PROVIDERS: list[dict] = [
-    # OpenAI — only provider with a stable embeddings API.
-    # xAI (Grok) is generation-only; it does not expose an embeddings endpoint.
+    # VoyageAI — purpose-built for code retrieval; voyage-code-3 outputs 1024-dim vectors.
+    # OpenAI-SDK-compatible endpoint.
+    {
+        "name": "voyageai",
+        "key_attr": "VOYAGE_API_KEY",
+        "base_url": "https://api.voyageai.com/v1",
+        "model": "voyage-code-3",
+    },
+    # OpenAI — fallback if VOYAGE_API_KEY not set.
+    # NOTE: text-embedding-3-small outputs 1536-dim; only used as fallback after
+    # migration sets the column to 1024-dim, so this path should rarely fire.
     {
         "name": "openai",
         "key_attr": "OPENAI_API_KEY",
@@ -34,18 +43,18 @@ EMBED_PROVIDERS: list[dict] = [
 ]
 
 GEN_PROVIDERS: list[dict] = [
-    # Claude — best for nuanced PRDs; streaming via Anthropic SDK
+    # Claude — Pro/Team/Studio tier; best quality for paying users
     {
         "name": "anthropic",
         "key_attr": "ANTHROPIC_API_KEY",
         "model": "claude-sonnet-4-6",
     },
-    # Grok — fallback on rate-limit / outage; streaming via OpenAI-compatible SDK
+    # Grok — free tier primary; also fallback for Claude rate-limit / outage
     {
         "name": "xai",
         "key_attr": "XAI_API_KEY",
         "base_url": "https://api.x.ai/v1",
-        "model": "grok-3-mini",  # cheaper fallback — only fires on Claude outage/rate-limit
+        "model": "grok-3-mini",
     },
 ]
 
@@ -112,17 +121,26 @@ async def stream_generation(
     user_message: str,
     max_tokens: int = 4096,
     on_chunk: "asyncio.coroutines.Coroutine | None" = None,
+    prefer_provider: str | None = None,
 ) -> GenerationResult:
     """
     Stream a generation request, yielding text chunks via on_chunk callback.
     Tries providers in GEN_PROVIDERS order; skips any without a key configured.
 
+    prefer_provider: when set (e.g. "xai"), that provider runs first; others are
+                     used as fallback only. When None, the default priority order applies.
     on_chunk: async callable(text: str) called for each streamed chunk.
     Returns GenerationResult with the final full text + token count.
     """
     last_error: Exception | None = None
 
-    for provider in GEN_PROVIDERS:
+    if prefer_provider:
+        ordered = [p for p in GEN_PROVIDERS if p["name"] == prefer_provider]
+        ordered += [p for p in GEN_PROVIDERS if p["name"] != prefer_provider]
+    else:
+        ordered = GEN_PROVIDERS
+
+    for provider in ordered:
         key = _get_key(provider)
         if not key:
             continue
@@ -145,6 +163,22 @@ async def stream_generation(
             continue
 
     raise RuntimeError(f"All generation providers failed. Last error: {last_error}")
+
+
+async def generate_text(
+    system_prompt: str,
+    user_message: str,
+    max_tokens: int = 1024,
+    prefer_provider: str | None = None,
+) -> str:
+    """Non-streaming generation. Wraps stream_generation and returns the full text."""
+    result = await stream_generation(
+        system_prompt=system_prompt,
+        user_message=user_message,
+        max_tokens=max_tokens,
+        prefer_provider=prefer_provider,
+    )
+    return result.full_text
 
 
 async def _stream_anthropic(

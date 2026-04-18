@@ -217,17 +217,31 @@ async def index_github_repo(
             publish_project_event(project_id, {"type": "github_index", "status": "failed", "chunk_count": 0})
             return
 
-        logger.info("Storing %d chunks from %s (full-text search, no embedding)", len(all_chunks), repo_full_name)
+        logger.info("Embedding %d chunks from %s via VoyageAI", len(all_chunks), repo_full_name)
+
+        # Embed all chunks in batches
+        from app.services.llm_providers import embed_batch, embedding_available
+        texts = [chunk_text for _, chunk_text in all_chunks]
+
+        embeddings: list[list[float] | None] = [None] * len(texts)
+        if embedding_available():
+            try:
+                vectors = await asyncio.get_event_loop().run_in_executor(
+                    None, __import__("app.services.llm_providers", fromlist=["embed_batch_sync"]).embed_batch_sync, texts
+                )
+                embeddings = vectors
+            except Exception as e:
+                logger.warning("Embedding failed, storing chunks without vectors: %s", e)
 
         # Delete old chunks for this project, then bulk-insert new ones
         db.query(GithubCodeChunk).filter(GithubCodeChunk.project_id == project_id).delete()
 
-        for file_path, chunk_text in all_chunks:
+        for i, (file_path, chunk_text) in enumerate(all_chunks):
             db.add(GithubCodeChunk(
                 project_id=project_id,
                 file_path=file_path,
                 chunk_text=chunk_text,
-                # embedding left null — using PostgreSQL FTS instead
+                embedding=embeddings[i],
             ))
 
         project.github_index_status = "ready"
@@ -259,31 +273,59 @@ def search_code_chunks(
     top_k: int = 10,
 ) -> str:
     """
-    Find the top-k most relevant code chunks using PostgreSQL full-text search.
-    Falls back to the most-recently indexed chunks if the query matches nothing.
-    Returns a formatted context string to inject into the PRD prompt.
+    Find the top-k most relevant code chunks.
+
+    Primary:  cosine similarity on VoyageAI voyage-code-3 embeddings (vector search).
+    Fallback: PostgreSQL full-text search if no embeddings exist or embedding API is unavailable.
+    Last resort: most-recently indexed chunks if FTS also returns nothing.
+
+    Returns a formatted context string to inject into the PRD/chat prompt.
     """
     from sqlalchemy import text as sa_text
+    from app.services.llm_providers import embed_batch_sync, embedding_available
 
     try:
-        # Full-text search ranked by ts_rank
-        rows = db.execute(
-            sa_text("""
-                SELECT file_path, chunk_text,
-                       ts_rank(
-                           to_tsvector('english', chunk_text),
-                           plainto_tsquery('english', :q)
-                       ) AS rank
-                FROM github_code_chunks
-                WHERE project_id = CAST(:pid AS uuid)
-                  AND to_tsvector('english', chunk_text) @@ plainto_tsquery('english', :q)
-                ORDER BY rank DESC
-                LIMIT :k
-            """),
-            {"q": question, "pid": str(project_id), "k": top_k},
-        ).fetchall()
+        rows = []
 
-        # If FTS finds nothing (e.g. question uses terms not in code), return top chunks by insert order
+        # ── Primary: vector similarity search ─────────────────────────────────
+        if embedding_available():
+            try:
+                vectors = embed_batch_sync([question])
+                q_vec = vectors[0]
+                # pgvector <=> operator = cosine distance (lower = more similar)
+                rows = db.execute(
+                    sa_text("""
+                        SELECT file_path, chunk_text
+                        FROM github_code_chunks
+                        WHERE project_id = CAST(:pid AS uuid)
+                          AND embedding IS NOT NULL
+                        ORDER BY embedding <=> CAST(:vec AS vector)
+                        LIMIT :k
+                    """),
+                    {"pid": str(project_id), "vec": str(q_vec), "k": top_k},
+                ).fetchall()
+            except Exception as e:
+                logger.warning("Vector search failed, falling back to FTS: %s", e)
+
+        # ── Fallback: full-text search ─────────────────────────────────────────
+        if not rows:
+            rows = db.execute(
+                sa_text("""
+                    SELECT file_path, chunk_text,
+                           ts_rank(
+                               to_tsvector('english', chunk_text),
+                               plainto_tsquery('english', :q)
+                           ) AS rank
+                    FROM github_code_chunks
+                    WHERE project_id = CAST(:pid AS uuid)
+                      AND to_tsvector('english', chunk_text) @@ plainto_tsquery('english', :q)
+                    ORDER BY rank DESC
+                    LIMIT :k
+                """),
+                {"q": question, "pid": str(project_id), "k": top_k},
+            ).fetchall()
+
+        # ── Last resort: most recent chunks ───────────────────────────────────
         if not rows:
             rows = db.execute(
                 sa_text("""
@@ -305,3 +347,59 @@ def search_code_chunks(
     except Exception as e:
         logger.warning("Code chunk search failed: %s", e)
         return ""
+
+
+def search_code_chunk_files(
+    project_id: str,
+    question: str,
+    db,
+    top_k: int = 10,
+) -> list[str]:
+    """
+    Same retrieval logic as search_code_chunks but returns deduplicated file paths only.
+    Used by the chat endpoint to surface proof references.
+    """
+    from sqlalchemy import text as sa_text
+    from app.services.llm_providers import embed_batch_sync, embedding_available
+
+    try:
+        rows = []
+
+        if embedding_available():
+            try:
+                vectors = embed_batch_sync([question])
+                q_vec = vectors[0]
+                rows = db.execute(
+                    sa_text("""
+                        SELECT DISTINCT file_path
+                        FROM github_code_chunks
+                        WHERE project_id = CAST(:pid AS uuid)
+                          AND embedding IS NOT NULL
+                        ORDER BY (SELECT MIN(embedding <=> CAST(:vec AS vector))
+                                  FROM github_code_chunks g2
+                                  WHERE g2.project_id = CAST(:pid AS uuid)
+                                    AND g2.file_path = github_code_chunks.file_path)
+                        LIMIT :k
+                    """),
+                    {"pid": str(project_id), "vec": str(q_vec), "k": top_k},
+                ).fetchall()
+            except Exception as e:
+                logger.warning("Vector file search failed: %s", e)
+
+        if not rows:
+            rows = db.execute(
+                sa_text("""
+                    SELECT DISTINCT file_path
+                    FROM github_code_chunks
+                    WHERE project_id = CAST(:pid AS uuid)
+                      AND to_tsvector('english', chunk_text) @@ plainto_tsquery('english', :q)
+                    LIMIT :k
+                """),
+                {"q": question, "pid": str(project_id), "k": top_k},
+            ).fetchall()
+
+        return [row.file_path for row in rows]
+
+    except Exception as e:
+        logger.warning("Code chunk file search failed: %s", e)
+        return []

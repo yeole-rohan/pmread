@@ -2,13 +2,11 @@ import json
 import uuid
 from datetime import datetime, timedelta
 
-import anthropic
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session as DBSession
 
 from app.auth import get_current_user
-from app.config import settings
 from app.database import get_db
 from app.models.insight import Insight
 from app.models.project import Project
@@ -20,17 +18,20 @@ from app.ai.prompts import (
     build_chat_user_message,
     build_clarify_user_message,
 )
+from app.services.llm_providers import generate_text
 
 router = APIRouter()
 
 
 class ChatRequest(BaseModel):
     question: str
+    use_codebase: bool = False
 
 
 class ChatResponse(BaseModel):
     answer: str
     quotes: list[str]
+    code_refs: list[str] = []
 
 
 class ClarifyRequest(BaseModel):
@@ -59,6 +60,13 @@ async def chat(
     if len(question) > 1000:
         raise HTTPException(status_code=422, detail={"error": "Question too long", "code": "QUESTION_TOO_LONG"})
 
+    # Codebase context is Pro-only
+    if body.use_codebase and current_user.plan == "free":
+        raise HTTPException(
+            status_code=403,
+            detail={"error": "Codebase context requires a Pro plan.", "code": "PRO_REQUIRED"},
+        )
+
     project = db.query(Project).filter(
         Project.id == project_id,
         Project.user_id == current_user.id,
@@ -77,19 +85,29 @@ async def chat(
         )
 
     insight_context = build_insight_context(insights)
-    user_message = build_chat_user_message(question, insight_context)
 
-    client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
-    message = client.messages.create(
-        model="claude-sonnet-4-6",
+    # ── Codebase context (Pro only, opt-in) ───────────────────────────────────
+    code_context = ""
+    code_refs: list[str] = []
+
+    if body.use_codebase and project.github_repo and project.github_index_status == "ready":
+        from app.services.github_indexer import search_code_chunks, search_code_chunk_files
+        code_context = search_code_chunks(str(project_id), question, db)
+        code_refs = search_code_chunk_files(str(project_id), question, db, top_k=5)
+
+    user_message = build_chat_user_message(question, insight_context, code_context)
+
+    # Free → grok-3-mini, Pro → Claude Sonnet
+    prefer_provider = "xai" if current_user.plan == "free" else None
+
+    raw = await generate_text(
+        system_prompt=CHAT_SYSTEM_PROMPT,
+        user_message=user_message,
         max_tokens=1024,
-        system=CHAT_SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_message}],
+        prefer_provider=prefer_provider,
     )
 
-    raw = message.content[0].text.strip()
-
-    # Strip markdown code fences if model wraps in ```json
+    raw = raw.strip()
     if raw.startswith("```"):
         raw = raw.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
 
@@ -98,10 +116,10 @@ async def chat(
         return ChatResponse(
             answer=parsed.get("answer", ""),
             quotes=parsed.get("quotes", []),
+            code_refs=code_refs,
         )
     except json.JSONDecodeError:
-        # Fallback: return raw text as answer with no quotes
-        return ChatResponse(answer=raw, quotes=[])
+        return ChatResponse(answer=raw, quotes=[], code_refs=code_refs)
 
 
 @router.post("/{project_id}/clarify", response_model=ClarifyResponse)
@@ -146,15 +164,15 @@ async def clarify(
     insight_context = build_insight_context(insights)
     user_message = build_clarify_user_message(question, insight_context)
 
-    client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
-    message = client.messages.create(
-        model="claude-haiku-4-5-20251001",
+    # Clarify is lightweight — always use grok to save Claude credits
+    raw = await generate_text(
+        system_prompt=CLARIFY_SYSTEM_PROMPT,
+        user_message=user_message,
         max_tokens=512,
-        system=CLARIFY_SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_message}],
+        prefer_provider="xai",
     )
 
-    raw = message.content[0].text.strip()
+    raw = raw.strip()
     if raw.startswith("```"):
         raw = raw.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
 
