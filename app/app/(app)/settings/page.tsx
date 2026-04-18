@@ -255,54 +255,95 @@ function SettingsContent() {
       <section className="bg-white border border-gray-100 rounded-xl p-6 mb-4">
         <h2 className="text-sm font-semibold text-gray-700 mb-4">Plan &amp; Usage</h2>
 
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <p className="text-sm font-medium text-gray-900 capitalize">{user.plan} Plan</p>
-            {user.plan === "free" && (
-              <p className="text-xs text-gray-500 mt-0.5">2 PRDs/month · unlimited uploads & insights</p>
-            )}
-            {user.plan === "pro" && (
-              <p className="text-xs text-gray-500 mt-0.5">15 PRDs/month · unlimited uploads & insights</p>
-            )}
-          </div>
-          {user.plan === "free" && (
-            <button
-              onClick={() => setShowUpgrade(true)}
-              className="px-3 py-1.5 bg-[#7F77DD] text-white rounded-lg text-sm font-medium hover:bg-[#6b64c4] transition-colors"
-            >
-              Upgrade to Pro — ₹2,499/mo
-            </button>
-          )}
-          {user.plan === "pro" && user.billing_provider === "razorpay" && (
-            !confirmCancelRazorpay ? (
-              <button
-                onClick={() => setConfirmCancelRazorpay(true)}
-                className="text-sm text-gray-500 hover:text-gray-700 hover:underline"
-              >
-                Cancel subscription →
-              </button>
-            ) : (
-              <div className="text-right space-y-1">
-                <p className="text-xs text-gray-600">Cancel at end of billing period?</p>
-                <div className="flex gap-2 justify-end">
-                  <button
-                    onClick={cancelRazorpaySubscription}
-                    disabled={cancellingRazorpay}
-                    className="px-2 py-1 bg-red-600 text-white rounded text-xs font-medium hover:bg-red-700 disabled:opacity-50"
-                  >
-                    {cancellingRazorpay ? "Cancelling..." : "Yes, cancel"}
-                  </button>
-                  <button
-                    onClick={() => setConfirmCancelRazorpay(false)}
-                    className="px-2 py-1 border border-gray-200 rounded text-xs text-gray-600 hover:bg-gray-50"
-                  >
-                    Keep
-                  </button>
-                </div>
+        {(() => {
+          const isCancelling = user.plan === "pro" && !!user.plan_expires_at;
+          const isExpired = user.plan === "free" && !!user.plan_expires_at;
+          const expiryDate = user.plan_expires_at
+            ? new Date(user.plan_expires_at).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })
+            : null;
+
+          return (
+            <div className="flex items-start justify-between mb-4 gap-4">
+              <div>
+                <p className="text-sm font-medium text-gray-900 capitalize">
+                  {user.plan} Plan
+                  {isCancelling && (
+                    <span className="ml-2 text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">
+                      Cancelling
+                    </span>
+                  )}
+                </p>
+                {user.plan === "pro" && !isCancelling && (
+                  <p className="text-xs text-gray-500 mt-0.5">15 PRDs/month · unlimited uploads &amp; insights</p>
+                )}
+                {isCancelling && (
+                  <p className="text-xs text-amber-600 mt-0.5">
+                    Access continues until {expiryDate}. No further charges.
+                  </p>
+                )}
+                {isExpired && (
+                  <p className="text-xs text-gray-400 mt-0.5">
+                    Pro plan ended on {expiryDate}
+                  </p>
+                )}
+                {user.plan === "free" && !isExpired && (
+                  <p className="text-xs text-gray-500 mt-0.5">2 PRDs/month · unlimited uploads &amp; insights</p>
+                )}
               </div>
-            )
-          )}
-        </div>
+
+              {/* Free or expired — show upgrade */}
+              {(user.plan === "free" || isExpired) && (
+                <button
+                  onClick={() => setShowUpgrade(true)}
+                  className="flex-shrink-0 px-3 py-1.5 bg-[#7F77DD] text-white rounded-lg text-sm font-medium hover:bg-[#6b64c4] transition-colors"
+                >
+                  {isExpired ? "Resubscribe to Pro →" : "Upgrade to Pro — ₹2,499/mo"}
+                </button>
+              )}
+
+              {/* Pro active + cancelling — show re-subscribe */}
+              {isCancelling && (
+                <button
+                  onClick={() => setShowUpgrade(true)}
+                  className="flex-shrink-0 px-3 py-1.5 bg-[#7F77DD] text-white rounded-lg text-sm font-medium hover:bg-[#6b64c4] transition-colors"
+                >
+                  Keep Pro →
+                </button>
+              )}
+
+              {/* Pro active + not cancelling — show cancel button */}
+              {user.plan === "pro" && !isCancelling && user.billing_provider === "razorpay" && (
+                !confirmCancelRazorpay ? (
+                  <button
+                    onClick={() => setConfirmCancelRazorpay(true)}
+                    className="flex-shrink-0 text-sm text-gray-400 hover:text-gray-600 hover:underline"
+                  >
+                    Cancel subscription
+                  </button>
+                ) : (
+                  <div className="text-right space-y-1">
+                    <p className="text-xs text-gray-600">Cancel at end of billing period?</p>
+                    <div className="flex gap-2 justify-end">
+                      <button
+                        onClick={cancelRazorpaySubscription}
+                        disabled={cancellingRazorpay}
+                        className="px-2 py-1 bg-red-600 text-white rounded text-xs font-medium hover:bg-red-700 disabled:opacity-50"
+                      >
+                        {cancellingRazorpay ? "Cancelling..." : "Yes, cancel"}
+                      </button>
+                      <button
+                        onClick={() => setConfirmCancelRazorpay(false)}
+                        className="px-2 py-1 border border-gray-200 rounded text-xs text-gray-600 hover:bg-gray-50"
+                      >
+                        Keep
+                      </button>
+                    </div>
+                  </div>
+                )
+              )}
+            </div>
+          );
+        })()}
 
         {(() => {
           const prdLimit = user.plan === "pro" ? 15 : 2;

@@ -181,6 +181,18 @@ async def razorpay_cancel_subscription(
     _require_razorpay()
     client = _razorpay_client()
     client.subscription.cancel(current_user.razorpay_sub_id, {"cancel_at_cycle_end": 1})
+
+    # Fetch subscription to get current billing period end date so the UI
+    # can show "Active until <date>" and hide the cancel button immediately.
+    try:
+        sub = client.subscription.fetch(current_user.razorpay_sub_id)
+        current_end = sub.get("current_end")
+        if current_end:
+            current_user.plan_expires_at = datetime.fromtimestamp(current_end, tz=timezone.utc)
+            db.commit()
+    except Exception:
+        pass  # Non-fatal — webhook will set plan_expires_at when it fires
+
     return {"success": True, "message": "Subscription will cancel at end of billing period"}
 
 
