@@ -1,11 +1,11 @@
 """
 Multi-model provider abstraction.
 
-Embeddings priority:  xAI (free tier) → OpenAI → fail gracefully
-Generation priority:  Anthropic Claude (streaming) → xAI Grok (streaming fallback)
+Embeddings priority:  VoyageAI → OpenAI → fail gracefully
+Generation priority:  Anthropic Claude (streaming) → Groq Llama (streaming fallback)
 
-All xAI calls use the OpenAI SDK pointed at https://api.x.ai/v1.
-The xAI API is fully OpenAI-compatible; only the base_url and API key differ.
+All Groq calls use the OpenAI SDK pointed at https://api.groq.com/openai/v1.
+The Groq API is fully OpenAI-compatible; only the base_url and API key differ.
 
 Adding a new provider later:
   1. Add its API key + model name to config.py
@@ -24,7 +24,6 @@ logger = logging.getLogger(__name__)
 
 EMBED_PROVIDERS: list[dict] = [
     # VoyageAI — purpose-built for code retrieval; voyage-code-3 outputs 1024-dim vectors.
-    # OpenAI-SDK-compatible endpoint.
     {
         "name": "voyageai",
         "key_attr": "VOYAGE_API_KEY",
@@ -32,8 +31,6 @@ EMBED_PROVIDERS: list[dict] = [
         "model": "voyage-code-3",
     },
     # OpenAI — fallback if VOYAGE_API_KEY not set.
-    # NOTE: text-embedding-3-small outputs 1536-dim; only used as fallback after
-    # migration sets the column to 1024-dim, so this path should rarely fire.
     {
         "name": "openai",
         "key_attr": "OPENAI_API_KEY",
@@ -43,18 +40,18 @@ EMBED_PROVIDERS: list[dict] = [
 ]
 
 GEN_PROVIDERS: list[dict] = [
-    # Claude — Pro/Team/Studio tier; best quality for paying users
+    # Claude — Pro users; best quality
     {
         "name": "anthropic",
         "key_attr": "ANTHROPIC_API_KEY",
         "model": "claude-sonnet-4-6",
     },
-    # Grok — free tier primary; also fallback for Claude rate-limit / outage
+    # Groq — free-tier users; fast Llama inference, generous free quota
     {
-        "name": "xai",
-        "key_attr": "XAI_API_KEY",
-        "base_url": "https://api.x.ai/v1",
-        "model": "grok-3-mini",
+        "name": "groq",
+        "key_attr": "GROQ_API_KEY",
+        "base_url": "https://api.groq.com/openai/v1",
+        "model": "llama-3.3-70b-versatile",
     },
 ]
 
@@ -127,7 +124,7 @@ async def stream_generation(
     Stream a generation request, yielding text chunks via on_chunk callback.
     Tries providers in GEN_PROVIDERS order; skips any without a key configured.
 
-    prefer_provider: when set (e.g. "xai"), that provider runs first; others are
+    prefer_provider: when set (e.g. "groq"), that provider runs first; others are
                      used as fallback only. When None, the default priority order applies.
     on_chunk: async callable(text: str) called for each streamed chunk.
     Returns GenerationResult with the final full text + token count.
@@ -227,12 +224,10 @@ async def _stream_openai_compat(
 
     full_response = ""
     buffer = ""
-    # xAI / OpenAI-compat doesn't give precise token counts in stream;
-    # we track completion_tokens via usage in the final chunk when stream_options is set.
     tokens_used = 0
 
-    # stream_options/include_usage is OpenAI-specific; xAI rejects it
-    extra = {} if provider["name"] == "xai" else {"stream_options": {"include_usage": True}}
+    # stream_options/include_usage is OpenAI-specific; Groq and others may reject it
+    extra = {} if provider["name"] != "openai" else {"stream_options": {"include_usage": True}}
     stream = await client.chat.completions.create(
         model=provider["model"],
         max_tokens=max_tokens,

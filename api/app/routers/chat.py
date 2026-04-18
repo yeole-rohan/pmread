@@ -120,7 +120,7 @@ async def chat(
     user_message = build_chat_user_message(question, insight_context, code_context)
     system_prompt = build_chat_system_prompt(has_codebase=bool(code_context))
     # Free → grok-3-mini, Pro → Claude Sonnet
-    prefer_provider = "xai" if current_user.plan == "free" else None
+    prefer_provider = "groq" if current_user.plan == "free" else None
 
     raw = await generate_text(
         system_prompt=system_prompt,
@@ -187,7 +187,7 @@ async def clarify(
         system_prompt=CLARIFY_SYSTEM_PROMPT,
         user_message=user_message,
         max_tokens=512,
-        prefer_provider="xai",
+        prefer_provider="groq",
     )
 
     raw = raw.strip()
