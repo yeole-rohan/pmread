@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import useSWR from "swr";
 import { FileText, FileImage, File, Loader2, CheckCircle2, XCircle, Clock } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { Doc } from "@/lib/types";
+import { docsCacheKey } from "@/lib/useProjectData";
 
 interface FilesTabProps {
   projectId: string;
@@ -59,18 +60,13 @@ function formatDate(iso: string) {
 }
 
 export default function FilesTab({ projectId }: FilesTabProps) {
-  const [docs, setDocs] = useState<Doc[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: docs, isLoading } = useSWR<Doc[]>(
+    docsCacheKey(projectId),
+    (key: string) => apiFetch<Doc[]>(key),
+    { revalidateOnFocus: false, dedupingInterval: 30_000 },
+  );
 
-  useEffect(() => {
-    setLoading(true);
-    apiFetch<Doc[]>(`/projects/${projectId}/docs`)
-      .then(setDocs)
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [projectId]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
         <div className="w-5 h-5 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
@@ -78,7 +74,7 @@ export default function FilesTab({ projectId }: FilesTabProps) {
     );
   }
 
-  if (docs.length === 0) {
+  if (!docs || docs.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
         <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center mb-4">
@@ -95,7 +91,6 @@ export default function FilesTab({ projectId }: FilesTabProps) {
 
   return (
     <div>
-      {/* Summary bar */}
       <div className="flex items-center justify-between mb-4">
         <p className="text-sm text-gray-500">
           <span className="font-semibold text-gray-900">{total}</span> file{total !== 1 ? "s" : ""} uploaded

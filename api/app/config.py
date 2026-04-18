@@ -41,9 +41,11 @@ class Settings(BaseSettings):
     # GitHub OAuth
     GITHUB_CLIENT_ID: str = ""
     GITHUB_CLIENT_SECRET: str = ""
-    # xAI / Grok — primary for embeddings (free tier) + generation fallback
+    # xAI / Grok — generation fallback for Claude rate-limit / outage
     XAI_API_KEY: str = ""
-    # OpenAI — fallback embedding provider if XAI_API_KEY not set
+    # VoyageAI — primary embedding provider for code (voyage-code-3, 1024-dim)
+    VOYAGE_API_KEY: str = ""
+    # OpenAI — fallback embedding provider if VOYAGE_API_KEY not set
     OPENAI_API_KEY: str = ""
     # Backend public URL (used for OAuth callbacks — same as FRONTEND_URL in prod behind Nginx)
     BACKEND_URL: str = "http://localhost:8000"

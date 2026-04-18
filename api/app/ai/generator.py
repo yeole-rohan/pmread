@@ -50,10 +50,11 @@ async def run_analysis(
     date_from: str | None = None,
     date_to: str | None = None,
     user_id: str | None = None,
+    user_plan: str = "free",
 ) -> None:
     """
     Generate a PRD from project insights, optionally filtered by type and recency.
-    Tries Claude first, falls back to Grok if Claude is rate-limited or unavailable.
+    Free plan uses grok-3-mini; Pro/Team/Studio use Claude Sonnet (grok as fallback).
     Called as a FastAPI background task.
     """
     from datetime import datetime, timezone, timedelta
@@ -147,6 +148,7 @@ async def run_analysis(
             user_message=user_message,
             max_tokens=4096,
             on_chunk=on_chunk,
+            prefer_provider="xai" if user_plan == "free" else None,
         )
 
         # on_chunk already accumulated full_response, but use result.full_text

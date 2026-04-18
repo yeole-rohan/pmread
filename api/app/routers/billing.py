@@ -154,6 +154,12 @@ async def razorpay_verify_payment(
     current_user.plan_expires_at = None
     db.commit()
 
+    from app.tasks.email_tasks import send_pro_welcome_email_task
+    send_pro_welcome_email_task.delay(
+        current_user.email,
+        current_user.display_name or "",
+    )
+
     return {"success": True}
 
 

@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Free Product Management Tools — No Signup Required | PMRead",
   description:
-    "Free AI tools for product managers: PRD generator, customer feedback analyzer, user story generator, persona creator, and RICE prioritization calculator.",
+    "Free AI tools for product managers: PRD generator, feedback analyzer, user story generator, persona creator, RICE calculator, meeting cost calculator, metric story generator, and PM interview prep.",
   alternates: { canonical: "https://pmread.rohanyeole.comanyeole.com/tools" },
   openGraph: {
     title: "Free PM Tools | PMRead",
@@ -54,16 +54,37 @@ const TOOLS = [
     tag: "Calculator",
     cta: "Prioritize features →",
   },
+  {
+    href: "/tools/meeting-cost-calculator",
+    name: "Meeting Cost Calculator",
+    desc: "Enter attendees, salary, and duration → see the real cost of your meeting and what you could have done instead. No AI — pure math.",
+    tag: "Calculator",
+    cta: "Calculate cost →",
+  },
+  {
+    href: "/tools/metric-story-generator",
+    name: "Metric Story Generator",
+    desc: "Paste raw product metrics → get a clear narrative: what changed, why it likely happened, and what to do next.",
+    tag: "AI",
+    cta: "Generate story →",
+  },
+  {
+    href: "/tools/interview-prep",
+    name: "PM Interview Prep",
+    desc: "Paste a job description + your resume → get 5–10 likely interview questions with answers grounded strictly in your own experience. No invented achievements.",
+    tag: "AI",
+    cta: "Prep for interview →",
+  },
 ];
 
 const FAQS = [
   {
     q: "Are all these tools really free?",
-    a: "Yes. All five tools are free with no signup, no account, and no credit card required.",
+    a: "Yes. All eight tools are free with no signup, no account, and no credit card required.",
   },
   {
     q: "Do these tools use AI?",
-    a: "Four of the five tools (PRD Generator, Feedback Analyzer, User Story Generator, Persona Generator) use AI. The Feature Prioritization tool is a pure RICE calculator — no AI needed.",
+    a: "Six tools use AI (PRD Generator, Feedback Analyzer, User Story Generator, Persona Generator, Metric Story Generator, PM Interview Prep). Feature Prioritization and Meeting Cost Calculator are pure math — no AI needed.",
   },
   {
     q: "What is PMRead?",
@@ -83,7 +104,7 @@ const jsonLd = {
       name: "Free Product Management Tools",
       description: "Free AI tools for product managers — no signup required.",
       url: "https://pmread.rohanyeole.comanyeole.com/tools",
-      numberOfItems: TOOLS.length,
+      numberOfItems: TOOLS.length, // auto-computed from TOOLS array
       itemListElement: TOOLS.map((t, i) => ({
         "@type": "ListItem",
         position: i + 1,
@@ -134,8 +155,8 @@ export default function ToolsPage() {
               Free tools for product managers
             </h1>
             <p className="text-gray-500 max-w-xl mx-auto">
-              Five tools to help you write PRDs, analyze feedback, generate user stories,
-              build personas, and prioritize features. No signup required.
+              Eight tools to help you write PRDs, analyze feedback, generate user stories,
+              build personas, prioritize features, calculate meeting costs, turn metrics into narratives, and prep for PM interviews. No signup required.
             </p>
           </div>
 

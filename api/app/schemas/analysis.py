@@ -10,6 +10,8 @@ class AnalysisListItem(BaseModel):
     status: str
     brief_summary: str | None
     created_at: datetime
+    extension_count: int = 0
+    new_insights_count: int = 0
 
 
 class AnalysisDetail(BaseModel):

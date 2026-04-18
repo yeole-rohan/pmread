@@ -92,6 +92,8 @@ export interface Analysis {
   error_message?: string | null;
   share_token?: string | null;
   created_at: string;
+  extension_count?: number;
+  new_insights_count?: number;
 }
 
 export class APIError extends Error {

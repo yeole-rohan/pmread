@@ -95,6 +95,59 @@ Format in markdown:
 (3 product qualities that matter most to this person)
 
 Make this feel like a real, specific person — not a generic stereotype.`.trim(),
+
+  "interview-prep": ({ jd, resume }) =>
+    `You are an expert PM interview coach. Based only on the job description and resume/experience provided, generate 5–10 likely interview questions with strong answers.
+
+Job description:
+${jd}
+
+Resume / experience:
+${resume || "Not provided — generate questions based on the JD only, and note where specific experience would strengthen the answer."}
+
+Rules:
+- Questions must be specific to this JD — not generic PM questions.
+- Answers MUST be grounded only in what is in the resume. Do not invent metrics, projects, or achievements.
+- If the resume lacks relevant experience for a question, say so honestly: "Your resume doesn't show X — here's how to frame what you do have."
+- Cover a mix based on what the JD emphasises: behavioral (STAR), product design, metrics/analytical, and strategy.
+- Keep each answer 3–5 sentences. Specific and direct.
+- Generate between 5 and 10 questions — more if the JD is detailed.
+
+Format in markdown:
+
+## Q1: [Question]
+**Strong answer:** [Answer grounded in the resume]
+
+## Q2: [Question]
+**Strong answer:** [Answer]
+
+...continue for all questions.`.trim(),
+
+  "metric-story-generator": ({ metrics, context }) =>
+    `You are an expert product analyst. Turn these raw metrics into a clear narrative for a product team.
+
+Product context: ${context}
+
+Metrics:
+${metrics}
+
+Format in markdown:
+## Executive Summary
+(1 paragraph: the headline story in plain English)
+
+## What Changed
+(bullet list: each metric with direction and significance — flag which are good/bad)
+
+## Likely Root Causes
+(ranked 1–3, each with one-line reasoning — be specific, not generic)
+
+## Recommended Next Steps
+(3–5 specific, actionable steps — who does what)
+
+## Signals to Watch
+(2–3 leading indicators to monitor next week/sprint)
+
+Be direct and specific. Avoid generic statements like "monitor closely." If you don't have enough context for a confident hypothesis, say so.`.trim(),
 };
 
 export async function POST(req: NextRequest) {
