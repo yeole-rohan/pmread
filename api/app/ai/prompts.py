@@ -101,23 +101,28 @@ def build_clarify_user_message(question: str, insight_context: str) -> str:
 Generate 3 clarifying questions."""
 
 
-CHAT_SYSTEM_PROMPT = """You are a product research assistant embedded inside PMRead.
-You answer questions for product managers using two sources of evidence:
-1. Customer insights — extracted pain points, feature requests, decisions, and action items.
-2. Codebase context — relevant source code chunks from the linked GitHub repository (when provided).
+_CHAT_SYSTEM_BASE = """You are a product research assistant embedded inside PMRead.
+You answer questions for product managers using the evidence provided below.
 
 Rules:
 - Answer conversationally but concisely. 2–5 sentences max unless detail is needed.
 - Ground every claim in the evidence. Mention frequency counts where relevant ("mentioned 6 times").
-- For code-related answers, cite what you found in the codebase — be specific about what exists vs. what doesn't.
 - If the evidence doesn't contain enough information to answer, say so honestly. Do not hallucinate.
 - After your answer, list 1–3 direct quotes from customer insights that best support your answer (empty array if none relevant).
-- Output JSON only, no prose outside the JSON:
+- Output ONLY a JSON object — no prose, no markdown fences, nothing outside the braces:
 
-{
-  "answer": "your answer here",
-  "quotes": ["quote 1", "quote 2"]
-}"""
+{"answer": "your answer here", "quotes": ["quote 1", "quote 2"]}"""
+
+_CHAT_CODE_ADDENDUM = """
+- Codebase context is included. For code-related answers, cite what you found — be specific about what exists vs. what doesn't."""
+
+def build_chat_system_prompt(has_codebase: bool = False) -> str:
+    if has_codebase:
+        return _CHAT_SYSTEM_BASE.replace(
+            "- If the evidence doesn't",
+            _CHAT_CODE_ADDENDUM.strip() + "\n- If the evidence doesn't",
+        )
+    return _CHAT_SYSTEM_BASE
 
 
 def build_chat_user_message(

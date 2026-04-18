@@ -1,4 +1,5 @@
 import json
+import re
 import uuid
 from datetime import datetime, timedelta
 
@@ -13,7 +14,7 @@ from app.models.project import Project
 from app.models.user import User
 from app.ai.context import build_insight_context
 from app.ai.prompts import (
-    CHAT_SYSTEM_PROMPT,
+    build_chat_system_prompt,
     CLARIFY_SYSTEM_PROMPT,
     build_chat_user_message,
     build_clarify_user_message,
@@ -21,6 +22,27 @@ from app.ai.prompts import (
 from app.services.llm_providers import generate_text
 
 router = APIRouter()
+
+
+def _extract_json(raw: str) -> dict | None:
+    """Parse JSON from LLM output that may contain surrounding prose."""
+    raw = raw.strip()
+    # Strip markdown code fences
+    if raw.startswith("```"):
+        raw = raw.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
+    # Direct parse
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        pass
+    # Find the first {...} block (handles prose-before-JSON responses)
+    match = re.search(r"\{.*\}", raw, re.DOTALL)
+    if match:
+        try:
+            return json.loads(match.group())
+        except json.JSONDecodeError:
+            pass
+    return None
 
 
 class ChatRequest(BaseModel):
@@ -96,30 +118,26 @@ async def chat(
         code_refs = search_code_chunk_files(str(project_id), question, db, top_k=5)
 
     user_message = build_chat_user_message(question, insight_context, code_context)
-
+    system_prompt = build_chat_system_prompt(has_codebase=bool(code_context))
     # Free → grok-3-mini, Pro → Claude Sonnet
     prefer_provider = "xai" if current_user.plan == "free" else None
 
     raw = await generate_text(
-        system_prompt=CHAT_SYSTEM_PROMPT,
+        system_prompt=system_prompt,
         user_message=user_message,
         max_tokens=1024,
         prefer_provider=prefer_provider,
     )
 
-    raw = raw.strip()
-    if raw.startswith("```"):
-        raw = raw.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
-
-    try:
-        parsed = json.loads(raw)
+    parsed = _extract_json(raw)
+    if parsed:
         return ChatResponse(
             answer=parsed.get("answer", ""),
             quotes=parsed.get("quotes", []),
             code_refs=code_refs,
         )
-    except json.JSONDecodeError:
-        return ChatResponse(answer=raw, quotes=[], code_refs=code_refs)
+    # Fallback — model returned plain prose, use it as-is
+    return ChatResponse(answer=raw.strip(), quotes=[], code_refs=code_refs)
 
 
 @router.post("/{project_id}/clarify", response_model=ClarifyResponse)

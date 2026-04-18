@@ -231,6 +231,8 @@ async def _stream_openai_compat(
     # we track completion_tokens via usage in the final chunk when stream_options is set.
     tokens_used = 0
 
+    # stream_options/include_usage is OpenAI-specific; xAI rejects it
+    extra = {} if provider["name"] == "xai" else {"stream_options": {"include_usage": True}}
     stream = await client.chat.completions.create(
         model=provider["model"],
         max_tokens=max_tokens,
@@ -239,7 +241,7 @@ async def _stream_openai_compat(
             {"role": "user", "content": user_message},
         ],
         stream=True,
-        stream_options={"include_usage": True},
+        **extra,
     )
 
     async for chunk in stream:
