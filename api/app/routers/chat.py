@@ -82,13 +82,6 @@ async def chat(
     if len(question) > 1000:
         raise HTTPException(status_code=422, detail={"error": "Question too long", "code": "QUESTION_TOO_LONG"})
 
-    # Codebase context is Pro-only
-    if body.use_codebase and current_user.plan == "free":
-        raise HTTPException(
-            status_code=403,
-            detail={"error": "Codebase context requires a Pro plan.", "code": "PRO_REQUIRED"},
-        )
-
     project = db.query(Project).filter(
         Project.id == project_id,
         Project.user_id == current_user.id,
@@ -108,17 +101,11 @@ async def chat(
 
     insight_context = build_insight_context(insights)
 
-    # ── Codebase context (Pro only, opt-in) ───────────────────────────────────
-    code_context = ""
+    # Codebase context — coming soon
     code_refs: list[str] = []
 
-    if body.use_codebase and project.github_repo and project.github_index_status == "ready":
-        from app.services.github_indexer import search_code_chunks, search_code_chunk_files
-        code_context = search_code_chunks(str(project_id), question, db)
-        code_refs = search_code_chunk_files(str(project_id), question, db, top_k=5)
-
-    user_message = build_chat_user_message(question, insight_context, code_context)
-    system_prompt = build_chat_system_prompt(has_codebase=bool(code_context))
+    user_message = build_chat_user_message(question, insight_context, "")
+    system_prompt = build_chat_system_prompt(has_codebase=False)
     # Free → grok-3-mini, Pro → Claude Sonnet
     prefer_provider = "groq" if current_user.plan == "free" else None
 

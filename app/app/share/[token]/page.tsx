@@ -8,6 +8,8 @@ import { PRD } from "@/lib/types";
 
 interface SharedPRD {
   question: string;
+  title: string;
+  additional_context: string | null;
   brief: PRD;
   created_at: string;
 }
@@ -77,9 +79,24 @@ export default function SharePage() {
         {/* Header */}
         <div className="mb-8">
           <span className="text-xs font-medium uppercase tracking-widest text-[#7F77DD]">PRD</span>
-          <h1 className="text-2xl font-bold text-gray-900 leading-snug mt-2 mb-2">
-            {data.question}
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900 leading-snug mt-2 mb-3">{data.title || data.question}</h1>
+          {data.additional_context && (
+            <div className="mb-3 bg-gray-50 border border-gray-100 rounded-xl px-4 py-3">
+              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Additional context</p>
+              <div className="space-y-1.5">
+                {data.additional_context.replace("Additional context:", "").trim().split(/Q: /).filter(Boolean).map((block, i) => {
+                  const [q, ...aParts] = block.split(/ A: /);
+                  const a = aParts.join(" A: ").trim();
+                  return (
+                    <div key={i} className="text-xs text-gray-600 leading-relaxed">
+                      <span className="font-medium text-gray-500">Q: </span>{q.trim()}
+                      {a && <><br /><span className="font-medium text-gray-500">A: </span>{a}</>}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           <p className="text-sm text-gray-400">{formatDate(data.created_at)}</p>
         </div>
 

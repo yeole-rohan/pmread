@@ -51,6 +51,10 @@ jobs:
             sudo systemctl restart pmread-stage-worker
             pm2 restart pmread-stage-frontend
 
+            echo "--- Verifying worker concurrency ---"
+            sleep 3
+            systemctl is-active pmread-stage-worker || (echo "Worker failed to start" && exit 1)
+
             echo "--- Stage deploy complete ---"
 
   # ── Auto-promote stage → main ─────────────────────────────────────────────
@@ -116,5 +120,9 @@ jobs:
             sudo systemctl restart pmread-prod-api
             sudo systemctl restart pmread-prod-worker
             pm2 restart pmread-prod-frontend
+
+            echo "--- Verifying worker concurrency ---"
+            sleep 3
+            systemctl is-active pmread-prod-worker || (echo "Worker failed to start" && exit 1)
 
             echo "--- Prod deploy complete ---"

@@ -25,6 +25,7 @@ export default function ProjectPage() {
   const projectId = params.id as string;
   const { user, mutate: mutateUser } = useUser();
   const searchParams = useSearchParams();
+  const highlightId = searchParams.get("highlight");
 
   const [tab, setTab] = useState<Tab>(
     searchParams.get("tab") === "prds" ? "prds" : "insights"
@@ -254,6 +255,7 @@ export default function ProjectPage() {
           grouped={insights}
           onDelete={handleDeleteInsight}
           onStar={handleStarInsight}
+          highlightId={highlightId}
         />
       )}
       {tab === "prds" && (

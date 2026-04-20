@@ -45,6 +45,33 @@ const BADGE: Record<ChangeType, { label: string; className: string }> = {
 
 const RELEASES: Release[] = [
   {
+    version: "v0.6",
+    date: "20 Apr 2026",
+    title: "Slack persistence, security hardening & env-aware CSP",
+    summary:
+      "Slack bot tokens and channels are now stored in the database — no more re-entering tokens on every session. Across the stack: tighter auth, safer file handling, environment-aware security headers, and dependency CVE fixes.",
+    changes: [
+      { type: "new",      text: "Slack persistence — bot token stored server-side per project, never exposed after saving; channels saved with message counts and last-fetch timestamps" },
+      { type: "new",      text: "Per-channel re-fetch button; token change flow with masked display (xoxb-••••••••)" },
+      { type: "new",      text: "Slack token validated against Slack API (auth.test) before saving; channel names validated with regex" },
+      { type: "improved", text: "Content-Security-Policy headers — strict in production, permissive for local dev (HMR websockets, source maps, localhost wildcard)" },
+      { type: "improved", text: "Session cookies use a dedicated SESSION_SECRET, marked Secure outside development" },
+      { type: "improved", text: "CORS restricted to configured FRONTEND_URL; localhost:3000 only allowed in development" },
+      { type: "improved", text: "Password minimum raised to 12 characters across signup, change-password, and reset-password" },
+      { type: "improved", text: "Login timing equalized — bcrypt always runs regardless of whether the email exists" },
+      { type: "improved", text: "Resend verification email enforces a 60-second per-user cooldown" },
+      { type: "improved", text: "Password change invalidates all active remember-me sessions" },
+      { type: "improved", text: "PATCH /auth/me now uses a typed schema with field-length limits" },
+      { type: "improved", text: "Billing period derived server-side from Razorpay subscription — no longer trusted from client body" },
+      { type: "improved", text: "Founding-member credits granted after email verification, not at signup" },
+      { type: "fixed",    text: "File uploads validate magic bytes (not just extension) for PDF and DOCX" },
+      { type: "fixed",    text: "PRD generation errors return a generic message — no internal exception text exposed to client" },
+      { type: "fixed",    text: "Replaced python-jose (unmaintained, CVE-2024-33664) with PyJWT 2.8.0" },
+      { type: "fixed",    text: "Bumped setuptools to ≥70.0.0 (CVE-2024-6345)" },
+      { type: "fixed",    text: "Admin panel login uses constant-time comparison; startup aborts if default secrets are still set" },
+    ],
+  },
+  {
     version: "v0.5",
     date: "18 Apr 2026",
     title: "PRD extensions, sharing, Ask tab, SWR caching & marketing refresh",

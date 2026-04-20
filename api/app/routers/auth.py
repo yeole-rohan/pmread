@@ -2,7 +2,7 @@ from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import RedirectResponse
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session as DBSession
 
 from app.auth import (
@@ -12,6 +12,7 @@ from app.auth import (
     generate_verify_token,
     generate_session_token,
     get_current_user,
+    _DUMMY_HASH,
 )
 from app.worker import send_verification_email_task
 from app.config import settings
@@ -71,8 +72,8 @@ async def signup(
     body: SignupRequest,
     db: DBSession = Depends(get_db),
 ):
-    if len(body.password) < 8:
-        raise HTTPException(status_code=422, detail={"error": "Password must be at least 8 characters", "code": "WEAK_PASSWORD"})
+    if len(body.password) < 12:
+        raise HTTPException(status_code=422, detail={"error": "Password must be at least 12 characters", "code": "WEAK_PASSWORD"})
 
     existing = db.query(User).filter(User.email == body.email).first()
     if existing:
@@ -90,18 +91,7 @@ async def signup(
     db.commit()
     db.refresh(user)
 
-    # Grant 100 founding-member credits if this email is on the list (unclaimed)
-    founding = db.query(FoundingMember).filter(
-        FoundingMember.email == body.email.lower(),
-        FoundingMember.claimed_by.is_(None),
-    ).first()
-    if founding:
-        user.prd_credits = 100
-        founding.claimed_by = user.id
-        founding.claimed_at = datetime.now(timezone.utc)
-        db.commit()
-        db.refresh(user)
-
+    # H11 fix: founding-member credits granted AFTER email verification, not here
     send_verification_email_task.delay(user.email, verify_token, user.display_name or user.email)
 
     access_token = create_access_token(str(user.id), user.email)
@@ -120,8 +110,9 @@ async def login(
 ):
     user = db.query(User).filter(User.email == body.email).first()
 
-    # Treat deleted accounts as non-existent (prevent enumeration of deleted accounts)
-    if not user or user.deleted_at or not verify_password(body.password, user.password_hash):
+    # L5 fix: always run bcrypt to prevent email enumeration via timing side-channel
+    _hash = user.password_hash if (user and not user.deleted_at) else _DUMMY_HASH
+    if not user or user.deleted_at or not verify_password(body.password, _hash):
         raise HTTPException(status_code=401, detail={"error": "Invalid email or password", "code": "INVALID_CREDENTIALS"})
 
     if body.remember_me:
@@ -158,6 +149,17 @@ async def verify_email(token: str, db: DBSession = Depends(get_db)):
     user.email_verified = True
     user.verify_token = None
     user.verify_token_exp = None
+
+    # H11 fix: grant founding-member credits only after email ownership is proven
+    founding = db.query(FoundingMember).filter(
+        FoundingMember.email == user.email.lower(),
+        FoundingMember.claimed_by.is_(None),
+    ).first()
+    if founding:
+        user.prd_credits = 100
+        founding.claimed_by = user.id
+        founding.claimed_at = datetime.now(timezone.utc)
+
     db.commit()
 
     return RedirectResponse(url=f"{settings.FRONTEND_URL}/login?verified=true")
@@ -170,6 +172,15 @@ async def resend_verification(
 ):
     if current_user.email_verified:
         return {"message": "Email already verified"}
+
+    # L6 fix: 60-second cooldown — infer issue time from expiry (token valid for 48h)
+    if current_user.verify_token_exp:
+        token_issued_at = current_user.verify_token_exp - timedelta(hours=48)
+        if token_issued_at > datetime.now(timezone.utc) - timedelta(seconds=60):
+            raise HTTPException(
+                status_code=429,
+                detail={"error": "Please wait before requesting another verification email", "code": "COOLDOWN"},
+            )
 
     verify_token, verify_exp = generate_verify_token()
     current_user.verify_token = verify_token
@@ -190,16 +201,22 @@ async def me(current_user: User = Depends(get_current_user)):
     return _user_response(current_user)
 
 
+class UpdateUserRequest(BaseModel):
+    display_name: str | None = Field(None, max_length=100)
+    digest_enabled: bool | None = None
+
+
 @router.patch("/me", response_model=UserOut)
 async def update_me(
-    body: dict,
+    body: UpdateUserRequest,
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
-    if "display_name" in body:
-        current_user.display_name = body["display_name"]
-    if "digest_enabled" in body:
-        current_user.digest_enabled = bool(body["digest_enabled"])
+    # M8 fix: typed schema replaces raw dict — prevents arbitrary field injection
+    if body.display_name is not None:
+        current_user.display_name = body.display_name
+    if body.digest_enabled is not None:
+        current_user.digest_enabled = body.digest_enabled
     db.commit()
     return _user_response(current_user)
 
@@ -217,9 +234,11 @@ async def change_password(
 ):
     if not verify_password(body.current_password, current_user.password_hash):
         raise HTTPException(status_code=400, detail={"error": "Current password is incorrect", "code": "WRONG_PASSWORD"})
-    if len(body.new_password) < 8:
-        raise HTTPException(status_code=422, detail={"error": "Password must be at least 8 characters", "code": "WEAK_PASSWORD"})
+    if len(body.new_password) < 12:
+        raise HTTPException(status_code=422, detail={"error": "Password must be at least 12 characters", "code": "WEAK_PASSWORD"})
     current_user.password_hash = hash_password(body.new_password)
+    # M7 fix: invalidate all remember-me sessions so old tokens can't authenticate after a password change
+    db.query(Session).filter(Session.user_id == current_user.id).delete()
     db.commit()
     return {"success": True}
 
@@ -280,8 +299,8 @@ async def reset_password(
     db: DBSession = Depends(get_db),
 ):
     """Verify reset token and set a new password."""
-    if len(body.new_password) < 8:
-        raise HTTPException(status_code=422, detail={"error": "Password must be at least 8 characters", "code": "WEAK_PASSWORD"})
+    if len(body.new_password) < 12:
+        raise HTTPException(status_code=422, detail={"error": "Password must be at least 12 characters", "code": "WEAK_PASSWORD"})
 
     user = db.query(User).filter(
         User.password_reset_token == body.token,

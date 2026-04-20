@@ -18,9 +18,16 @@ interface SearchProject {
   name: string;
 }
 
+interface SearchPRD {
+  id: string;
+  project_id: string;
+  title: string;
+}
+
 interface SearchResults {
   projects: SearchProject[];
   insights: SearchInsight[];
+  prds: SearchPRD[];
 }
 
 const TYPE_COLORS: Record<string, string> = {
@@ -93,8 +100,11 @@ export default function SearchModal({ open, onClose }: SearchModalProps) {
 
   if (!open) return null;
 
-  const hasResults =
-    (results?.projects?.length ?? 0) > 0 || (results?.insights?.length ?? 0) > 0;
+  const totalCount =
+    (results?.projects?.length ?? 0) +
+    (results?.insights?.length ?? 0) +
+    (results?.prds?.length ?? 0);
+  const hasResults = totalCount > 0;
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-24 px-4">
@@ -110,7 +120,7 @@ export default function SearchModal({ open, onClose }: SearchModalProps) {
             ref={inputRef}
             value={query}
             onChange={(e) => handleChange(e.target.value)}
-            placeholder="Search insights, projects…"
+            placeholder="Search insights, PRDs, projects…"
             className="flex-1 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none bg-transparent"
           />
           {query && (
@@ -151,6 +161,25 @@ export default function SearchModal({ open, onClose }: SearchModalProps) {
                 </div>
               )}
 
+              {/* PRDs */}
+              {results!.prds?.length > 0 && (
+                <div>
+                  <p className="px-4 py-1.5 text-xs font-semibold text-gray-400 uppercase tracking-wide mt-1">PRDs</p>
+                  {results!.prds.map((prd) => (
+                    <button
+                      key={prd.id}
+                      onClick={() => navigate(`/project/${prd.project_id}/analysis/${prd.id}`)}
+                      className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-left cursor-pointer"
+                    >
+                      <span className="w-5 h-5 rounded bg-emerald-100 text-emerald-600 text-xs flex items-center justify-center flex-shrink-0 font-bold">
+                        D
+                      </span>
+                      <span className="text-sm text-gray-800 line-clamp-1">{prd.title}</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {/* Insights */}
               {results!.insights.length > 0 && (
                 <div>
@@ -158,7 +187,7 @@ export default function SearchModal({ open, onClose }: SearchModalProps) {
                   {results!.insights.map((ins) => (
                     <button
                       key={ins.id}
-                      onClick={() => navigate(`/project/${ins.project_id}?tab=insights`)}
+                      onClick={() => navigate(`/project/${ins.project_id}?tab=insights&highlight=${ins.id}`)}
                       className="w-full flex items-start gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-left cursor-pointer"
                     >
                       <span className={`mt-0.5 text-xs px-1.5 py-0.5 rounded-full font-medium flex-shrink-0 ${TYPE_COLORS[ins.type] ?? "bg-gray-100 text-gray-600"}`}>
@@ -182,9 +211,7 @@ export default function SearchModal({ open, onClose }: SearchModalProps) {
           <p className="text-xs text-gray-400">⌘K to open · Esc to close</p>
           {hasResults && (
             <p className="text-xs text-gray-400">
-              {(results?.insights.length ?? 0) + (results?.projects.length ?? 0)} result{
-                (results?.insights.length ?? 0) + (results?.projects.length ?? 0) !== 1 ? "s" : ""
-              }
+              {totalCount} result{totalCount !== 1 ? "s" : ""}
             </p>
           )}
         </div>

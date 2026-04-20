@@ -103,7 +103,7 @@ export function useProjectData(projectId: string): ProjectData {
   // Real-time SSE — revalidates cache when extraction finishes
   useProjectEvents(projectId, {
     onExtraction: async () => {
-      await mutateInsights();
+      await Promise.all([mutateInsights(), mutatePrds()]);
       setExtracting(false);
     },
   });

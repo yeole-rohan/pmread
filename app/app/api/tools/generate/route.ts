@@ -1,6 +1,30 @@
 import { NextRequest } from "next/server";
+import { cookies } from "next/headers";
 
 type Inputs = Record<string, string>;
+
+// H7 fix: verify the caller holds a valid PMRead session token
+async function isAuthenticated(req: NextRequest): Promise<boolean> {
+  // Accept token from Authorization header or pmread_token cookie
+  const authHeader = req.headers.get("Authorization") ?? "";
+  const token = authHeader.startsWith("Bearer ")
+    ? authHeader.slice(7)
+    : (await cookies()).get("pmread_token")?.value ?? "";
+
+  if (!token) return false;
+
+  // Validate against the backend — a 200 means the token is good
+  try {
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api";
+    const res = await fetch(`${backendUrl}/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
 
 const PROMPTS: Record<string, (i: Inputs) => string> = {
   "prd-generator": ({ problem, users, context }) =>
@@ -150,7 +174,15 @@ Format in markdown:
 Be direct and specific. Avoid generic statements like "monitor closely." If you don't have enough context for a confident hypothesis, say so.`.trim(),
 };
 
+// Per-input size cap to prevent token exhaustion (H7 fix)
+const MAX_INPUT_CHARS = 12_000;
+
 export async function POST(req: NextRequest) {
+  // Require a valid PMRead session (H7 fix)
+  if (!(await isAuthenticated(req))) {
+    return Response.json({ error: "Authentication required" }, { status: 401 });
+  }
+
   const body = await req.json() as { tool: string } & Inputs;
   const { tool, ...inputs } = body;
 
@@ -163,7 +195,11 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: "AI not configured" }, { status: 503 });
   }
 
-  const prompt = buildPrompt(inputs);
+  // Cap individual input fields to prevent token exhaustion
+  const cappedInputs = Object.fromEntries(
+    Object.entries(inputs).map(([k, v]) => [k, String(v).slice(0, MAX_INPUT_CHARS)])
+  );
+  const prompt = buildPrompt(cappedInputs);
 
   const xaiRes = await fetch("https://api.x.ai/v1/chat/completions", {
     method: "POST",

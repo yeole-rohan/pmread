@@ -164,6 +164,7 @@ async def get_prd(
         question=analysis.question,
         status=analysis.status,
         brief=analysis.brief,
+        extensions=analysis.extensions or [],
         error_message=analysis.error_message,
         share_token=analysis.share_token,
         created_at=analysis.created_at,
@@ -392,21 +393,30 @@ async def extend_prd(
         max_tokens=1024,
     )
 
+    now = datetime.now(timezone.utc)
     update_label = f"Update {analysis.extension_count + 1}"
-    date_str = datetime.now(timezone.utc).strftime("%b %d, %Y")
-    separator = f"\n\n---\n\n## {update_label} — {date_str}\n\n"
-    appended = separator + result
+    date_str = now.strftime("%b %d, %Y")
 
-    analysis.brief_markdown = (analysis.brief_markdown or "") + appended
+    new_extension = {
+        "label": update_label,
+        "date": date_str,
+        "created_at": now.isoformat(),
+        "content": result,
+        "insight_ids": body.insight_ids,
+    }
+
+    current_extensions = list(analysis.extensions or [])
+    current_extensions.append(new_extension)
+    analysis.extensions = current_extensions
     analysis.extension_count += 1
-    analysis.extended_at = datetime.now(timezone.utc)
+    analysis.extended_at = now
     db.commit()
 
     return {
         "success": True,
         "extension_count": analysis.extension_count,
         "extensions_remaining": 3 - analysis.extension_count,
-        "appended_markdown": appended,
+        "extension": new_extension,
     }
 
 

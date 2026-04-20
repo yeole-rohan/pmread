@@ -390,19 +390,6 @@ function SettingsContent() {
       <section className="bg-white border border-gray-100 rounded-xl p-6 mb-4">
         <h2 className="text-sm font-semibold text-gray-700 mb-4">Integrations</h2>
 
-        {githubConnected && (
-          <div className="mb-3 flex items-center gap-2 text-xs text-emerald-600 bg-emerald-50 px-3 py-2 rounded-lg">
-            <CheckCircle size={13} />
-            GitHub connected successfully
-          </div>
-        )}
-        {githubError && (
-          <div className="mb-3 flex items-center gap-2 text-xs text-red-600 bg-red-50 px-3 py-2 rounded-lg">
-            <AlertCircle size={13} />
-            GitHub connection failed. Try again.
-          </div>
-        )}
-
         <div className="flex items-center justify-between">
           <div>
             <p className="text-sm font-medium text-gray-900">GitHub</p>
@@ -410,25 +397,9 @@ function SettingsContent() {
               Embed your codebase so PRDs reference real implementation context
             </p>
           </div>
-          {user.github_connected ? (
-            <div className="flex items-center gap-2">
-              <span className="text-xs text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full font-medium">Connected</span>
-              <button
-                onClick={disconnectGithub}
-                disabled={disconnectingGithub}
-                className="text-xs text-gray-400 hover:text-gray-600 hover:underline cursor-pointer"
-              >
-                {disconnectingGithub ? "Disconnecting..." : "Disconnect"}
-              </button>
-            </div>
-          ) : (
-            <a
-              href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api"}/github/connect?token=${getToken() ?? ""}`}
-              className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              Connect GitHub →
-            </a>
-          )}
+          <span className="px-3 py-1.5 border border-dashed border-gray-200 rounded-lg text-xs text-gray-400 cursor-default select-none">
+            Coming soon
+          </span>
         </div>
       </section>
 
