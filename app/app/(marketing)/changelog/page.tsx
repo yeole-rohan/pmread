@@ -140,14 +140,14 @@ const RELEASES: Release[] = [
   {
     version: "v0.1",
     date: "14 Apr 2026",
-    title: "Initial launch",
+    title: "First working build",
     summary:
-      "PMRead is live. Sign up, create a project, and generate your first PRD.",
+      "End-to-end prototype working: auth, projects, and PRD generation from uploaded context. Private development build.",
     changes: [
       { type: "new", text: "User auth — sign up, log in, JWT sessions" },
       { type: "new", text: "Projects — create and manage multiple products" },
       { type: "new", text: "PRD generation from uploaded context" },
-      { type: "new", text: "Next.js frontend + FastAPI backend, deployed on self-hosted VPS" },
+      { type: "new", text: "Next.js frontend + FastAPI backend on self-hosted VPS" },
     ],
   },
 ];
@@ -219,15 +219,15 @@ export default function ChangelogPage() {
 
         {/* CTA */}
         <div className="mt-16 rounded-2xl border border-[#7F77DD]/20 bg-purple-50 p-8 text-center">
-          <p className="text-lg font-semibold text-gray-900">Try the latest version</p>
+          <p className="text-lg font-semibold text-gray-900">Currently in development</p>
           <p className="mt-1 text-gray-500">
-            Everything above is live. Sign up free and start generating PRDs from your customer feedback.
+            PMRead is being actively built. Join the waitlist to get early access when we open up.
           </p>
           <Link
-            href="/signup"
+            href="/waitlist"
             className="mt-4 inline-block rounded-lg bg-[#7F77DD] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#6B63D0]"
           >
-            Get started free →
+            Join the waitlist →
           </Link>
         </div>
       </main>
