@@ -25,3 +25,4 @@ class Project(Base):
     )
     github_repo: Mapped[str | None] = mapped_column(String, nullable=True)  # "owner/repo"
     github_index_status: Mapped[str | None] = mapped_column(String, nullable=True)  # null | "indexing" | "ready" | "failed"
+    slack_bot_token: Mapped[str | None] = mapped_column(String, nullable=True)

@@ -12,7 +12,7 @@ from app.config import settings
 celery_app = Celery(
     "pmread",
     broker=settings.REDIS_URL,
-    backend=settings.REDIS_URL,
+    backend="db+" + settings.DATABASE_URL,
 )
 
 celery_app.conf.update(

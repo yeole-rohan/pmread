@@ -113,7 +113,7 @@ class RazorpayVerifyRequest(BaseModel):
     razorpay_payment_id: str
     razorpay_subscription_id: str
     razorpay_signature: str
-    billing_period: str = "monthly"   # "monthly" | "annual"
+    # billing_period intentionally removed — derived server-side from Razorpay (C4 fix)
 
 
 @router.post("/razorpay/verify")
@@ -125,6 +125,7 @@ async def razorpay_verify_payment(
     """
     Called by the frontend after the Razorpay widget reports success.
     Verifies HMAC signature, then upgrades the user to Pro.
+    billing_period is derived from the Razorpay subscription — never trusted from client.
     """
     if not settings.RAZORPAY_KEY_SECRET:
         raise HTTPException(
@@ -145,9 +146,20 @@ async def razorpay_verify_payment(
             detail={"error": "Invalid payment signature", "code": "INVALID_SIGNATURE"},
         )
 
+    # Derive billing_period server-side — never trust the client body (C4 fix)
+    client = _razorpay_client()
+    try:
+        sub = client.subscription.fetch(body.razorpay_subscription_id)
+        plan_id = sub.get("plan_id", "")
+    except Exception:
+        plan_id = ""
+    billing_period = "annual" if (
+        settings.RAZORPAY_PRO_ANNUAL_PLAN_ID and plan_id == settings.RAZORPAY_PRO_ANNUAL_PLAN_ID
+    ) else "monthly"
+
     current_user.plan = "pro"
     current_user.billing_provider = "razorpay"
-    current_user.billing_period = body.billing_period
+    current_user.billing_period = billing_period
     current_user.razorpay_sub_id = body.razorpay_subscription_id
     current_user.razorpay_payment_id = body.razorpay_payment_id
     current_user.plan_started_at = datetime.now(timezone.utc)

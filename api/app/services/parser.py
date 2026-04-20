@@ -54,6 +54,23 @@ def parse_text(file_bytes: bytes) -> str:
     return clean_text(text)
 
 
+# H8 fix: magic bytes for supported binary types — txt/md are skipped (no magic)
+_MAGIC: dict[str, bytes] = {
+    "pdf":  b"%PDF",
+    "docx": b"PK\x03\x04",  # ZIP container (Office Open XML)
+}
+
+
+def _check_magic(file_bytes: bytes, ext: str) -> None:
+    expected = _MAGIC.get(ext)
+    if expected and not file_bytes[:4].startswith(expected):
+        from fastapi import HTTPException
+        raise HTTPException(
+            status_code=415,
+            detail={"error": f"File content does not match .{ext} format", "code": "INVALID_FILE_CONTENT"},
+        )
+
+
 def parse_file(file_bytes: bytes, filename: str) -> tuple[str, str]:
     """Returns (extracted_text, file_type)."""
     ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
@@ -64,6 +81,9 @@ def parse_file(file_bytes: bytes, filename: str) -> tuple[str, str]:
             status_code=415,
             detail={"error": f"Unsupported file type: .{ext}", "code": "UNSUPPORTED_FILE_TYPE"},
         )
+
+    # Verify actual file bytes match the declared extension (H8 fix)
+    _check_magic(file_bytes, ext)
 
     if ext == "pdf":
         text = parse_pdf(file_bytes)

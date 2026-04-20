@@ -23,6 +23,7 @@ class Analysis(Base):
     status: Mapped[str] = mapped_column(String, nullable=False, default="pending")
     brief: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
     brief_markdown: Mapped[str | None] = mapped_column(Text, nullable=True)
+    extensions: Mapped[list | None] = mapped_column(JSONB, nullable=True, default=list)
     error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
     tokens_used: Mapped[int | None] = mapped_column(Integer, nullable=True)
     share_token: Mapped[str | None] = mapped_column(String(64), nullable=True, unique=True)

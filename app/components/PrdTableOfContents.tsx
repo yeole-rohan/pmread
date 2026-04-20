@@ -18,7 +18,6 @@ function buildTocItems(brief: PRD): TocItem[] {
   if (brief.non_goals?.length)          items.push({ id: "prd-nongoals",  label: "Non-Goals",    count: brief.non_goals.length });
   if (brief.user_stories?.length)       items.push({ id: "prd-stories",   label: "User Stories", count: brief.user_stories.length });
   items.push({ id: "prd-changes",   label: "What Changes" });
-  if (brief.engineering_tasks?.length)  items.push({ id: "prd-tasks",     label: "Eng Tasks",    count: brief.engineering_tasks.length });
   if (brief.edge_cases?.length)         items.push({ id: "prd-edge",      label: "Edge Cases",   count: brief.edge_cases.length });
   if (brief.analytics_events?.length)   items.push({ id: "prd-analytics", label: "Analytics",    count: brief.analytics_events.length });
   if (brief.open_questions?.length)     items.push({ id: "prd-questions", label: "Open Qs",      count: brief.open_questions.length });
@@ -95,7 +94,7 @@ export default function PrdTableOfContents({ brief }: { brief: PRD }) {
                 >
                   <span className="truncate">{item.label}</span>
                   {item.count !== undefined && (
-                    <span className={`ml-2 flex-shrink-0 tabular-nums ${isActive ? "text-purple-300" : "text-gray-200"}`}>
+                    <span className={`ml-2 flex-shrink-0 tabular-nums ${isActive ? "text-purple-800" : "text-gray-800"}`}>
                       {item.count}
                     </span>
                   )}

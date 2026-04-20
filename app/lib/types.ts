@@ -82,12 +82,23 @@ export interface PRD {
 // Keep Brief as alias for backwards compatibility
 export type Brief = PRD;
 
+export interface PRDExtension {
+  label: string;       // "Update 1"
+  date: string;        // "Apr 19, 2026"
+  created_at: string;
+  content: string;     // LLM-generated markdown prose
+  insight_ids: string[];
+}
+
 export interface Analysis {
   id: string;
   project_id: string;
   question: string;
+  title: string;
+  additional_context?: string | null;
   status: "pending" | "processing" | "complete" | "failed";
   brief: PRD | null;
+  extensions?: PRDExtension[];
   brief_summary?: string | null;
   error_message?: string | null;
   share_token?: string | null;

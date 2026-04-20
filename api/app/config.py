@@ -37,6 +37,7 @@ class Settings(BaseSettings):
     # Admin
     ADMIN_USERNAME: str = "admin"
     ADMIN_PASSWORD: str = "change-me"
+    SESSION_SECRET: str = ""   # separate cookie-signing key; falls back to JWT_SECRET in dev
 
     # GitHub OAuth
     GITHUB_CLIENT_ID: str = ""
@@ -62,3 +63,28 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
+
+# ── Startup security guards ────────────────────────────────────────────────
+_INSECURE_JWT = "change-me-in-production-use-openssl-rand-hex-32"
+_INSECURE_ADMIN_PW = "change-me"
+
+if settings.ENVIRONMENT != "development":
+    if settings.JWT_SECRET == _INSECURE_JWT:
+        raise RuntimeError(
+            "SECURITY: JWT_SECRET is still the default value. "
+            "Run: openssl rand -hex 32  and set it in .env"
+        )
+    if settings.ADMIN_PASSWORD == _INSECURE_ADMIN_PW:
+        raise RuntimeError(
+            "SECURITY: ADMIN_PASSWORD is still 'change-me'. "
+            "Set a strong password in .env"
+        )
+    # M12 fix: prevent open-redirect if FRONTEND_URL is accidentally misconfigured
+    if not settings.FRONTEND_URL.startswith("https://"):
+        raise RuntimeError(
+            "SECURITY: FRONTEND_URL must start with https:// in production."
+        )
+
+# SESSION_SECRET defaults to JWT_SECRET if not set separately (dev only)
+if not hasattr(settings, "SESSION_SECRET") or not settings.SESSION_SECRET:
+    settings.SESSION_SECRET = settings.JWT_SECRET

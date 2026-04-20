@@ -17,7 +17,7 @@ interface NewInsight {
 interface Props {
   prd: Analysis;
   onClose: () => void;
-  onExtended: (appended: string, extensionCount: number) => void;
+  onExtended: (extension: import("@/lib/types").PRDExtension, extensionCount: number) => void;
 }
 
 const TYPE_LABEL: Record<string, string> = {
@@ -73,12 +73,12 @@ export default function ExtendPRDModal({ prd, onClose, onExtended }: Props) {
         success: boolean;
         extension_count: number;
         extensions_remaining: number;
-        appended_markdown: string;
+        extension: import("@/lib/types").PRDExtension;
       }>(`/analyses/${prd.id}/extend`, {
         method: "POST",
         body: JSON.stringify({ insight_ids: Array.from(selected) }),
       });
-      onExtended(result.appended_markdown, result.extension_count);
+      onExtended(result.extension, result.extension_count);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Failed to update PRD. Try again.";
       setError(msg);
@@ -94,7 +94,7 @@ export default function ExtendPRDModal({ prd, onClose, onExtended }: Props) {
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
           <div>
             <h2 className="text-sm font-bold text-gray-900">Update PRD</h2>
-            <p className="text-xs text-gray-400 mt-0.5 truncate max-w-xs">{prd.question}</p>
+            <p className="text-xs text-gray-400 mt-0.5 truncate max-w-xs">{prd.title || prd.question}</p>
           </div>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
             <X size={16} />

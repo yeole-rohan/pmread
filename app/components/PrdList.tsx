@@ -28,7 +28,7 @@ export default function PrdList({ projectId, prds: initialPrds, isPro = false }:
   const [prds, setPrds] = useState(initialPrds);
   const [extending, setExtending] = useState<Analysis | null>(null);
 
-  function handleExtended(prdId: string, _appended: string, extensionCount: number) {
+  function handleExtended(prdId: string, extensionCount: number) {
     setPrds((prev) =>
       prev.map((p) =>
         p.id === prdId
@@ -79,7 +79,7 @@ export default function PrdList({ projectId, prds: initialPrds, isPro = false }:
                   {STATUS_ICON[prd.status] ?? <Clock size={14} className="text-gray-400" />}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 truncate">{prd.question}</p>
+                  <p className="text-sm font-medium text-gray-900 truncate">{prd.title || prd.question}</p>
                   {prd.brief_summary && (
                     <p className="text-xs text-gray-400 truncate mt-0.5">{prd.brief_summary}</p>
                   )}
@@ -126,7 +126,7 @@ export default function PrdList({ projectId, prds: initialPrds, isPro = false }:
         <ExtendPRDModal
           prd={extending}
           onClose={() => setExtending(null)}
-          onExtended={(appended, count) => handleExtended(extending.id, appended, count)}
+          onExtended={(_ext, count) => handleExtended(extending.id, count)}
         />
       )}
     </>

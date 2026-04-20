@@ -20,6 +20,7 @@ class GithubCodeChunk(Base):
     )
     file_path: Mapped[str] = mapped_column(String, nullable=False)
     chunk_text: Mapped[str] = mapped_column(Text, nullable=False)
+    file_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
     embedding: Mapped[list[float]] = mapped_column(Vector(1024), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=text("NOW()")

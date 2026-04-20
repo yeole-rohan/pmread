@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session as DBSession
 
 from app.config import settings
@@ -32,7 +32,8 @@ def _require_admin(credentials: HTTPBasicCredentials = Depends(security)):
 # ── Request / Response schemas ─────────────────────────────────────────────────
 
 class AddFoundingMembersRequest(BaseModel):
-    emails: list[EmailStr]
+    # M2 fix: cap list size to prevent bulk-insert DoS
+    emails: list[EmailStr] = Field(..., max_length=1000)
 
 
 class AddFoundingMembersResponse(BaseModel):
