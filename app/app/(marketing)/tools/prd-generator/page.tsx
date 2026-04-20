@@ -3,7 +3,7 @@ import PRDGeneratorTool from "./PRDGeneratorTool";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Free AI PRD Generator — Product Requirements Document | PMRead",
+  title: "Free AI PRD Generator | PMRead",
   description:
     "Generate a full product requirements document from a problem statement in seconds. Free AI PRD generator — no signup required.",
   alternates: { canonical: "https://pmread.rohanyeole.comanyeole.com/tools/prd-generator" },

@@ -5,7 +5,7 @@ import MeetingCostCalculatorTool from "./MeetingCostCalculatorTool";
 const BASE = "https://pmread.rohanyeole.com";
 
 export const metadata: Metadata = {
-  title: "Meeting Cost Calculator — See What Your Meetings Really Cost | PMRead",
+  title: "Meeting Cost Calculator | PMRead",
   description:
     "Free meeting cost calculator for product managers. Enter attendees, salary, and duration to see the real cost of your meeting — and how many PRDs you could have written instead.",
   alternates: { canonical: `${BASE}/tools/meeting-cost-calculator` },

@@ -5,7 +5,7 @@ import MetricStoryGeneratorTool from "./MetricStoryGeneratorTool";
 const BASE = "https://pmread.rohanyeole.com";
 
 export const metadata: Metadata = {
-  title: "Metric Story Generator — Turn Raw Data Into a Narrative | PMRead",
+  title: "Metric Story Generator — Raw Data to Narrative | PMRead",
   description:
     "Free AI tool for product managers. Paste your product metrics and get a clear narrative: what changed, why it likely happened, and what to do next. No signup required.",
   alternates: { canonical: `${BASE}/tools/metric-story-generator` },

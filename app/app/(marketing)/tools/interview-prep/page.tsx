@@ -5,7 +5,7 @@ import InterviewPrepTool from "./InterviewPrepTool";
 const BASE = "https://pmread.rohanyeole.com";
 
 export const metadata: Metadata = {
-  title: "PM Interview Prep — Generate Likely Questions from JD + Resume",
+  title: "PM Interview Prep Tool — Questions from JD + Resume",
   description:
     "Free AI tool for product managers. Paste a job description and your resume — get 5–10 likely interview questions with strong answers grounded in your actual experience. No signup required.",
   alternates: { canonical: `${BASE}/tools/interview-prep` },
