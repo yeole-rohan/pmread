@@ -3,7 +3,7 @@ import FeaturePrioritizationTool from "./FeaturePrioritizationTool";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Free Feature Prioritization Tool — RICE Scoring Calculator | PMRead",
+  title: "Free RICE Feature Prioritization Calculator | PMRead",
   description:
     "Prioritize your product backlog with RICE scoring. Enter features with Reach, Impact, Confidence, and Effort — get a ranked list instantly. Free, no signup.",
   alternates: { canonical: "https://pmread.rohanyeole.com/tools/feature-prioritization" },

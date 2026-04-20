@@ -17,9 +17,9 @@ import MarketingNav from "@/components/MarketingNav";
 import MarketingFooter from "@/components/MarketingFooter";
 
 export const metadata: Metadata = {
-  title: "PMRead — Customer Evidence to Engineering Spec, With Citations",
+  title: "PMRead — Customer Evidence to Engineering Spec",
   description:
-    "Upload customer interviews, transcripts, and feedback. PMRead extracts insights, ranks them by frequency, and generates a PRD where every requirement is traced back to real customer evidence.",
+    "Upload customer interviews and feedback. PMRead extracts insights, ranks by frequency, and generates a PRD with every claim traced to real customer evidence.",
   keywords: [
     "prd generator",
     "evidence-backed prd",
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   ],
   alternates: { canonical: "https://pmread.rohanyeole.com" },
   openGraph: {
-    title: "PMRead — Customer Evidence to Engineering Spec, With Citations",
+    title: "PMRead — Customer Evidence to Engineering Spec",
     description:
       "Upload customer interviews, transcripts, and feedback. PMRead extracts insights, ranks them by frequency, and generates a PRD where every requirement is traced back to real customer evidence.",
     url: "https://pmread.rohanyeole.com",

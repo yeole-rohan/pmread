@@ -5,7 +5,7 @@ import { TEMPLATES, TEMPLATE_CATEGORIES } from "@/lib/templates";
 const BASE = "https://pmread.rohanyeole.com";
 
 export const metadata: Metadata = {
-  title: "Free Product Management Templates — Copy-Paste Ready | PMRead",
+  title: "Free PM Templates — Copy-Paste Ready | PMRead",
   description:
     "Free PM templates: PRD, OKR, product roadmap, buyer persona, user stories, and more. Written by PMs, copy-paste ready, no signup required.",
   alternates: { canonical: `${BASE}/templates` },
