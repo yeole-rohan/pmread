@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const BASE = "https://pmread.rohanyeole.com";
+import { SITE_URL as BASE } from "@/lib/site";
 
 // Static pages — update lastModified whenever the page content changes
 const STATIC_PAGES: MetadataRoute.Sitemap = [
@@ -21,12 +20,6 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
     lastModified: new Date("2026-04-16"),
     changeFrequency: "monthly",
     priority: 0.7,
-  },
-  {
-    url: `${BASE}/changelog`,
-    lastModified: new Date("2026-04-16"),
-    changeFrequency: "weekly",
-    priority: 0.6,
   },
   {
     url: `${BASE}/privacy`,

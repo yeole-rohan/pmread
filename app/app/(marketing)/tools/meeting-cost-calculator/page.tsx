@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import MeetingCostCalculatorTool from "./MeetingCostCalculatorTool";
 
-const BASE = "https://pmread.rohanyeole.com";
+import { SITE_URL as BASE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Meeting Cost Calculator | PMRead",

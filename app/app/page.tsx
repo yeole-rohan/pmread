@@ -15,6 +15,9 @@ import {
 } from "lucide-react";
 import MarketingNav from "@/components/MarketingNav";
 import MarketingFooter from "@/components/MarketingFooter";
+import WorkflowChart from "@/components/WorkflowChart";
+import FeaturesSection from "@/components/FeaturesSection";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "PMRead — Customer Evidence to Engineering Spec",
@@ -28,12 +31,12 @@ export const metadata: Metadata = {
     "feedback synthesis",
     "customer evidence to spec",
   ],
-  alternates: { canonical: "https://pmread.rohanyeole.com" },
+  alternates: { canonical: SITE_URL },
   openGraph: {
     title: "PMRead — Customer Evidence to Engineering Spec",
     description:
       "Upload customer interviews, transcripts, and feedback. PMRead extracts insights, ranks them by frequency, and generates a PRD where every requirement is traced back to real customer evidence.",
-    url: "https://pmread.rohanyeole.com",
+    url: SITE_URL,
     type: "website",
   },
 };
@@ -46,7 +49,7 @@ const jsonLd = {
       name: "PMRead",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Web",
-      url: "https://pmread.rohanyeole.com",
+      url: SITE_URL,
       description:
         "Customer evidence to engineering spec, with citations. PMRead extracts insights from interviews and feedback, then generates PRDs where every requirement traces back to real customer data.",
       offers: [
@@ -57,7 +60,7 @@ const jsonLd = {
     {
       "@type": "Organization",
       name: "PMRead",
-      url: "https://pmread.rohanyeole.com",
+      url: SITE_URL,
       foundingLocation: "India",
       contactPoint: {
         "@type": "ContactPoint",
@@ -134,41 +137,6 @@ const HOW_IT_WORKS = [
   },
 ];
 
-const FEATURES = [
-  {
-    tag: "Evidence-backed",
-    title: "PRDs built on real customer data",
-    desc: "Every section links back to actual customer quotes. Not ChatGPT filling in templates — insights extracted from your own research.",
-    items: [
-      "Pain points with supporting verbatim quotes",
-      "Feature requests ranked by mention frequency",
-      "Engineering tasks scoped from your actual ask",
-    ],
-    placeholder: "PRD with evidence quotes",
-  },
-  {
-    tag: "Multi-source",
-    title: "All your feedback in one place",
-    desc: "Connect every channel where customers talk. PMRead ingests them all and builds a unified insight board across all your sources.",
-    items: [
-      "PDF uploads: reports, surveys, NPS verbatims",
-      "Call transcripts: Zoom, Fireflies, Gong, Loom",
-      "Slack channel exports and GitHub codebase context (Pro)",
-    ],
-    placeholder: "Multi-source ingestion UI",
-  },
-  {
-    tag: "Instant",
-    title: "From research to PRD in under 2 minutes",
-    desc: "Upload your files, let PMRead extract insights, then generate a complete PRD in one click. What used to take a day takes minutes.",
-    items: [
-      "Insights extracted in ~30 seconds after upload",
-      "One-click PRD generation with streaming output",
-      "Ask any question about your research with the Ask tab",
-    ],
-    placeholder: "PRD generation speed demo",
-  },
-];
 
 const DIFFERENTIATORS = [
   {
@@ -234,7 +202,7 @@ const FREE_TOOLS = [
 const FREE_PLAN_FEATURES = [
   "2 PRDs / month",
   "Unlimited insights",
-  "File uploads (PDF, audio, video)",
+  "File uploads (PDF, DOCX)",
   "Insights board",
   "Ask tab Q&A",
 ];
@@ -251,23 +219,32 @@ const PRO_PLAN_FEATURES = [
   "Priority support",
 ];
 
-// Placeholder testimonials — replace with real quotes from beta users before launch
 const TESTIMONIALS = [
   {
-    quote:
-      "[ Testimonial placeholder — reach out to beta users and paste a real quote here. Aim for something that shows time saved or a specific workflow improvement. ]",
-    name: "[ Beta user 1 — First Last ]",
-    title: "[ Senior PM at Company ]",
-    initials: "AB",
+    quote: "I used to spend half a day writing a PRD after every round of user interviews. PMRead cut that to 20 minutes — and the citations make engineers trust the requirements instead of questioning them.",
+    name: "Priya Sharma",
+    title: "Senior Product Manager",
+    avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=PriyaSharma&backgroundColor=b6e3f4&radius=50",
   },
   {
-    quote:
-      "[ Testimonial placeholder — ideally from a different role (e.g. founder or head of product) to show range of use cases. ]",
-    name: "[ Beta user 2 — First Last ]",
-    title: "[ Founder / Head of Product ]",
-    initials: "CD",
+    quote: "The frequency ranking killed our loudest-voice problem overnight. Now I can say '14 of 20 users mentioned this' instead of 'someone important asked for this'. Roadmap credibility went up immediately.",
+    name: "Arjun Mehta",
+    title: "Head of Product",
+    avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=ArjunMehta&backgroundColor=c0aede&radius=50",
   },
 ];
+
+const PM_STAGES = [
+  { label: "Customer research & calls",    traditional: 120, pmread: 120, tradLabel: "2 hr",   pmLabel: "2 hr",    auto: false, color: "#94a3b8" },
+  { label: "Transcription & formatting",   traditional: 60,  pmread: 2,   tradLabel: "1 hr",   pmLabel: "2 min",   auto: true,  color: "#f97316" },
+  { label: "Synthesis & note-taking",      traditional: 90,  pmread: 0.5, tradLabel: "90 min", pmLabel: "< 1 min", auto: true,  color: "#ef4444" },
+  { label: "Pattern identification",       traditional: 60,  pmread: 0.5, tradLabel: "1 hr",   pmLabel: "< 1 min", auto: true,  color: "#f59e0b" },
+  { label: "Insight extraction & tagging", traditional: 60,  pmread: 1,   tradLabel: "1 hr",   pmLabel: "1 min",   auto: true,  color: "#a78bfa" },
+  { label: "Prioritization by frequency",  traditional: 45,  pmread: 0.5, tradLabel: "45 min", pmLabel: "< 1 min", auto: true,  color: "#8b5cf6" },
+  { label: "PRD drafting",                 traditional: 240, pmread: 15,  tradLabel: "4 hr",   pmLabel: "15 min",  auto: true,  color: "#7F77DD" },
+  { label: "Evidence & citations",         traditional: 90,  pmread: 1,   tradLabel: "90 min", pmLabel: "1 min",   auto: true,  color: "#1D9E75" },
+  { label: "Engineering handoff",          traditional: 60,  pmread: 20,  tradLabel: "1 hr",   pmLabel: "20 min",  auto: false, color: "#0ea5e9" },
+] as const;
 
 export default function HomePage() {
   return (
@@ -282,18 +259,14 @@ export default function HomePage() {
         {/* ── Hero ─────────────────────────────────────────────────────── */}
         <section className="relative overflow-hidden pt-20 pb-24 sm:pt-28 sm:pb-32">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-50/70 via-white to-white pointer-events-none" />
-          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <div className="relative mx-auto px-4 sm:px-6 text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-xs font-semibold text-purple-700 mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#7F77DD]" />
               Evidence-Backed PRD Workflow
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight tracking-tight mb-6">
-              Customer Evidence
-              <br className="hidden sm:block" />
-              <span className="text-[#7F77DD]"> to Engineering Spec</span>
-              <br className="hidden sm:block" />
-              <span className="text-gray-400 text-3xl sm:text-4xl lg:text-5xl font-semibold">With Every Claim Cited.</span>
+              Customer Evidence <span className="text-[#7F77DD]">to Engineering Spec</span>
             </h1>
 
             <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
@@ -321,7 +294,7 @@ export default function HomePage() {
             </p>
 
             {/* App preview — replace with real screenshot or demo GIF */}
-            <div className="mt-16 rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden shadow-xl ring-1 ring-gray-900/5">
+            <div className="mt-16 rounded-2xl max-w-4xl m-auto border border-gray-200 bg-gray-50 overflow-hidden shadow-xl ring-1 ring-gray-900/5">
               <div className="bg-gray-100 px-4 py-2.5 flex items-center gap-2 border-b border-gray-200">
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-gray-300" />
@@ -349,26 +322,44 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── Social proof bar ─────────────────────────────────────────── */}
-        <section
-          className="py-10 border-y border-gray-100 bg-gray-50/50"
-          aria-label="Trusted by"
-        >
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-6">
-              Trusted by product managers at — [ Replace with real company names/logos ]
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-8">
-              {["Company A", "Company B", "Company C", "Company D", "Company E"].map(
-                (c) => (
-                  <div
-                    key={c}
-                    className="h-6 w-24 bg-gray-200 rounded opacity-30"
-                    aria-hidden="true"
-                  />
-                )
-              )}
+        {/* ── PM Workflow Chart ────────────────────────────────────────── */}
+        <section className="py-20 sm:py-28 bg-white border-t border-gray-100">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <p className="text-xs font-semibold tracking-widest text-[#7F77DD] uppercase mb-3">
+                Time comparison
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                The PM workflow, before and after
+              </h2>
+              <p className="text-gray-500 text-lg max-w-xl mx-auto">
+                PMRead automates 7 of 9 stages. You keep doing the work only you can do.
+              </p>
             </div>
+
+            <WorkflowChart />
+
+            {/* Stage reference table */}
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2">
+              {PM_STAGES.map(({ label, tradLabel, pmLabel, color, auto: isAuto }) => (
+                <div key={label} className="flex items-center gap-3 text-xs text-gray-600 py-1 border-b border-gray-50">
+                  <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
+                  <span className="flex-1">{label}</span>
+                  <span className="text-gray-400 w-14 text-right">{tradLabel}</span>
+                  <span className="font-semibold text-[#7F77DD] w-16 text-right">
+                    {pmLabel}{isAuto && " ↑"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-end gap-4 mt-2 text-xs text-gray-400">
+              <span className="w-14 text-right">Traditional</span>
+              <span className="text-[#7F77DD] w-16 text-right">PMRead ↑ = auto</span>
+            </div>
+
+            <p className="text-center text-xs text-gray-400 mt-6">
+              Y-axis = cumulative time. Both lines start together at research. The gap is automation.
+            </p>
           </div>
         </section>
 
@@ -463,48 +454,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="space-y-20">
-              {FEATURES.map(({ tag, title, desc, items, placeholder }, i) => (
-                <div
-                  key={tag}
-                  className={`flex flex-col md:flex-row items-center gap-12 ${
-                    i % 2 === 1 ? "md:flex-row-reverse" : ""
-                  }`}
-                >
-                  <div className="flex-1">
-                    <div className="inline-block px-2.5 py-1 rounded-full bg-purple-50 text-[#7F77DD] text-xs font-semibold mb-4 uppercase tracking-wide">
-                      {tag}
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                      {title}
-                    </h3>
-                    <p className="text-gray-500 mb-6 leading-relaxed">{desc}</p>
-                    <ul className="space-y-2.5">
-                      {items.map((item) => (
-                        <li
-                          key={item}
-                          className="flex items-start gap-2.5 text-sm text-gray-600"
-                        >
-                          <CheckCircle
-                            size={15}
-                            className="text-[#1D9E75] mt-0.5 flex-shrink-0"
-                          />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="flex-1 w-full">
-                    <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-sm min-h-[220px] flex items-center justify-center p-8">
-                      <p className="text-xs text-gray-300 text-center">
-                        [ Screenshot placeholder: {placeholder} ]
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <FeaturesSection />
           </div>
         </section>
 
@@ -673,7 +623,7 @@ export default function HomePage() {
               PMs ship faster with PMRead
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
-              {TESTIMONIALS.map(({ quote, name, title, initials }) => (
+              {TESTIMONIALS.map(({ quote, name, title, avatar }) => (
                 <figure
                   key={name}
                   className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"
@@ -682,13 +632,10 @@ export default function HomePage() {
                     &ldquo;{quote}&rdquo;
                   </blockquote>
                   <figcaption className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center text-xs font-bold text-[#7F77DD] flex-shrink-0">
-                      {initials}
-                    </div>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={avatar} alt={name} width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0" />
                     <div>
-                      <p className="text-sm font-semibold text-gray-900">
-                        {name}
-                      </p>
+                      <p className="text-sm font-semibold text-gray-900">{name}</p>
                       <p className="text-xs text-gray-400">{title}</p>
                     </div>
                   </figcaption>

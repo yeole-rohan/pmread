@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { GLOSSARY, getTerm } from "@/lib/glossary";
 
-const BASE = "https://pmread.rohanyeole.com";
+import { SITE_URL as BASE } from "@/lib/site";
 
 export function generateStaticParams() {
   return GLOSSARY.map((t) => ({ term: t.slug }));
