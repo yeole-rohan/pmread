@@ -8,9 +8,10 @@ const PROD_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 // Prod CSP: strict — only allow the configured API origin.
 const CSP_PROD = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://cdn.razorpay.com",
   "style-src 'self' 'unsafe-inline'",
-  `connect-src 'self' ${PROD_API_URL}`,
+  `connect-src 'self' ${PROD_API_URL} https://api.razorpay.com https://lumberjack.razorpay.com`,
+  "frame-src https://api.razorpay.com",
   "img-src 'self' data: https:",
   "font-src 'self'",
   "frame-ancestors 'none'",
@@ -23,9 +24,10 @@ const CSP_PROD = [
 // unsafe-eval needed for Next.js source maps; ws:// needed for HMR websocket.
 const CSP_DEV = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://cdn.razorpay.com",
   "style-src 'self' 'unsafe-inline'",
-  "connect-src 'self' http://localhost:* https://localhost:* ws://localhost:* wss://localhost:*",
+  "connect-src 'self' http://localhost:* https://localhost:* ws://localhost:* wss://localhost:* https://api.razorpay.com https://lumberjack.razorpay.com",
+  "frame-src https://api.razorpay.com",
   "img-src 'self' data: https: http:",
   "font-src 'self' data:",
   "frame-ancestors 'none'",

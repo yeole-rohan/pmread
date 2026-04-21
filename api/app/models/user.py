@@ -24,6 +24,7 @@ class User(Base):
     billing_provider: Mapped[str | None] = mapped_column(String, nullable=True)  # 'stripe' | 'razorpay'
     plan_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     plan_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    plan_renews_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     # Stripe
     stripe_customer_id: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
     stripe_sub_id: Mapped[str | None] = mapped_column(String, nullable=True)
