@@ -20,11 +20,11 @@ export const USE_CASES: UseCase[] = [
       "Move fast from customer call to feature spec — without the ₹30,000/month enterprise tooling tax.",
     metaDescription:
       "PMRead helps Indian startup product managers turn customer feedback into PRDs fast. Priced in INR, built for lean teams. Try free.",
-    heroStat: { value: "₹2,499/mo", label: "vs ₹8,000–₹30,000 for western PM tools" },
+    heroStat: { value: "₹1,699/mo", label: "vs ₹8,000–₹30,000 for western PM tools" },
     painPoints: [
       {
         title: "Enterprise tools priced for US teams",
-        body: "Productboard, Dovetail, and Aha! charge $30–$80/user/month — which is ₹2,500–₹6,500 per person. For a 3-PM startup team, that's ₹1 lakh+ per year just for tooling. PMRead Pro is ₹2,499/month for one PM, with a usable free tier.",
+        body: "Productboard, Dovetail, and Aha! charge $30–$80/user/month — which is ₹2,500–₹6,500 per person. For a 3-PM startup team, that's ₹1 lakh+ per year just for tooling. PMRead Pro is ₹1,699/month for one PM, with a usable free tier.",
       },
       {
         title: "Customer calls stay in your head",
@@ -42,7 +42,7 @@ export const USE_CASES: UseCase[] = [
       },
       {
         title: "Priced in INR, no conversion tax",
-        body: "Pro plan is ₹2,499/month billed in INR via Razorpay. No international transaction fees, no dollar conversion surprises. Free tier includes 2 PRDs/month — enough to validate the product before paying.",
+        body: "Pro plan is ₹1,699/month billed in INR via Razorpay. No international transaction fees, no dollar conversion surprises. Free tier includes 2 PRDs/month — enough to validate the product before paying.",
       },
       {
         title: "Works with how Indian PMs actually work",
@@ -57,7 +57,7 @@ export const USE_CASES: UseCase[] = [
     faqs: [
       {
         q: "Is PMRead available in India?",
-        a: "Yes. PMRead is built with Indian PMs as a primary audience. Pricing is in INR via Razorpay (₹2,499/mo Pro), and the free tier includes 2 PRDs/month.",
+        a: "Yes. PMRead is built with Indian PMs as a primary audience. Pricing is in INR via Razorpay (₹1,699/mo Pro), and the free tier includes 2 PRDs/month.",
       },
       {
         q: "Does PMRead work with Indian languages?",

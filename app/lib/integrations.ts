@@ -93,7 +93,7 @@ export const INTEGRATIONS: Integration[] = [
       },
       {
         q: "Is Slack ingestion available on the free plan?",
-        a: "No. Slack ingestion requires a Pro plan (₹2,499/mo or $29/mo). The free tier supports file uploads and insight extraction but not external source connections.",
+        a: "No. Slack ingestion requires a Pro plan (₹1,699/mo or $19/mo). The free tier supports file uploads and insight extraction but not external source connections.",
       },
     ],
   },
@@ -177,7 +177,7 @@ export const INTEGRATIONS: Integration[] = [
       },
       {
         q: "Is GitHub integration available on the free plan?",
-        a: "No. GitHub integration requires a Pro plan (₹2,499/mo or $29/mo).",
+        a: "No. GitHub integration requires a Pro plan (₹1,699/mo or $19/mo).",
       },
     ],
   },

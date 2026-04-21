@@ -51,7 +51,7 @@ const jsonLd = {
         "Customer evidence to engineering spec, with citations. PMRead extracts insights from interviews and feedback, then generates PRDs where every requirement traces back to real customer data.",
       offers: [
         { "@type": "Offer", price: "0", priceCurrency: "INR", name: "Free plan" },
-        { "@type": "Offer", price: "999", priceCurrency: "INR", name: "Pro plan" },
+        { "@type": "Offer", price: "1699", priceCurrency: "INR", name: "Pro plan" },
       ],
     },
     {
@@ -194,7 +194,7 @@ const DIFFERENTIATORS = [
   {
     icon: IndianRupee,
     title: "Built for India. Priced in INR.",
-    body: "Every competing tool is priced for US teams at $30–$80/user/month. PMRead Pro is ₹2,499/month — billed in INR via Razorpay, with a free tier that actually lets you use the product.",
+    body: "Every competing tool is priced for US teams at $30–$80/user/month. PMRead Pro is ₹1,699/month — billed in INR via Razorpay, with a free tier that actually lets you use the product.",
   },
 ];
 
@@ -631,7 +631,7 @@ export default function HomePage() {
                 </div>
                 <p className="text-sm font-medium text-gray-500 mb-1">Pro</p>
                 <div className="flex items-end gap-1 mb-5">
-                  <span className="text-4xl font-bold text-gray-900">₹2,499</span>
+                  <span className="text-4xl font-bold text-gray-900">₹1,699</span>
                   <span className="text-gray-400 text-sm mb-1">/month</span>
                 </div>
                 <ul className="space-y-2.5 mb-6">

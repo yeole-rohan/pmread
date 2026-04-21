@@ -298,7 +298,7 @@ function SettingsContent() {
                   onClick={() => setShowUpgrade(true)}
                   className="flex-shrink-0 px-3 py-1.5 bg-[#7F77DD] text-white rounded-lg text-sm font-medium hover:bg-[#6b64c4] transition-colors"
                 >
-                  {isExpired ? "Resubscribe to Pro →" : "Upgrade to Pro — ₹2,499/mo"}
+                  {isExpired ? "Resubscribe to Pro →" : "Upgrade to Pro — ₹1,699/mo"}
                 </button>
               )}
 

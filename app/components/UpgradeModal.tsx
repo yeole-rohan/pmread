@@ -12,8 +12,8 @@ interface UpgradeModalProps {
   defaultBilling?: "monthly" | "annual";
 }
 
-const MONTHLY_PRICE = 2499;
-const ANNUAL_PRICE = 24990;
+const MONTHLY_PRICE = 1699;
+const ANNUAL_PRICE = 16990;
 const ANNUAL_PER_MONTH = Math.round(ANNUAL_PRICE / 12); // 2083
 
 function loadRazorpayScript(): Promise<void> {
