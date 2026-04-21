@@ -72,8 +72,8 @@ async def signup(
     body: SignupRequest,
     db: DBSession = Depends(get_db),
 ):
-    if len(body.password) < 12:
-        raise HTTPException(status_code=422, detail={"error": "Password must be at least 12 characters", "code": "WEAK_PASSWORD"})
+    if len(body.password) < 8:
+        raise HTTPException(status_code=422, detail={"error": "Password must be at least 8 characters", "code": "WEAK_PASSWORD"})
 
     existing = db.query(User).filter(User.email == body.email).first()
     if existing:
@@ -234,8 +234,8 @@ async def change_password(
 ):
     if not verify_password(body.current_password, current_user.password_hash):
         raise HTTPException(status_code=400, detail={"error": "Current password is incorrect", "code": "WRONG_PASSWORD"})
-    if len(body.new_password) < 12:
-        raise HTTPException(status_code=422, detail={"error": "Password must be at least 12 characters", "code": "WEAK_PASSWORD"})
+    if len(body.new_password) < 8:
+        raise HTTPException(status_code=422, detail={"error": "Password must be at least 8 characters", "code": "WEAK_PASSWORD"})
     current_user.password_hash = hash_password(body.new_password)
     # M7 fix: invalidate all remember-me sessions so old tokens can't authenticate after a password change
     db.query(Session).filter(Session.user_id == current_user.id).delete()
@@ -299,8 +299,8 @@ async def reset_password(
     db: DBSession = Depends(get_db),
 ):
     """Verify reset token and set a new password."""
-    if len(body.new_password) < 12:
-        raise HTTPException(status_code=422, detail={"error": "Password must be at least 12 characters", "code": "WEAK_PASSWORD"})
+    if len(body.new_password) < 8:
+        raise HTTPException(status_code=422, detail={"error": "Password must be at least 8 characters", "code": "WEAK_PASSWORD"})
 
     user = db.query(User).filter(
         User.password_reset_token == body.token,
