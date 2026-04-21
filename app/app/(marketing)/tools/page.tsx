@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/lib/site";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -5,11 +6,11 @@ export const metadata: Metadata = {
   title: "Free Product Management Tools — No Signup Required | PMRead",
   description:
     "Free AI tools for product managers: PRD generator, feedback analyzer, user story generator, persona creator, RICE calculator, meeting cost calculator, metric story generator, and PM interview prep.",
-  alternates: { canonical: "https://pmread.rohanyeole.comanyeole.com/tools" },
+  alternates: { canonical: `${SITE_URL}/tools` },
   openGraph: {
     title: "Free PM Tools | PMRead",
     description: "Free AI tools for product managers — PRD generator, feedback analyzer, user story generator, persona creator, and RICE calculator. No signup required.",
-    url: "https://pmread.rohanyeole.comanyeole.com/tools",
+    url: `${SITE_URL}/tools`,
   },
   twitter: {
     card: "summary_large_image",
@@ -103,13 +104,13 @@ const jsonLd = {
       "@type": "ItemList",
       name: "Free Product Management Tools",
       description: "Free AI tools for product managers — no signup required.",
-      url: "https://pmread.rohanyeole.comanyeole.com/tools",
+      url: `${SITE_URL}/tools`,
       numberOfItems: TOOLS.length, // auto-computed from TOOLS array
       itemListElement: TOOLS.map((t, i) => ({
         "@type": "ListItem",
         position: i + 1,
         name: t.name,
-        url: `https://pmread.rohanyeole.comanyeole.com${t.href}`,
+        url: `${SITE_URL}${t.href}`,
         description: t.desc,
       })),
     },
@@ -124,8 +125,8 @@ const jsonLd = {
     {
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://pmread.rohanyeole.comanyeole.com" },
-        { "@type": "ListItem", position: 2, name: "Tools", item: "https://pmread.rohanyeole.comanyeole.com/tools" },
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Tools", item: `${SITE_URL}/tools` },
       ],
     },
   ],

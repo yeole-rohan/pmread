@@ -4,7 +4,7 @@ import Link from "next/link";
 import { CheckCircle, ArrowRight } from "lucide-react";
 import { INTEGRATIONS, getIntegration } from "@/lib/integrations";
 
-const BASE = "https://pmread.rohanyeole.com";
+import { SITE_URL as BASE } from "@/lib/site";
 
 export function generateStaticParams() {
   return INTEGRATIONS.map((i) => ({ slug: i.slug }));

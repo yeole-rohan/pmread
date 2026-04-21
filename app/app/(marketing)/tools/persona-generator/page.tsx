@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/lib/site";
 import type { Metadata } from "next";
 import PersonaGeneratorTool from "./PersonaGeneratorTool";
 import Link from "next/link";
@@ -6,11 +7,11 @@ export const metadata: Metadata = {
   title: "Free AI Persona Generator — User Persona Creator | PMRead",
   description:
     "Turn bullet points about your users into a structured persona card. Free AI persona generator for product managers — no signup required.",
-  alternates: { canonical: "https://pmread.rohanyeole.comanyeole.com/tools/persona-generator" },
+  alternates: { canonical: `${SITE_URL}/tools/persona-generator` },
   openGraph: {
     title: "Free AI Persona Generator | PMRead",
     description: "Paste notes about your user and get a full persona card with goals, frustrations, a memorable quote, and recommended product qualities.",
-    url: "https://pmread.rohanyeole.comanyeole.com/tools/persona-generator",
+    url: `${SITE_URL}/tools/persona-generator`,
   },
   twitter: {
     card: "summary_large_image",
@@ -48,7 +49,7 @@ const jsonLd = {
       description: "Generate structured user personas from bullet points or interview notes using AI. Free, no signup required.",
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
-      url: "https://pmread.rohanyeole.comanyeole.com/tools/persona-generator",
+      url: `${SITE_URL}/tools/persona-generator`,
     },
     {
       "@type": "HowTo",
@@ -72,9 +73,9 @@ const jsonLd = {
     {
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://pmread.rohanyeole.comanyeole.com" },
-        { "@type": "ListItem", position: 2, name: "Tools", item: "https://pmread.rohanyeole.comanyeole.com/tools" },
-        { "@type": "ListItem", position: 3, name: "Persona Generator", item: "https://pmread.rohanyeole.comanyeole.com/tools/persona-generator" },
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Tools", item: `${SITE_URL}/tools` },
+        { "@type": "ListItem", position: 3, name: "Persona Generator", item: `${SITE_URL}/tools/persona-generator` },
       ],
     },
   ],
