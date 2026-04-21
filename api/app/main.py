@@ -3,7 +3,6 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
-from uvicorn.middleware.proxy_headers import ProxyHeadersMiddleware
 from sqladmin import Admin, ModelView
 from sqladmin.authentication import AuthenticationBackend
 from starlette.requests import Request
@@ -51,11 +50,6 @@ app = FastAPI(
     redoc_url=None,
     lifespan=lifespan,
 )
-
-# Trust X-Forwarded-Proto/For from nginx so scheme is seen as https on staging/prod.
-# Without this uvicorn sees scheme=http internally and sqladmin generates http://
-# redirect URLs — Secure cookies won't travel over that redirect, breaking login.
-app.add_middleware(ProxyHeadersMiddleware, trusted_hosts="*")
 
 app.add_middleware(
     SessionMiddleware,

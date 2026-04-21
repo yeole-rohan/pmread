@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/lib/site";
 import type { Metadata } from "next";
 import FeaturePrioritizationTool from "./FeaturePrioritizationTool";
 import Link from "next/link";
@@ -6,11 +7,11 @@ export const metadata: Metadata = {
   title: "Free RICE Feature Prioritization Calculator | PMRead",
   description:
     "Prioritize your product backlog with RICE scoring. Enter features with Reach, Impact, Confidence, and Effort — get a ranked list instantly. Free, no signup.",
-  alternates: { canonical: "https://pmread.rohanyeole.com/tools/feature-prioritization" },
+  alternates: { canonical: `${SITE_URL}/tools/feature-prioritization` },
   openGraph: {
     title: "Free RICE Feature Prioritization Calculator | PMRead",
     description: "Score and rank product features using the RICE framework. Free prioritization tool for product managers.",
-    url: "https://pmread.rohanyeole.com/tools/feature-prioritization",
+    url: `${SITE_URL}/tools/feature-prioritization`,
   },
   twitter: {
     card: "summary_large_image",
@@ -48,7 +49,7 @@ const jsonLd = {
       description: "RICE scoring calculator for product managers. Rank features by Reach × Impact × Confidence ÷ Effort.",
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
-      url: "https://pmread.rohanyeole.com/tools/feature-prioritization",
+      url: `${SITE_URL}/tools/feature-prioritization`,
     },
     {
       "@type": "HowTo",
@@ -73,9 +74,9 @@ const jsonLd = {
     {
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://pmread.rohanyeole.com" },
-        { "@type": "ListItem", position: 2, name: "Tools", item: "https://pmread.rohanyeole.com/tools" },
-        { "@type": "ListItem", position: 3, name: "Feature Prioritization", item: "https://pmread.rohanyeole.com/tools/feature-prioritization" },
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Tools", item: `${SITE_URL}/tools` },
+        { "@type": "ListItem", position: 3, name: "Feature Prioritization", item: `${SITE_URL}/tools/feature-prioritization` },
       ],
     },
   ],

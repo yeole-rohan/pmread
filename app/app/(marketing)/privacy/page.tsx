@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/lib/site";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -5,7 +6,7 @@ export const metadata: Metadata = {
   title: "Privacy Policy — PMRead",
   description:
     "PMRead's privacy policy. How we collect, use, and protect your data.",
-  alternates: { canonical: "https://pmread.rohanyeole.com/privacy" },
+  alternates: { canonical: SITE_URL + '/privacy' },
   robots: { index: true, follow: true },
 };
 
@@ -114,7 +115,7 @@ const SECTIONS = [
   {
     id: "changes",
     title: "8. Changes to this policy",
-    text: "We may update this policy from time to time. Material changes will be notified by email to registered users at least 14 days before taking effect. The current policy is always available at pmread.rohanyeole.com/privacy.",
+    text: "We may update this policy from time to time. Material changes will be notified by email to registered users at least 14 days before taking effect. The current policy is always available at pmread.org/privacy.",
   },
   {
     id: "contact",

@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/lib/site";
 import type { Metadata } from "next";
 import Link from "next/link";
 import PricingPlans from "@/components/PricingPlans";
@@ -6,12 +7,12 @@ export const metadata: Metadata = {
   title: "Pricing — PMRead",
   description:
     "Start free with 2 PRDs/month. Upgrade to Pro for ₹1,699/month and unlock 15 PRDs, Slack ingestion, GitHub context, and PDF export.",
-  alternates: { canonical: "https://pmread.rohanyeole.com/pricing" },
+  alternates: { canonical: SITE_URL + '/pricing' },
   openGraph: {
     title: "Pricing — PMRead",
     description:
       "Start free with 2 PRDs/month. Upgrade to Pro for ₹1,699/month.",
-    url: "https://pmread.rohanyeole.com/pricing",
+    url: SITE_URL + '/pricing',
   },
 };
 

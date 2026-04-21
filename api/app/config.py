@@ -31,7 +31,7 @@ class Settings(BaseSettings):
 
     # App
     ENVIRONMENT: str = "development"
-    FRONTEND_URL: str = "https://pmread.rohanyeole.com"
+    FRONTEND_URL: str = "https://pmread.org"
     SENTRY_DSN: str = ""
 
     # Admin

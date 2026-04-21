@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/lib/site";
 import type { Metadata } from "next";
 import FeedbackAnalyzerTool from "./FeedbackAnalyzerTool";
 import Link from "next/link";
@@ -6,11 +7,11 @@ export const metadata: Metadata = {
   title: "Free Customer Feedback Analyzer | PMRead",
   description:
     "Paste raw customer feedback and instantly extract key themes, pain points, and feature requests. Free AI feedback analysis tool — no signup required.",
-  alternates: { canonical: "https://pmread.rohanyeole.comanyeole.com/tools/feedback-analyzer" },
+  alternates: { canonical: `${SITE_URL}/tools/feedback-analyzer` },
   openGraph: {
     title: "Free Customer Feedback Analyzer | PMRead",
     description: "Paste raw feedback and get structured themes, pain points, feature requests, and recommended actions in seconds.",
-    url: "https://pmread.rohanyeole.comanyeole.com/tools/feedback-analyzer",
+    url: `${SITE_URL}/tools/feedback-analyzer`,
   },
   twitter: {
     card: "summary_large_image",
@@ -48,7 +49,7 @@ const jsonLd = {
       description: "AI tool that extracts themes, pain points, and feature requests from raw customer feedback. Free, no signup required.",
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
-      url: "https://pmread.rohanyeole.comanyeole.com/tools/feedback-analyzer",
+      url: `${SITE_URL}/tools/feedback-analyzer`,
     },
     {
       "@type": "HowTo",
@@ -72,9 +73,9 @@ const jsonLd = {
     {
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://pmread.rohanyeole.comanyeole.com" },
-        { "@type": "ListItem", position: 2, name: "Tools", item: "https://pmread.rohanyeole.comanyeole.com/tools" },
-        { "@type": "ListItem", position: 3, name: "Feedback Analyzer", item: "https://pmread.rohanyeole.comanyeole.com/tools/feedback-analyzer" },
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Tools", item: `${SITE_URL}/tools` },
+        { "@type": "ListItem", position: 3, name: "Feedback Analyzer", item: `${SITE_URL}/tools/feedback-analyzer` },
       ],
     },
   ],
