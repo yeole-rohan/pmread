@@ -7,7 +7,6 @@ const FOOTER_LINKS = {
     { label: "Interview Prep", href: "/tools/interview-prep" },
     { label: "Templates", href: "/templates" },
     { label: "Integrations", href: "/integrations" },
-    { label: "Changelog", href: "/changelog" },
   ],
   Resources: [
     { label: "Blog", href: "/blog" },
