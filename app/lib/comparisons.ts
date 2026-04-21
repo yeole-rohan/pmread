@@ -45,7 +45,7 @@ export const COMPARISONS: Comparison[] = [
       { feature: "Interview highlight reels", pmread: false, competitor: true },
       { feature: "Auto-generated PRD sections", pmread: true, competitor: false },
       { feature: "Free tier", pmread: "2 PRDs/mo", competitor: "Limited trial" },
-      { feature: "Pro pricing", pmread: "₹2,499/mo", competitor: "$30–$50/user/mo" },
+      { feature: "Pro pricing", pmread: "₹1,699/mo", competitor: "$30–$50/user/mo" },
       { feature: "Built for India market", pmread: true, competitor: false },
     ],
     pmreadWins: [
@@ -106,7 +106,7 @@ export const COMPARISONS: Comparison[] = [
       { feature: "Jira / Linear sync", pmread: false, competitor: true },
       { feature: "Stakeholder-facing roadmap views", pmread: false, competitor: true },
       { feature: "Free tier", pmread: "2 PRDs/mo", competitor: "Trial only" },
-      { feature: "Pro pricing", pmread: "₹2,499/mo", competitor: "$20–$80/user/mo" },
+      { feature: "Pro pricing", pmread: "₹1,699/mo", competitor: "$20–$80/user/mo" },
       { feature: "Setup time", pmread: "< 5 minutes", competitor: "Days to weeks" },
     ],
     pmreadWins: [
@@ -168,7 +168,7 @@ export const COMPARISONS: Comparison[] = [
       { feature: "Slack ingestion", pmread: "Pro", competitor: false },
       { feature: "GitHub context", pmread: "Pro", competitor: false },
       { feature: "Free tier", pmread: "2 PRDs/mo", competitor: "Free (limited AI)" },
-      { feature: "AI pricing", pmread: "₹2,499/mo", competitor: "$10/user/mo add-on" },
+      { feature: "AI pricing", pmread: "₹1,699/mo", competitor: "$10/user/mo add-on" },
     ],
     pmreadWins: [
       "PRDs grounded in real customer evidence — not hallucinated requirements",

@@ -5,12 +5,12 @@ import PricingPlans from "@/components/PricingPlans";
 export const metadata: Metadata = {
   title: "Pricing — PMRead",
   description:
-    "Start free with 2 PRDs/month. Upgrade to Pro for ₹2,499/month and unlock 15 PRDs, Slack ingestion, GitHub context, and PDF export.",
+    "Start free with 2 PRDs/month. Upgrade to Pro for ₹1,699/month and unlock 15 PRDs, Slack ingestion, GitHub context, and PDF export.",
   alternates: { canonical: "https://pmread.rohanyeole.com/pricing" },
   openGraph: {
     title: "Pricing — PMRead",
     description:
-      "Start free with 2 PRDs/month. Upgrade to Pro for ₹2,499/month.",
+      "Start free with 2 PRDs/month. Upgrade to Pro for ₹1,699/month.",
     url: "https://pmread.rohanyeole.com/pricing",
   },
 };
@@ -40,7 +40,7 @@ const faqItems = [
   },
   {
     q: "How does annual billing work?",
-    a: "Annual billing charges you for 10 months upfront (₹24,990/year), giving you 2 months free compared to monthly billing. You can toggle between monthly and annual on this page before signing up.",
+    a: "Annual billing charges you for 10 months upfront (₹16,990/year), giving you 2 months free compared to monthly billing. You can toggle between monthly and annual on this page before signing up.",
   },
   {
     q: "What file formats are supported?",

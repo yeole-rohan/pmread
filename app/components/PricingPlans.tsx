@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { CheckCircle, X } from "lucide-react";
 
-const MONTHLY_PRICE = 2499;
-const ANNUAL_PRICE = 24990; // 10 months = ~2 months free
+const MONTHLY_PRICE = 1699;
+const ANNUAL_PRICE = 16990; // 10 months = ~2 months free
 
 type FeatureRow = {
   name: string;
@@ -151,7 +151,7 @@ export default function PricingPlans() {
                 </p>
               </div>
             ) : (
-              <p className="text-sm text-gray-400 mt-1">≈ $30 USD · billed monthly</p>
+              <p className="text-sm text-gray-400 mt-1">≈ $19 USD · billed monthly</p>
             )}
             <p className="text-sm text-gray-500 mt-2">
               For PMs shipping features regularly.

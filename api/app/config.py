@@ -26,8 +26,8 @@ class Settings(BaseSettings):
     # Razorpay
     RAZORPAY_KEY_ID: str = ""
     RAZORPAY_KEY_SECRET: str = ""
-    RAZORPAY_PRO_PLAN_ID: str = ""         # monthly plan — ₹2,499/mo, create in Razorpay dashboard
-    RAZORPAY_PRO_ANNUAL_PLAN_ID: str = ""  # annual plan  — ₹24,990/yr, create in Razorpay dashboard
+    RAZORPAY_PRO_PLAN_ID: str = ""         # monthly plan — ₹1,699/mo, create in Razorpay dashboard
+    RAZORPAY_PRO_ANNUAL_PLAN_ID: str = ""  # annual plan  — ₹16,990/yr, create in Razorpay dashboard
 
     # App
     ENVIRONMENT: str = "development"
