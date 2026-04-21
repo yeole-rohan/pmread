@@ -16,6 +16,7 @@ import {
 import MarketingNav from "@/components/MarketingNav";
 import MarketingFooter from "@/components/MarketingFooter";
 import WorkflowChart from "@/components/WorkflowChart";
+import FeaturesSection from "@/components/FeaturesSection";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -136,41 +137,6 @@ const HOW_IT_WORKS = [
   },
 ];
 
-const FEATURES = [
-  {
-    tag: "Evidence-backed",
-    title: "PRDs built on real customer data",
-    desc: "Every section links back to actual customer quotes. Not ChatGPT filling in templates — insights extracted from your own research.",
-    items: [
-      "Pain points with supporting verbatim quotes",
-      "Feature requests ranked by mention frequency",
-      "Engineering tasks scoped from your actual ask",
-    ],
-    placeholder: "PRD with evidence quotes",
-  },
-  {
-    tag: "Multi-source",
-    title: "All your feedback in one place",
-    desc: "Connect every channel where customers talk. PMRead ingests them all and builds a unified insight board across all your sources.",
-    items: [
-      "PDF uploads: reports, surveys, NPS verbatims",
-      "Call transcripts: Zoom, Fireflies, Gong, Loom",
-      "Slack channel exports and GitHub codebase context (Pro)",
-    ],
-    placeholder: "Multi-source ingestion UI",
-  },
-  {
-    tag: "Instant",
-    title: "From research to PRD in under 2 minutes",
-    desc: "Upload your files, let PMRead extract insights, then generate a complete PRD in one click. What used to take a day takes minutes.",
-    items: [
-      "Insights extracted in ~30 seconds after upload",
-      "One-click PRD generation with streaming output",
-      "Ask any question about your research with the Ask tab",
-    ],
-    placeholder: "PRD generation speed demo",
-  },
-];
 
 const DIFFERENTIATORS = [
   {
@@ -488,48 +454,7 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="space-y-20">
-              {FEATURES.map(({ tag, title, desc, items, placeholder }, i) => (
-                <div
-                  key={tag}
-                  className={`flex flex-col md:flex-row items-center gap-12 ${
-                    i % 2 === 1 ? "md:flex-row-reverse" : ""
-                  }`}
-                >
-                  <div className="flex-1">
-                    <div className="inline-block px-2.5 py-1 rounded-full bg-purple-50 text-[#7F77DD] text-xs font-semibold mb-4 uppercase tracking-wide">
-                      {tag}
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                      {title}
-                    </h3>
-                    <p className="text-gray-500 mb-6 leading-relaxed">{desc}</p>
-                    <ul className="space-y-2.5">
-                      {items.map((item) => (
-                        <li
-                          key={item}
-                          className="flex items-start gap-2.5 text-sm text-gray-600"
-                        >
-                          <CheckCircle
-                            size={15}
-                            className="text-[#1D9E75] mt-0.5 flex-shrink-0"
-                          />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <div className="flex-1 w-full">
-                    <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-sm min-h-[220px] flex items-center justify-center p-8">
-                      <p className="text-xs text-gray-300 text-center">
-                        [ Screenshot placeholder: {placeholder} ]
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <FeaturesSection />
           </div>
         </section>
 
