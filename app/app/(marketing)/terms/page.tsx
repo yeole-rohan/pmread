@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/lib/site";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -5,7 +6,7 @@ export const metadata: Metadata = {
   title: "Terms of Service — PMRead",
   description:
     "PMRead's terms of service. Your rights and responsibilities when using PMRead.",
-  alternates: { canonical: "https://pmread.rohanyeole.com/terms" },
+  alternates: { canonical: SITE_URL + '/terms' },
   robots: { index: true, follow: true },
 };
 
@@ -79,7 +80,7 @@ const SECTIONS = [
   {
     id: "data",
     title: "7. Data handling",
-    text: "Our Privacy Policy (pmread.rohanyeole.com/privacy) governs how we collect and use your data and is incorporated into these terms by reference.",
+    text: "Our Privacy Policy (pmread.org/privacy) governs how we collect and use your data and is incorporated into these terms by reference.",
   },
   {
     id: "availability",

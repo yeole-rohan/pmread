@@ -4,7 +4,7 @@ import Link from "next/link";
 import { CheckCircle } from "lucide-react";
 import { USE_CASES, getUseCase } from "@/lib/use-cases";
 
-const BASE = "https://pmread.rohanyeole.com";
+import { SITE_URL as BASE } from "@/lib/site";
 
 export function generateStaticParams() {
   return USE_CASES.map((u) => ({ slug: u.slug }));

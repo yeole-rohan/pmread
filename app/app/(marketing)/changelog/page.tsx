@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/lib/site";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -5,11 +6,11 @@ export const metadata: Metadata = {
   title: "Changelog — PMRead",
   description:
     "What's new in PMRead — product updates, new features, and improvements shipped by the team.",
-  alternates: { canonical: "https://pmread.rohanyeole.com/changelog" },
+  alternates: { canonical: SITE_URL + '/changelog' },
   openGraph: {
     title: "PMRead Changelog",
     description: "Product updates, new features, and improvements.",
-    url: "https://pmread.rohanyeole.com/changelog",
+    url: SITE_URL + '/changelog',
   },
 };
 
@@ -17,7 +18,7 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   name: "PMRead Changelog",
-  url: "https://pmread.rohanyeole.com/changelog",
+  url: SITE_URL + '/changelog',
   description: "Product updates, new features, and improvements shipped by PMRead.",
 };
 

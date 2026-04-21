@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const BASE = "https://pmread.rohanyeole.com";
+import { SITE_URL as BASE } from "@/lib/site";
 
 // Static pages — update lastModified whenever the page content changes
 const STATIC_PAGES: MetadataRoute.Sitemap = [

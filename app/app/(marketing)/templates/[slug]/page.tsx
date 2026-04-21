@@ -4,7 +4,7 @@ import Link from "next/link";
 import { TEMPLATES, getTemplate } from "@/lib/templates";
 import TemplateCopyBlock from "@/components/TemplateCopyBlock";
 
-const BASE = "https://pmread.rohanyeole.com";
+import { SITE_URL as BASE } from "@/lib/site";
 
 export function generateStaticParams() {
   return TEMPLATES.map((t) => ({ slug: t.slug }));

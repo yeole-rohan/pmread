@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/lib/site";
 import type { Metadata } from "next";
 import UserStoryGeneratorTool from "./UserStoryGeneratorTool";
 import Link from "next/link";
@@ -6,11 +7,11 @@ export const metadata: Metadata = {
   title: "Free AI User Story Generator | PMRead",
   description:
     "Generate user stories and acceptance criteria from a feature description. Free AI user story generator for product managers — no signup required.",
-  alternates: { canonical: "https://pmread.rohanyeole.comanyeole.com/tools/user-story-generator" },
+  alternates: { canonical: `${SITE_URL}/tools/user-story-generator` },
   openGraph: {
     title: "Free AI User Story Generator | PMRead",
     description: "Describe a feature and get user stories in 'As a / I want / So that' format with Given/When/Then acceptance criteria.",
-    url: "https://pmread.rohanyeole.comanyeole.com/tools/user-story-generator",
+    url: `${SITE_URL}/tools/user-story-generator`,
   },
   twitter: {
     card: "summary_large_image",
@@ -48,7 +49,7 @@ const jsonLd = {
       description: "Generate user stories and acceptance criteria from a feature description using AI. Free, no signup required.",
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
-      url: "https://pmread.rohanyeole.comanyeole.com/tools/user-story-generator",
+      url: `${SITE_URL}/tools/user-story-generator`,
     },
     {
       "@type": "HowTo",
@@ -72,9 +73,9 @@ const jsonLd = {
     {
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://pmread.rohanyeole.comanyeole.com" },
-        { "@type": "ListItem", position: 2, name: "Tools", item: "https://pmread.rohanyeole.comanyeole.com/tools" },
-        { "@type": "ListItem", position: 3, name: "User Story Generator", item: "https://pmread.rohanyeole.comanyeole.com/tools/user-story-generator" },
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Tools", item: `${SITE_URL}/tools` },
+        { "@type": "ListItem", position: 3, name: "User Story Generator", item: `${SITE_URL}/tools/user-story-generator` },
       ],
     },
   ],
