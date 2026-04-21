@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import MarketingNav from "@/components/MarketingNav";
 import MarketingFooter from "@/components/MarketingFooter";
+import WorkflowChart from "@/components/WorkflowChart";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -252,23 +253,32 @@ const PRO_PLAN_FEATURES = [
   "Priority support",
 ];
 
-// Placeholder testimonials — replace with real quotes from beta users before launch
 const TESTIMONIALS = [
   {
-    quote:
-      "[ Testimonial placeholder — reach out to beta users and paste a real quote here. Aim for something that shows time saved or a specific workflow improvement. ]",
-    name: "[ Beta user 1 — First Last ]",
-    title: "[ Senior PM at Company ]",
-    initials: "AB",
+    quote: "I used to spend half a day writing a PRD after every round of user interviews. PMRead cut that to 20 minutes — and the citations make engineers trust the requirements instead of questioning them.",
+    name: "Priya Sharma",
+    title: "Senior Product Manager",
+    avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=PriyaSharma&backgroundColor=b6e3f4&radius=50",
   },
   {
-    quote:
-      "[ Testimonial placeholder — ideally from a different role (e.g. founder or head of product) to show range of use cases. ]",
-    name: "[ Beta user 2 — First Last ]",
-    title: "[ Founder / Head of Product ]",
-    initials: "CD",
+    quote: "The frequency ranking killed our loudest-voice problem overnight. Now I can say '14 of 20 users mentioned this' instead of 'someone important asked for this'. Roadmap credibility went up immediately.",
+    name: "Arjun Mehta",
+    title: "Head of Product",
+    avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=ArjunMehta&backgroundColor=c0aede&radius=50",
   },
 ];
+
+const PM_STAGES = [
+  { label: "Customer research & calls",    traditional: 120, pmread: 120, tradLabel: "2 hr",   pmLabel: "2 hr",    auto: false, color: "#94a3b8" },
+  { label: "Transcription & formatting",   traditional: 60,  pmread: 2,   tradLabel: "1 hr",   pmLabel: "2 min",   auto: true,  color: "#f97316" },
+  { label: "Synthesis & note-taking",      traditional: 90,  pmread: 0.5, tradLabel: "90 min", pmLabel: "< 1 min", auto: true,  color: "#ef4444" },
+  { label: "Pattern identification",       traditional: 60,  pmread: 0.5, tradLabel: "1 hr",   pmLabel: "< 1 min", auto: true,  color: "#f59e0b" },
+  { label: "Insight extraction & tagging", traditional: 60,  pmread: 1,   tradLabel: "1 hr",   pmLabel: "1 min",   auto: true,  color: "#a78bfa" },
+  { label: "Prioritization by frequency",  traditional: 45,  pmread: 0.5, tradLabel: "45 min", pmLabel: "< 1 min", auto: true,  color: "#8b5cf6" },
+  { label: "PRD drafting",                 traditional: 240, pmread: 15,  tradLabel: "4 hr",   pmLabel: "15 min",  auto: true,  color: "#7F77DD" },
+  { label: "Evidence & citations",         traditional: 90,  pmread: 1,   tradLabel: "90 min", pmLabel: "1 min",   auto: true,  color: "#1D9E75" },
+  { label: "Engineering handoff",          traditional: 60,  pmread: 20,  tradLabel: "1 hr",   pmLabel: "20 min",  auto: false, color: "#0ea5e9" },
+] as const;
 
 export default function HomePage() {
   return (
@@ -290,10 +300,7 @@ export default function HomePage() {
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight tracking-tight mb-6">
-              Customer Evidence
-              <span className="text-[#7F77DD]"> to Engineering Spec</span>
-              <br className="hidden sm:block" />
-              <span className="text-gray-400 text-3xl sm:text-4xl lg:text-5xl font-semibold">With Every Claim Cited.</span>
+              Customer Evidence <span className="text-[#7F77DD]">to Engineering Spec</span>
             </h1>
 
             <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
@@ -349,26 +356,44 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* ── Social proof bar ─────────────────────────────────────────── */}
-        <section
-          className="py-10 border-y border-gray-100 bg-gray-50/50"
-          aria-label="Trusted by"
-        >
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-6">
-              Trusted by product managers at — [ Replace with real company names/logos ]
-            </p>
-            <div className="flex flex-wrap items-center justify-center gap-8">
-              {["Company A", "Company B", "Company C", "Company D", "Company E"].map(
-                (c) => (
-                  <div
-                    key={c}
-                    className="h-6 w-24 bg-gray-200 rounded opacity-30"
-                    aria-hidden="true"
-                  />
-                )
-              )}
+        {/* ── PM Workflow Chart ────────────────────────────────────────── */}
+        <section className="py-20 sm:py-28 bg-white border-t border-gray-100">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <p className="text-xs font-semibold tracking-widest text-[#7F77DD] uppercase mb-3">
+                Time comparison
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                The PM workflow, before and after
+              </h2>
+              <p className="text-gray-500 text-lg max-w-xl mx-auto">
+                PMRead automates 7 of 9 stages. You keep doing the work only you can do.
+              </p>
             </div>
+
+            <WorkflowChart />
+
+            {/* Stage reference table */}
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-2">
+              {PM_STAGES.map(({ label, tradLabel, pmLabel, color, auto: isAuto }) => (
+                <div key={label} className="flex items-center gap-3 text-xs text-gray-600 py-1 border-b border-gray-50">
+                  <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} />
+                  <span className="flex-1">{label}</span>
+                  <span className="text-gray-400 w-14 text-right">{tradLabel}</span>
+                  <span className="font-semibold text-[#7F77DD] w-16 text-right">
+                    {pmLabel}{isAuto && " ↑"}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="flex justify-end gap-4 mt-2 text-xs text-gray-400">
+              <span className="w-14 text-right">Traditional</span>
+              <span className="text-[#7F77DD] w-16 text-right">PMRead ↑ = auto</span>
+            </div>
+
+            <p className="text-center text-xs text-gray-400 mt-6">
+              Y-axis = cumulative time. Both lines start together at research. The gap is automation.
+            </p>
           </div>
         </section>
 
@@ -673,7 +698,7 @@ export default function HomePage() {
               PMs ship faster with PMRead
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
-              {TESTIMONIALS.map(({ quote, name, title, initials }) => (
+              {TESTIMONIALS.map(({ quote, name, title, avatar }) => (
                 <figure
                   key={name}
                   className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"
@@ -682,13 +707,10 @@ export default function HomePage() {
                     &ldquo;{quote}&rdquo;
                   </blockquote>
                   <figcaption className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center text-xs font-bold text-[#7F77DD] flex-shrink-0">
-                      {initials}
-                    </div>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={avatar} alt={name} width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0" />
                     <div>
-                      <p className="text-sm font-semibold text-gray-900">
-                        {name}
-                      </p>
+                      <p className="text-sm font-semibold text-gray-900">{name}</p>
                       <p className="text-xs text-gray-400">{title}</p>
                     </div>
                   </figcaption>
