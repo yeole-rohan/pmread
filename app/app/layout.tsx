@@ -20,9 +20,8 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE_URL,
     siteName: "PMRead",
-    images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
-  twitter: { card: "summary_large_image", images: ["/og-image.png"] },
+  twitter: { card: "summary_large_image" },
   robots: process.env.NEXT_PUBLIC_NOINDEX === "true"
     ? { index: false, follow: false }
     : { index: true, follow: true },
