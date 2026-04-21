@@ -71,7 +71,7 @@ export default function MarketingFooter() {
           <div className="flex items-center gap-4">
             {/* Social placeholders */}
             <a
-              href="https://twitter.com/pmreadapp"
+              href="https://x.com/RohanYeole99904"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
@@ -80,7 +80,7 @@ export default function MarketingFooter() {
               X / Twitter
             </a>
             <a
-              href="https://linkedin.com/company/pmread"
+              href="https://www.linkedin.com/in/rohan-yeole-a90282136/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
