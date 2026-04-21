@@ -22,6 +22,7 @@ export const metadata: Metadata = {
     siteName: "PMRead",
   },
   twitter: { card: "summary_large_image" },
+  verification: { google: "xueZ9q7sAS6VO8lAIskvJovfMinZGQZiGJ4uqPNbNgs", other: { "msvalidate.01": "1F44885A78C356C4A0627DAC299F6302" } },
   robots: process.env.NEXT_PUBLIC_NOINDEX === "true"
     ? { index: false, follow: false }
     : { index: true, follow: true },
