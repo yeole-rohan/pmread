@@ -22,12 +22,6 @@ const STATIC_PAGES: MetadataRoute.Sitemap = [
     priority: 0.7,
   },
   {
-    url: `${BASE}/changelog`,
-    lastModified: new Date("2026-04-16"),
-    changeFrequency: "weekly",
-    priority: 0.6,
-  },
-  {
     url: `${BASE}/privacy`,
     lastModified: new Date("2026-04-16"),
     changeFrequency: "yearly",
