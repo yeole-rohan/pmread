@@ -255,7 +255,6 @@ def _background_summarize(project_id: str, file_chunks: list[tuple[str, str, str
     Sequential with a small delay so concurrent jobs share the rate limit gracefully.
     """
     from app.config import settings
-    from app.models.github_chunk import GithubCodeChunk
     from sqlalchemy import text as sa_text
 
     groq_key = settings.GROQ_API_KEY
@@ -300,7 +299,6 @@ async def index_github_repo(
     try:
         from app.models.project import Project
         from app.models.github_chunk import GithubCodeChunk
-        from app.config import settings
 
         project = db.query(Project).filter(Project.id == project_id).first()
         if not project:
