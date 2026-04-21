@@ -7,6 +7,7 @@ export interface User {
   billing_period: "monthly" | "annual" | null;
   plan_started_at: string | null;
   plan_expires_at: string | null;
+  plan_renews_at: string | null;
   analyses_used: number;
   prds_generated_this_month: number;
   prds_reset_at: string | null;
