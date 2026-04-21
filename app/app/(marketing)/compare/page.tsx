@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { COMPARISONS } from "@/lib/comparisons";
 
-const BASE = "https://pmread.rohanyeole.com";
+import { SITE_URL as BASE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "PMRead vs Alternatives — Tool Comparisons | PMRead",

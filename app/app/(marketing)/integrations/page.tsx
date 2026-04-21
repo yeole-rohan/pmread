@@ -3,7 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { INTEGRATIONS } from "@/lib/integrations";
 
-const BASE = "https://pmread.rohanyeole.com";
+import { SITE_URL as BASE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Integrations — Connect Slack, GitHub & More | PMRead",

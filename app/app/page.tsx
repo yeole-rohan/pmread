@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import MarketingNav from "@/components/MarketingNav";
 import MarketingFooter from "@/components/MarketingFooter";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "PMRead — Customer Evidence to Engineering Spec",
@@ -28,12 +29,12 @@ export const metadata: Metadata = {
     "feedback synthesis",
     "customer evidence to spec",
   ],
-  alternates: { canonical: "https://pmread.rohanyeole.com" },
+  alternates: { canonical: SITE_URL },
   openGraph: {
     title: "PMRead — Customer Evidence to Engineering Spec",
     description:
       "Upload customer interviews, transcripts, and feedback. PMRead extracts insights, ranks them by frequency, and generates a PRD where every requirement is traced back to real customer evidence.",
-    url: "https://pmread.rohanyeole.com",
+    url: SITE_URL,
     type: "website",
   },
 };
@@ -46,7 +47,7 @@ const jsonLd = {
       name: "PMRead",
       applicationCategory: "BusinessApplication",
       operatingSystem: "Web",
-      url: "https://pmread.rohanyeole.com",
+      url: SITE_URL,
       description:
         "Customer evidence to engineering spec, with citations. PMRead extracts insights from interviews and feedback, then generates PRDs where every requirement traces back to real customer data.",
       offers: [
@@ -57,7 +58,7 @@ const jsonLd = {
     {
       "@type": "Organization",
       name: "PMRead",
-      url: "https://pmread.rohanyeole.com",
+      url: SITE_URL,
       foundingLocation: "India",
       contactPoint: {
         "@type": "ContactPoint",
@@ -234,7 +235,7 @@ const FREE_TOOLS = [
 const FREE_PLAN_FEATURES = [
   "2 PRDs / month",
   "Unlimited insights",
-  "File uploads (PDF, audio, video)",
+  "File uploads (PDF, DOCX)",
   "Insights board",
   "Ask tab Q&A",
 ];
@@ -290,7 +291,6 @@ export default function HomePage() {
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight tracking-tight mb-6">
               Customer Evidence
-              <br className="hidden sm:block" />
               <span className="text-[#7F77DD]"> to Engineering Spec</span>
               <br className="hidden sm:block" />
               <span className="text-gray-400 text-3xl sm:text-4xl lg:text-5xl font-semibold">With Every Claim Cited.</span>

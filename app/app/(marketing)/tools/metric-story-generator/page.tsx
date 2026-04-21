@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import MetricStoryGeneratorTool from "./MetricStoryGeneratorTool";
 
-const BASE = "https://pmread.rohanyeole.com";
+import { SITE_URL as BASE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Metric Story Generator — Raw Data to Narrative | PMRead",
