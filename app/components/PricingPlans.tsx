@@ -16,7 +16,7 @@ export const FEATURE_ROWS: FeatureRow[] = [
   { name: "PRDs per month", free: "2", pro: "15" },
   { name: "Insight extraction", free: true, pro: true },
   { name: "Unlimited insights", free: true, pro: true },
-  { name: "File uploads (PDF, DOCX, audio, video)", free: true, pro: true },
+  { name: "File uploads (PDF, DOCX)", free: true, pro: true },
   { name: "Insights board with starring", free: true, pro: true },
   { name: "Ask tab Q&A over your data", free: true, pro: true },
   { name: "Slack channel ingestion", free: false, pro: true },

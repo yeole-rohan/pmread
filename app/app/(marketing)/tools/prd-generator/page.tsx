@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/lib/site";
 import type { Metadata } from "next";
 import PRDGeneratorTool from "./PRDGeneratorTool";
 import Link from "next/link";
@@ -6,11 +7,11 @@ export const metadata: Metadata = {
   title: "Free AI PRD Generator | PMRead",
   description:
     "Generate a full product requirements document from a problem statement in seconds. Free AI PRD generator — no signup required.",
-  alternates: { canonical: "https://pmread.rohanyeole.comanyeole.com/tools/prd-generator" },
+  alternates: { canonical: `${SITE_URL}/tools/prd-generator` },
   openGraph: {
     title: "Free AI PRD Generator | PMRead",
     description: "Turn a problem statement into a full PRD with user stories, acceptance criteria, and success metrics.",
-    url: "https://pmread.rohanyeole.comanyeole.com/tools/prd-generator",
+    url: `${SITE_URL}/tools/prd-generator`,
   },
   twitter: {
     card: "summary_large_image",
@@ -48,7 +49,7 @@ const jsonLd = {
       description: "Generate a product requirements document from a problem statement using AI. Includes user stories, acceptance criteria, and success metrics.",
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
-      url: "https://pmread.rohanyeole.comanyeole.com/tools/prd-generator",
+      url: `${SITE_URL}/tools/prd-generator`,
     },
     {
       "@type": "HowTo",
@@ -72,9 +73,9 @@ const jsonLd = {
     {
       "@type": "BreadcrumbList",
       itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://pmread.rohanyeole.comanyeole.com" },
-        { "@type": "ListItem", position: 2, name: "Tools", item: "https://pmread.rohanyeole.comanyeole.com/tools" },
-        { "@type": "ListItem", position: 3, name: "PRD Generator", item: "https://pmread.rohanyeole.comanyeole.com/tools/prd-generator" },
+        { "@type": "ListItem", position: 1, name: "Home", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Tools", item: `${SITE_URL}/tools` },
+        { "@type": "ListItem", position: 3, name: "PRD Generator", item: `${SITE_URL}/tools/prd-generator` },
       ],
     },
   ],

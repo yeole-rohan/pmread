@@ -41,7 +41,10 @@ jobs:
 
             echo "--- Building frontend ---"
             cd app
-            npm ci --silent && npm run build
+            npm ci --silent
+            NEXT_PUBLIC_SITE_URL=https://staging-pmread.rohanyeole.com \
+            NEXT_PUBLIC_NOINDEX=true \
+            npm run build
             cp -r .next/static .next/standalone/.next/static
             cp -r public .next/standalone/public
             cd ..
@@ -111,7 +114,9 @@ jobs:
 
             echo "--- Building frontend ---"
             cd app
-            npm ci --silent && npm run build
+            npm ci --silent
+            NEXT_PUBLIC_SITE_URL=https://pmread.org \
+            npm run build
             cp -r .next/static .next/standalone/.next/static
             cp -r public .next/standalone/public
             cd ..

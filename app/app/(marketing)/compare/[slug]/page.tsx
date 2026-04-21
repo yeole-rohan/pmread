@@ -4,7 +4,7 @@ import Link from "next/link";
 import { CheckCircle, XCircle, MinusCircle } from "lucide-react";
 import { COMPARISONS, getComparison } from "@/lib/comparisons";
 
-const BASE = "https://pmread.rohanyeole.com";
+import { SITE_URL as BASE } from "@/lib/site";
 
 export function generateStaticParams() {
   return COMPARISONS.map((c) => ({ slug: c.slug }));

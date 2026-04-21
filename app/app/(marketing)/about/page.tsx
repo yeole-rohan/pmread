@@ -1,3 +1,4 @@
+import { SITE_URL } from "@/lib/site";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Mail } from "lucide-react";
@@ -6,12 +7,12 @@ export const metadata: Metadata = {
   title: "About — PMRead",
   description:
     "PMRead is an AI-powered PRD generator built by product managers, for product managers. We're on a mission to turn customer feedback into shipping velocity.",
-  alternates: { canonical: "https://pmread.rohanyeole.com/about" },
+  alternates: { canonical: SITE_URL + '/about' },
   openGraph: {
     title: "About PMRead",
     description:
       "PMRead is an AI-powered PRD generator built by product managers, for product managers.",
-    url: "https://pmread.rohanyeole.com/about",
+    url: SITE_URL + '/about',
   },
 };
 
@@ -19,13 +20,13 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "AboutPage",
   name: "About PMRead",
-  url: "https://pmread.rohanyeole.com/about",
+  url: SITE_URL + '/about',
   description:
     "PMRead is an AI-powered product requirements document generator built in India.",
   mainEntity: {
     "@type": "Organization",
     name: "PMRead",
-    url: "https://pmread.rohanyeole.com",
+    url: SITE_URL,
     foundingDate: "2025",
     foundingLocation: "India",
     email: "rohan.yeole@rohanyeole.com",
