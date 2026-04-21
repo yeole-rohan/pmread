@@ -259,7 +259,7 @@ export default function HomePage() {
         {/* ── Hero ─────────────────────────────────────────────────────── */}
         <section className="relative overflow-hidden pt-20 pb-24 sm:pt-28 sm:pb-32">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-50/70 via-white to-white pointer-events-none" />
-          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
+          <div className="relative mx-auto px-4 sm:px-6 text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-xs font-semibold text-purple-700 mb-6">
               <span className="w-1.5 h-1.5 rounded-full bg-[#7F77DD]" />
               Evidence-Backed PRD Workflow
@@ -294,7 +294,7 @@ export default function HomePage() {
             </p>
 
             {/* App preview — replace with real screenshot or demo GIF */}
-            <div className="mt-16 rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden shadow-xl ring-1 ring-gray-900/5">
+            <div className="mt-16 rounded-2xl max-w-4xl m-auto border border-gray-200 bg-gray-50 overflow-hidden shadow-xl ring-1 ring-gray-900/5">
               <div className="bg-gray-100 px-4 py-2.5 flex items-center gap-2 border-b border-gray-200">
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-gray-300" />

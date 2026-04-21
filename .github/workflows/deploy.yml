@@ -94,7 +94,7 @@ jobs:
             echo "--- Restarting staging services ---"
             sudo systemctl restart pmread-stage-api
             sudo systemctl restart pmread-stage-worker
-            pm2 restart pmread-stage-frontend
+            pm2 restart pmread-stage-frontend --update-env
 
             echo "--- Verifying worker ---"
             sleep 3
@@ -145,7 +145,7 @@ jobs:
             echo "--- Restarting production services ---"
             sudo systemctl restart pmread-prod-api
             sudo systemctl restart pmread-prod-worker
-            pm2 restart pmread-prod-frontend
+            pm2 restart pmread-prod-frontend --update-env
 
             echo "--- Verifying worker ---"
             sleep 3
