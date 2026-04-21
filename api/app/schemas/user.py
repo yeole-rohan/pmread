@@ -12,6 +12,7 @@ class UserOut(BaseModel):
     billing_period: str | None = None
     plan_started_at: datetime | None
     plan_expires_at: datetime | None
+    plan_renews_at: datetime | None
     analyses_used: int
     prds_generated_this_month: int
     prds_reset_at: datetime | None
