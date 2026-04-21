@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { Insight, InsightType } from "@/lib/types";
 
@@ -49,19 +49,31 @@ interface InsightsBoardProps {
   grouped: Record<InsightType, Insight[]>;
   onDelete?: (id: string) => void;
   onStar?: (id: string) => void;
+  highlightId?: string | null;
 }
 
-function InsightCard({ insight, onDelete, onStar, typeMeta }: {
+function InsightCard({ insight, onDelete, onStar, typeMeta, highlight }: {
   insight: Insight;
   onDelete?: (id: string) => void;
   onStar?: (id: string) => void;
   typeMeta: typeof TYPE_META[InsightType];
+  highlight?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
+  const [flashing, setFlashing] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
   const fresh = isNew(insight.created_at);
 
+  useEffect(() => {
+    if (!highlight) return;
+    cardRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setFlashing(true);
+    const t = setTimeout(() => setFlashing(false), 1800);
+    return () => clearTimeout(t);
+  }, [highlight]);
+
   return (
-    <div className={`bg-white border rounded-xl p-3 flex flex-col transition-all hover:shadow-sm ${insight.used_in_prd ? "border-purple-100 bg-purple-50/20 hover:border-purple-200" : "border-gray-100 hover:border-gray-200"}`}>
+    <div ref={cardRef} className={`bg-white border rounded-xl p-3 flex flex-col transition-all hover:shadow-sm ${flashing ? "border-[#7F77DD] ring-2 ring-[#7F77DD]/20" : insight.used_in_prd ? "border-purple-100 bg-purple-50/20 hover:border-purple-200" : "border-gray-100 hover:border-gray-200"}`}>
       {/* Top row: dot + content + actions */}
       <div className="flex items-start gap-2">
         <span className={`w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0 ${typeMeta.dot}`} />
@@ -138,6 +150,7 @@ function DateSection({
   onDelete,
   onStar,
   typeMeta,
+  highlightId,
 }: {
   label: string;
   items: Insight[];
@@ -145,8 +158,10 @@ function DateSection({
   onDelete?: (id: string) => void;
   onStar?: (id: string) => void;
   typeMeta: typeof TYPE_META[InsightType];
+  highlightId?: string | null;
 }) {
-  const [open, setOpen] = useState(defaultOpen);
+  const hasHighlight = items.some((i) => i.id === highlightId);
+  const [open, setOpen] = useState(defaultOpen || hasHighlight);
 
   if (items.length === 0) return null;
 
@@ -172,7 +187,7 @@ function DateSection({
       {open && (
         <div className="grid grid-cols-2 gap-2 mb-5">
           {items.map((ins) => (
-            <InsightCard key={ins.id} insight={ins} onDelete={onDelete} onStar={onStar} typeMeta={typeMeta} />
+            <InsightCard key={ins.id} insight={ins} onDelete={onDelete} onStar={onStar} typeMeta={typeMeta} highlight={ins.id === highlightId} />
           ))}
         </div>
       )}
@@ -180,9 +195,19 @@ function DateSection({
   );
 }
 
-export default function InsightsBoard({ grouped, onDelete, onStar }: InsightsBoardProps) {
-  const [activeTab, setActiveTab] = useState<InsightType>("pain_point");
+export default function InsightsBoard({ grouped, onDelete, onStar, highlightId }: InsightsBoardProps) {
+  // Find which tab the highlighted insight lives in
+  const highlightTab = highlightId
+    ? TYPES.find((t) => grouped[t]?.some((i) => i.id === highlightId))
+    : undefined;
+
+  const [activeTab, setActiveTab] = useState<InsightType>(highlightTab ?? "pain_point");
   const [sort, setSort] = useState<"frequency" | "newest">("frequency");
+
+  // Switch tab if highlightId changes (e.g. second navigation from search)
+  useEffect(() => {
+    if (highlightTab) setActiveTab(highlightTab);
+  }, [highlightTab]);
 
   const total = TYPES.reduce((sum, t) => sum + (grouped[t]?.length ?? 0), 0);
 
@@ -196,6 +221,14 @@ export default function InsightsBoard({ grouped, onDelete, onStar }: InsightsBoa
         <p className="text-sm text-gray-400 max-w-xs">
           Upload customer interviews, feedback, or meeting notes to start extracting insights.
         </p>
+        <a
+          href="/templates/user-interview-script"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 text-xs text-[#7F77DD] hover:underline"
+        >
+          How to run a customer interview →
+        </a>
       </div>
     );
   }
@@ -265,6 +298,21 @@ export default function InsightsBoard({ grouped, onDelete, onStar }: InsightsBoa
         )}
       </div>
 
+      {/* Low-data nudge — show when board has fewer than 5 insights total */}
+      {total < 5 && total > 0 && (
+        <div className="mb-4 flex items-center gap-2 text-xs text-gray-400">
+          <span>Still gathering research?</span>
+          <a
+            href="/templates/user-interview-script"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#7F77DD] hover:underline"
+          >
+            Customer interview script →
+          </a>
+        </div>
+      )}
+
       {/* Cards */}
       {rawItems.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-12 text-center">
@@ -273,14 +321,14 @@ export default function InsightsBoard({ grouped, onDelete, onStar }: InsightsBoa
         </div>
       ) : useBuckets ? (
         <div>
-          <DateSection label="Today" items={todayItems} defaultOpen={true} onDelete={onDelete} onStar={onStar} typeMeta={activeMeta} />
-          <DateSection label="This week" items={weekItems} defaultOpen={true} onDelete={onDelete} onStar={onStar} typeMeta={activeMeta} />
-          <DateSection label="Earlier" items={earlierItems} defaultOpen={false} onDelete={onDelete} onStar={onStar} typeMeta={activeMeta} />
+          <DateSection label="Today" items={todayItems} defaultOpen={true} onDelete={onDelete} onStar={onStar} typeMeta={activeMeta} highlightId={highlightId} />
+          <DateSection label="This week" items={weekItems} defaultOpen={true} onDelete={onDelete} onStar={onStar} typeMeta={activeMeta} highlightId={highlightId} />
+          <DateSection label="Earlier" items={earlierItems} defaultOpen={false} onDelete={onDelete} onStar={onStar} typeMeta={activeMeta} highlightId={highlightId} />
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-2">
           {sorted.map((ins) => (
-            <InsightCard key={ins.id} insight={ins} onDelete={onDelete} onStar={onStar} typeMeta={activeMeta} />
+            <InsightCard key={ins.id} insight={ins} onDelete={onDelete} onStar={onStar} typeMeta={activeMeta} highlight={ins.id === highlightId} />
           ))}
         </div>
       )}

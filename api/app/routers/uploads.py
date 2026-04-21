@@ -6,7 +6,7 @@ from app.database import get_db
 from app.models.project import Project
 from app.models.uploaded_doc import UploadedDoc
 from app.models.user import User
-from app.services.parser import parse_file, MAX_FILE_SIZE, ALLOWED_TYPES
+from app.services.parser import parse_file, MAX_FILE_SIZE
 from app.worker import extract_insights_task
 
 router = APIRouter()

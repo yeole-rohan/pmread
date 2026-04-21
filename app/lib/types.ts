@@ -4,6 +4,7 @@ export interface User {
   display_name: string | null;
   plan: "free" | "pro";
   billing_provider: "stripe" | "razorpay" | null;
+  billing_period: "monthly" | "annual" | null;
   plan_started_at: string | null;
   plan_expires_at: string | null;
   analyses_used: number;
@@ -81,16 +82,29 @@ export interface PRD {
 // Keep Brief as alias for backwards compatibility
 export type Brief = PRD;
 
+export interface PRDExtension {
+  label: string;       // "Update 1"
+  date: string;        // "Apr 19, 2026"
+  created_at: string;
+  content: string;     // LLM-generated markdown prose
+  insight_ids: string[];
+}
+
 export interface Analysis {
   id: string;
   project_id: string;
   question: string;
+  title: string;
+  additional_context?: string | null;
   status: "pending" | "processing" | "complete" | "failed";
   brief: PRD | null;
+  extensions?: PRDExtension[];
   brief_summary?: string | null;
   error_message?: string | null;
   share_token?: string | null;
   created_at: string;
+  extension_count?: number;
+  new_insights_count?: number;
 }
 
 export class APIError extends Error {

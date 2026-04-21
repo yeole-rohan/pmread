@@ -1,36 +1,59 @@
 import json
+import re
 import uuid
 from datetime import datetime, timedelta
 
-import anthropic
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session as DBSession
 
 from app.auth import get_current_user
-from app.config import settings
 from app.database import get_db
 from app.models.insight import Insight
 from app.models.project import Project
 from app.models.user import User
 from app.ai.context import build_insight_context
 from app.ai.prompts import (
-    CHAT_SYSTEM_PROMPT,
+    build_chat_system_prompt,
     CLARIFY_SYSTEM_PROMPT,
     build_chat_user_message,
     build_clarify_user_message,
 )
+from app.services.llm_providers import generate_text
 
 router = APIRouter()
 
 
+def _extract_json(raw: str) -> dict | None:
+    """Parse JSON from LLM output that may contain surrounding prose."""
+    raw = raw.strip()
+    # Strip markdown code fences
+    if raw.startswith("```"):
+        raw = raw.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
+    # Direct parse
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        pass
+    # Find the first {...} block (handles prose-before-JSON responses)
+    match = re.search(r"\{.*\}", raw, re.DOTALL)
+    if match:
+        try:
+            return json.loads(match.group())
+        except json.JSONDecodeError:
+            pass
+    return None
+
+
 class ChatRequest(BaseModel):
     question: str
+    use_codebase: bool = False
 
 
 class ChatResponse(BaseModel):
     answer: str
     quotes: list[str]
+    code_refs: list[str] = []
 
 
 class ClarifyRequest(BaseModel):
@@ -77,31 +100,31 @@ async def chat(
         )
 
     insight_context = build_insight_context(insights)
-    user_message = build_chat_user_message(question, insight_context)
 
-    client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
-    message = client.messages.create(
-        model="claude-sonnet-4-6",
+    # Codebase context — coming soon
+    code_refs: list[str] = []
+
+    user_message = build_chat_user_message(question, insight_context, "")
+    system_prompt = build_chat_system_prompt(has_codebase=False)
+    # Free → grok-3-mini, Pro → Claude Sonnet
+    prefer_provider = "groq" if current_user.plan == "free" else None
+
+    raw = await generate_text(
+        system_prompt=system_prompt,
+        user_message=user_message,
         max_tokens=1024,
-        system=CHAT_SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_message}],
+        prefer_provider=prefer_provider,
     )
 
-    raw = message.content[0].text.strip()
-
-    # Strip markdown code fences if model wraps in ```json
-    if raw.startswith("```"):
-        raw = raw.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
-
-    try:
-        parsed = json.loads(raw)
+    parsed = _extract_json(raw)
+    if parsed:
         return ChatResponse(
             answer=parsed.get("answer", ""),
             quotes=parsed.get("quotes", []),
+            code_refs=code_refs,
         )
-    except json.JSONDecodeError:
-        # Fallback: return raw text as answer with no quotes
-        return ChatResponse(answer=raw, quotes=[])
+    # Fallback — model returned plain prose, use it as-is
+    return ChatResponse(answer=raw.strip(), quotes=[], code_refs=code_refs)
 
 
 @router.post("/{project_id}/clarify", response_model=ClarifyResponse)
@@ -146,15 +169,15 @@ async def clarify(
     insight_context = build_insight_context(insights)
     user_message = build_clarify_user_message(question, insight_context)
 
-    client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
-    message = client.messages.create(
-        model="claude-haiku-4-5-20251001",
+    # Clarify is lightweight — always use grok to save Claude credits
+    raw = await generate_text(
+        system_prompt=CLARIFY_SYSTEM_PROMPT,
+        user_message=user_message,
         max_tokens=512,
-        system=CLARIFY_SYSTEM_PROMPT,
-        messages=[{"role": "user", "content": user_message}],
+        prefer_provider="groq",
     )
 
-    raw = message.content[0].text.strip()
+    raw = raw.strip()
     if raw.startswith("```"):
         raw = raw.split("\n", 1)[-1].rsplit("```", 1)[0].strip()
 

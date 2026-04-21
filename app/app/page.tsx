@@ -1,5 +1,735 @@
-import { redirect } from "next/navigation";
+import type { Metadata } from "next";
+import Link from "next/link";
+import {
+  UploadCloud,
+  Sparkles,
+  FileCheck,
+  CheckCircle,
+  ArrowRight,
+  Play,
+  Quote,
+  GitBranch,
+  Layers,
+  BarChart2,
+  IndianRupee,
+} from "lucide-react";
+import MarketingNav from "@/components/MarketingNav";
+import MarketingFooter from "@/components/MarketingFooter";
 
-export default function RootPage() {
-  redirect("/dashboard");
+export const metadata: Metadata = {
+  title: "PMRead — Customer Evidence to Engineering Spec",
+  description:
+    "Upload customer interviews and feedback. PMRead extracts insights, ranks by frequency, and generates a PRD with every claim traced to real customer evidence.",
+  keywords: [
+    "prd generator",
+    "evidence-backed prd",
+    "customer feedback analysis tool",
+    "product requirements document",
+    "feedback synthesis",
+    "customer evidence to spec",
+  ],
+  alternates: { canonical: "https://pmread.rohanyeole.com" },
+  openGraph: {
+    title: "PMRead — Customer Evidence to Engineering Spec",
+    description:
+      "Upload customer interviews, transcripts, and feedback. PMRead extracts insights, ranks them by frequency, and generates a PRD where every requirement is traced back to real customer evidence.",
+    url: "https://pmread.rohanyeole.com",
+    type: "website",
+  },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      name: "PMRead",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      url: "https://pmread.rohanyeole.com",
+      description:
+        "Customer evidence to engineering spec, with citations. PMRead extracts insights from interviews and feedback, then generates PRDs where every requirement traces back to real customer data.",
+      offers: [
+        { "@type": "Offer", price: "0", priceCurrency: "INR", name: "Free plan" },
+        { "@type": "Offer", price: "1699", priceCurrency: "INR", name: "Pro plan" },
+      ],
+    },
+    {
+      "@type": "Organization",
+      name: "PMRead",
+      url: "https://pmread.rohanyeole.com",
+      foundingLocation: "India",
+      contactPoint: {
+        "@type": "ContactPoint",
+        email: "rohan.yeole@rohanyeole.com",
+        contactType: "customer support",
+      },
+    },
+  ],
+};
+
+const STATS = [
+  {
+    value: "4–8 hrs",
+    label: "to write a PRD manually",
+    contrast: "PMRead does it in under 15 minutes",
+    source: "PM industry research",
+    href: null,
+  },
+  {
+    value: "⅓",
+    label: "of working hours spent in meetings",
+    contrast: "Leaving almost no time for actual spec work",
+    source: "Workplace productivity research",
+    href: null,
+  },
+  {
+    value: "$42,000",
+    label: "wasted per manager annually",
+    contrast: "In unnecessary meetings and overhead tasks",
+    source: "Organizational efficiency research",
+    href: null,
+  },
+  {
+    value: "20 min",
+    label: "re-entry cost per context switch",
+    contrast: "Fragmented tools kill deep work",
+    source: "Cited by Shreyas Doshi, PM frameworks research",
+    href: "https://www.linkedin.com/in/shreyasdoshi/",
+  },
+  {
+    value: "71%",
+    label: "of workers would skip low-value meetings",
+    contrast: "If they had high-quality async notes and action items",
+    source: "Employee workplace survey",
+    href: null,
+  },
+  {
+    value: "95%",
+    label: "of products fail",
+    contrast: "The difference is often the quality of the spec",
+    source: "Marty Cagan, Silicon Valley Product Group",
+    href: "https://www.svpg.com",
+  },
+];
+
+const HOW_IT_WORKS = [
+  {
+    step: "01",
+    title: "Upload your sources",
+    desc: "Drag in PDFs, call transcripts, Slack exports, audio, or video. PMRead handles any format — no reformatting needed.",
+    icon: UploadCloud,
+  },
+  {
+    step: "02",
+    title: "Get instant insights",
+    desc: "AI reads everything and extracts what matters: pain points, feature requests, key decisions, and action items — grouped and searchable.",
+    icon: Sparkles,
+  },
+  {
+    step: "03",
+    title: "Generate a cited spec",
+    desc: "Star your key insights, pick a focus area, and get a complete PRD — every requirement traced back to real customer quotes. Not AI-filled templates. Cited evidence.",
+    icon: FileCheck,
+  },
+];
+
+const FEATURES = [
+  {
+    tag: "Evidence-backed",
+    title: "PRDs built on real customer data",
+    desc: "Every section links back to actual customer quotes. Not ChatGPT filling in templates — insights extracted from your own research.",
+    items: [
+      "Pain points with supporting verbatim quotes",
+      "Feature requests ranked by mention frequency",
+      "Engineering tasks scoped from your actual ask",
+    ],
+    placeholder: "PRD with evidence quotes",
+  },
+  {
+    tag: "Multi-source",
+    title: "All your feedback in one place",
+    desc: "Connect every channel where customers talk. PMRead ingests them all and builds a unified insight board across all your sources.",
+    items: [
+      "PDF uploads: reports, surveys, NPS verbatims",
+      "Call transcripts: Zoom, Fireflies, Gong, Loom",
+      "Slack channel exports and GitHub codebase context (Pro)",
+    ],
+    placeholder: "Multi-source ingestion UI",
+  },
+  {
+    tag: "Instant",
+    title: "From research to PRD in under 2 minutes",
+    desc: "Upload your files, let PMRead extract insights, then generate a complete PRD in one click. What used to take a day takes minutes.",
+    items: [
+      "Insights extracted in ~30 seconds after upload",
+      "One-click PRD generation with streaming output",
+      "Ask any question about your research with the Ask tab",
+    ],
+    placeholder: "PRD generation speed demo",
+  },
+];
+
+const DIFFERENTIATORS = [
+  {
+    icon: Quote,
+    title: "PRDs grounded in evidence, not prompts",
+    body: "Every other AI tool generates from what you type. PMRead generates from what your customers actually said — with citations. \"7 of your last 15 customers mentioned this\" is not a hallucination. It's your data.",
+  },
+  {
+    icon: GitBranch,
+    title: "GitHub codebase context",
+    body: "No other PM tool reads your codebase. When PMRead generates engineering tasks, they reference real modules, file paths, and data models — not generic placeholders that engineers have to translate.",
+  },
+  {
+    icon: Layers,
+    title: "The full chain in one tool",
+    body: "Other tools are either research repositories or spec generators. PMRead is both: upload a transcript and it automatically feeds the PRD generator. Ingest → extract → rank → generate, without leaving the tab.",
+  },
+  {
+    icon: BarChart2,
+    title: "Frequency ranking kills the loudest voice",
+    body: "Decisions made from the most recent complaint are the norm. PMRead tracks how often each problem appears across all your sources — so your roadmap reflects 20 customers, not the one who emailed last.",
+  },
+  {
+    icon: IndianRupee,
+    title: "Built for India. Priced in INR.",
+    body: "Every competing tool is priced for US teams at $30–$80/user/month. PMRead Pro is ₹1,699/month — billed in INR via Razorpay, with a free tier that actually lets you use the product.",
+  },
+];
+
+const FREE_TOOLS = [
+  {
+    name: "PRD Generator",
+    href: "/tools/prd-generator",
+    desc: "Paste a problem statement → get a full PRD draft",
+  },
+  {
+    name: "Feedback Analyzer",
+    href: "/tools/feedback-analyzer",
+    desc: "Paste raw feedback → AI extracts themes and pain points",
+  },
+  {
+    name: "Feature Prioritization",
+    href: "/tools/feature-prioritization",
+    desc: "Enter features + RICE scores → ranked output",
+  },
+  {
+    name: "User Story Generator",
+    href: "/tools/user-story-generator",
+    desc: "Feature idea → acceptance criteria + user stories",
+  },
+  {
+    name: "PM Interview Prep",
+    href: "/tools/interview-prep",
+    desc: "Paste a JD + resume → get likely questions with answers from your real experience",
+  },
+  {
+    name: "Metric Story Generator",
+    href: "/tools/metric-story-generator",
+    desc: "Raw metrics → narrative: what changed, why, and what to do next",
+  },
+];
+
+const FREE_PLAN_FEATURES = [
+  "2 PRDs / month",
+  "Unlimited insights",
+  "File uploads (PDF, audio, video)",
+  "Insights board",
+  "Ask tab Q&A",
+];
+
+const PRO_PLAN_FEATURES = [
+  "15 PRDs / month",
+  "Unlimited insights",
+  "File uploads",
+  "Slack channel ingestion",
+  "Call transcript import",
+  "GitHub codebase context",
+  "PRD updates — extend with new insights (up to 3×/PRD)",
+  "PDF export",
+  "Priority support",
+];
+
+// Placeholder testimonials — replace with real quotes from beta users before launch
+const TESTIMONIALS = [
+  {
+    quote:
+      "[ Testimonial placeholder — reach out to beta users and paste a real quote here. Aim for something that shows time saved or a specific workflow improvement. ]",
+    name: "[ Beta user 1 — First Last ]",
+    title: "[ Senior PM at Company ]",
+    initials: "AB",
+  },
+  {
+    quote:
+      "[ Testimonial placeholder — ideally from a different role (e.g. founder or head of product) to show range of use cases. ]",
+    name: "[ Beta user 2 — First Last ]",
+    title: "[ Founder / Head of Product ]",
+    initials: "CD",
+  },
+];
+
+export default function HomePage() {
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <MarketingNav />
+
+      <main>
+        {/* ── Hero ─────────────────────────────────────────────────────── */}
+        <section className="relative overflow-hidden pt-20 pb-24 sm:pt-28 sm:pb-32">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-50/70 via-white to-white pointer-events-none" />
+          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-xs font-semibold text-purple-700 mb-6">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#7F77DD]" />
+              Evidence-Backed PRD Workflow
+            </div>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight tracking-tight mb-6">
+              Customer Evidence
+              <br className="hidden sm:block" />
+              <span className="text-[#7F77DD]"> to Engineering Spec</span>
+              <br className="hidden sm:block" />
+              <span className="text-gray-400 text-3xl sm:text-4xl lg:text-5xl font-semibold">With Every Claim Cited.</span>
+            </h1>
+
+            <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+              Upload interviews, transcripts, and feedback. PMRead extracts insights,
+              tracks frequency across all your sources, and generates a spec where
+              every requirement links back to what customers actually said.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/signup"
+                className="w-full sm:w-auto px-8 py-3.5 bg-[#7F77DD] hover:bg-[#6b64c4] text-white font-semibold rounded-xl text-base transition-colors shadow-sm"
+              >
+                Get started free →
+              </Link>
+              <Link
+                href="#how-it-works"
+                className="w-full sm:w-auto px-8 py-3.5 border border-gray-200 hover:border-gray-300 text-gray-700 font-medium rounded-xl text-base transition-colors"
+              >
+                See how it works
+              </Link>
+            </div>
+            <p className="mt-4 text-xs text-gray-400">
+              Free forever · No credit card required · 2 PRDs/month on the free plan
+            </p>
+
+            {/* App preview — replace with real screenshot or demo GIF */}
+            <div className="mt-16 rounded-2xl border border-gray-200 bg-gray-50 overflow-hidden shadow-xl ring-1 ring-gray-900/5">
+              <div className="bg-gray-100 px-4 py-2.5 flex items-center gap-2 border-b border-gray-200">
+                <div className="flex gap-1.5">
+                  <div className="w-3 h-3 rounded-full bg-gray-300" />
+                  <div className="w-3 h-3 rounded-full bg-gray-300" />
+                  <div className="w-3 h-3 rounded-full bg-gray-300" />
+                </div>
+                <div className="flex-1 ml-3 bg-white rounded px-3 py-1 text-xs text-gray-400 text-left">
+                  pmread.rohanyeole.com/project/...
+                </div>
+              </div>
+              <div className="p-10 flex items-center justify-center min-h-[300px]">
+                <div className="text-center">
+                  <div className="w-16 h-16 rounded-2xl bg-purple-100 flex items-center justify-center mx-auto mb-4">
+                    <Play size={24} className="text-[#7F77DD] ml-1" />
+                  </div>
+                  <p className="text-sm text-gray-400 font-medium">
+                    Product demo coming soon
+                  </p>
+                  <p className="text-xs text-gray-300 mt-1">
+                    [ Replace with a 30-second screen recording or animated GIF ]
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Social proof bar ─────────────────────────────────────────── */}
+        <section
+          className="py-10 border-y border-gray-100 bg-gray-50/50"
+          aria-label="Trusted by"
+        >
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-6">
+              Trusted by product managers at — [ Replace with real company names/logos ]
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-8">
+              {["Company A", "Company B", "Company C", "Company D", "Company E"].map(
+                (c) => (
+                  <div
+                    key={c}
+                    className="h-6 w-24 bg-gray-200 rounded opacity-30"
+                    aria-hidden="true"
+                  />
+                )
+              )}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Stats ────────────────────────────────────────────────────── */}
+        <section className="py-20 sm:py-28 bg-gray-950">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-14">
+              <p className="text-xs font-semibold tracking-widest text-purple-400 uppercase mb-3">
+                The overhead problem
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+                Why PMs can&apos;t write good PRDs
+              </h2>
+              <p className="text-gray-400 text-lg max-w-xl mx-auto">
+                The data on where product managers actually spend their time — and why specs suffer.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-800 rounded-2xl overflow-hidden">
+              {STATS.map(({ value, label, contrast, source, href }) => (
+                <div key={value + label} className="bg-gray-950 p-8 flex flex-col">
+                  <p className="text-4xl sm:text-5xl font-bold text-white mb-2 tracking-tight">
+                    {value}
+                  </p>
+                  <p className="text-sm font-semibold text-gray-200 mb-2">{label}</p>
+                  <p className="text-xs text-gray-400 leading-relaxed mb-4 flex-1">{contrast}</p>
+                  <p className="text-xs text-gray-400 border-t border-gray-800 pt-3 mt-auto">
+                    {href ? (
+                      <a
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-white transition-colors underline underline-offset-2"
+                      >
+                        {source}
+                      </a>
+                    ) : (
+                      source
+                    )}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-center text-xs text-gray-400 mt-6">
+              Sources: Workplace productivity research, Shreyas Doshi (LNO Framework), Marty Cagan (SVPG)
+            </p>
+          </div>
+        </section>
+
+        {/* ── How it works ─────────────────────────────────────────────── */}
+        <section id="how-it-works" className="py-20 sm:py-28 scroll-mt-16">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                Research to PRD in three steps
+              </h2>
+              <p className="text-gray-500 text-lg max-w-xl mx-auto">
+                PMRead fits into your existing workflow. No new process to
+                learn.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-10">
+              {HOW_IT_WORKS.map(({ step, title, desc, icon: Icon }) => (
+                <div key={step}>
+                  <div className="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center mb-4">
+                    <Icon size={20} className="text-[#7F77DD]" />
+                  </div>
+                  <div className="text-xs font-bold text-purple-300 uppercase tracking-wider mb-1">
+                    Step {step}
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                    {title}
+                  </h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Features ─────────────────────────────────────────────────── */}
+        <section id="features" className="py-20 sm:py-28 bg-gray-50">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                Built for how PMs actually work
+              </h2>
+              <p className="text-gray-500 text-lg max-w-xl mx-auto">
+                Every feature is designed around one chain: customer evidence → extracted insight → cited requirement → shipped feature.
+              </p>
+            </div>
+
+            <div className="space-y-20">
+              {FEATURES.map(({ tag, title, desc, items, placeholder }, i) => (
+                <div
+                  key={tag}
+                  className={`flex flex-col md:flex-row items-center gap-12 ${
+                    i % 2 === 1 ? "md:flex-row-reverse" : ""
+                  }`}
+                >
+                  <div className="flex-1">
+                    <div className="inline-block px-2.5 py-1 rounded-full bg-purple-50 text-[#7F77DD] text-xs font-semibold mb-4 uppercase tracking-wide">
+                      {tag}
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                      {title}
+                    </h3>
+                    <p className="text-gray-500 mb-6 leading-relaxed">{desc}</p>
+                    <ul className="space-y-2.5">
+                      {items.map((item) => (
+                        <li
+                          key={item}
+                          className="flex items-start gap-2.5 text-sm text-gray-600"
+                        >
+                          <CheckCircle
+                            size={15}
+                            className="text-[#1D9E75] mt-0.5 flex-shrink-0"
+                          />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="flex-1 w-full">
+                    <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden shadow-sm min-h-[220px] flex items-center justify-center p-8">
+                      <p className="text-xs text-gray-300 text-center">
+                        [ Screenshot placeholder: {placeholder} ]
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Differentiators ──────────────────────────────────────────── */}
+        <section className="py-20 sm:py-28">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-14">
+              <p className="text-xs font-semibold tracking-widest text-[#7F77DD] uppercase mb-3">
+                Why PMRead
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                What no other AI tool does
+              </h2>
+              <p className="text-gray-500 text-lg max-w-xl mx-auto">
+                These aren&apos;t feature bullets. They&apos;re gaps every other tool has — that PMRead doesn&apos;t.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              {DIFFERENTIATORS.map(({ icon: Icon, title, body }, i) => (
+                <div
+                  key={title}
+                  className={`rounded-2xl border border-gray-200 bg-white p-6 flex gap-4${
+                    i === DIFFERENTIATORS.length - 1 && DIFFERENTIATORS.length % 2 !== 0
+                      ? " md:col-span-2 md:max-w-lg md:mx-auto"
+                      : ""
+                  }`}
+                >
+                  <div className="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center shrink-0 mt-0.5">
+                    <Icon size={16} className="text-[#7F77DD]" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold text-gray-900 mb-1.5">{title}</h3>
+                    <p className="text-sm text-gray-500 leading-relaxed">{body}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Free tools ───────────────────────────────────────────────── */}
+        <section className="py-20 sm:py-28">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                Free tools — no signup required
+              </h2>
+              <p className="text-gray-500 text-lg max-w-xl mx-auto">
+                Start using PMRead&apos;s AI tools right now. No account
+                needed.
+              </p>
+            </div>
+
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {FREE_TOOLS.map(({ name, href, desc }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="group p-5 rounded-xl border border-gray-200 hover:border-[#7F77DD] hover:shadow-sm transition-all bg-white"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="font-semibold text-gray-900 text-sm">
+                      {name}
+                    </h3>
+                    <ArrowRight
+                      size={14}
+                      className="text-gray-300 group-hover:text-[#7F77DD] transition-colors mt-0.5 flex-shrink-0"
+                    />
+                  </div>
+                  <p className="text-xs text-gray-500 leading-relaxed">{desc}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Pricing preview ──────────────────────────────────────────── */}
+        <section className="py-20 sm:py-28 bg-gray-50">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+              Start free, upgrade when you&apos;re ready
+            </h2>
+            <p className="text-gray-500 text-lg mb-12">
+              No credit card required to start.
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-6 text-left mb-8">
+              {/* Free plan */}
+              <div className="rounded-2xl border border-gray-200 bg-white p-6">
+                <p className="text-sm font-medium text-gray-500 mb-1">Free</p>
+                <div className="flex items-end gap-1 mb-5">
+                  <span className="text-4xl font-bold text-gray-900">₹0</span>
+                  <span className="text-gray-400 text-sm mb-1">/month</span>
+                </div>
+                <ul className="space-y-2.5 mb-6">
+                  {FREE_PLAN_FEATURES.map((f) => (
+                    <li
+                      key={f}
+                      className="flex items-center gap-2 text-sm text-gray-600"
+                    >
+                      <CheckCircle
+                        size={14}
+                        className="text-[#1D9E75] flex-shrink-0"
+                      />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/signup"
+                  className="block w-full text-center py-2.5 border border-gray-200 hover:border-gray-300 text-gray-700 font-medium rounded-lg text-sm transition-colors"
+                >
+                  Get started free
+                </Link>
+              </div>
+
+              {/* Pro plan */}
+              <div className="rounded-2xl border-2 border-[#7F77DD] bg-white p-6 relative">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                  <span className="bg-[#7F77DD] text-white text-xs font-semibold px-3 py-1 rounded-full">
+                    Most popular
+                  </span>
+                </div>
+                <p className="text-sm font-medium text-gray-500 mb-1">Pro</p>
+                <div className="flex items-end gap-1 mb-5">
+                  <span className="text-4xl font-bold text-gray-900">₹1,699</span>
+                  <span className="text-gray-400 text-sm mb-1">/month</span>
+                </div>
+                <ul className="space-y-2.5 mb-6">
+                  {PRO_PLAN_FEATURES.map((f) => (
+                    <li
+                      key={f}
+                      className="flex items-center gap-2 text-sm text-gray-600"
+                    >
+                      <CheckCircle
+                        size={14}
+                        className="text-[#1D9E75] flex-shrink-0"
+                      />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href="/signup?plan=pro"
+                  className="block w-full text-center py-2.5 bg-[#7F77DD] hover:bg-[#6b64c4] text-white font-semibold rounded-lg text-sm transition-colors"
+                >
+                  Upgrade to Pro →
+                </Link>
+              </div>
+            </div>
+
+            <Link
+              href="/pricing"
+              className="text-sm text-[#7F77DD] hover:underline font-medium"
+            >
+              See full feature comparison →
+            </Link>
+          </div>
+        </section>
+
+        {/* ── Testimonials ─────────────────────────────────────────────── */}
+        <section className="py-20 sm:py-28">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-12">
+              PMs ship faster with PMRead
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              {TESTIMONIALS.map(({ quote, name, title, initials }) => (
+                <figure
+                  key={name}
+                  className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"
+                >
+                  <blockquote className="text-gray-600 text-sm leading-relaxed mb-5 italic">
+                    &ldquo;{quote}&rdquo;
+                  </blockquote>
+                  <figcaption className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-full bg-purple-100 flex items-center justify-center text-xs font-bold text-[#7F77DD] flex-shrink-0">
+                      {initials}
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900">
+                        {name}
+                      </p>
+                      <p className="text-xs text-gray-400">{title}</p>
+                    </div>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ── Final CTA ────────────────────────────────────────────────── */}
+        <section className="py-20 sm:py-28 bg-[#7F77DD]">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+              Build specs your engineers can trust
+            </h2>
+            <p className="text-purple-200 text-lg mb-10">
+              Every requirement backed by evidence. Every claim traced to a real customer.
+              Stop writing from memory — start writing from proof.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link
+                href="/signup"
+                className="w-full sm:w-auto px-8 py-3.5 bg-white text-[#7F77DD] font-semibold rounded-xl text-base hover:bg-purple-50 transition-colors shadow-sm"
+              >
+                Get started free →
+              </Link>
+              <Link
+                href="/pricing"
+                className="w-full sm:w-auto px-8 py-3.5 border border-purple-400 hover:border-white text-white font-medium rounded-xl text-base transition-colors"
+              >
+                View pricing
+              </Link>
+            </div>
+            <p className="mt-5 text-xs text-purple-300">
+              Free forever · No credit card required
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <MarketingFooter />
+    </>
+  );
 }

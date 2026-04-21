@@ -1,3 +1,5 @@
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
@@ -12,8 +14,15 @@ from app.models.project import Project
 from app.models.analysis import Analysis
 from app.models.feedback import Feedback
 from app.models.insight import Insight
+from app.models.founding_member import FoundingMember
+from app.models.uploaded_doc import UploadedDoc
+from app.models.session import Session
+from app.models.waitlist import WaitlistEmail
+from app.models.github_chunk import GithubCodeChunk
+from app.models.celery_task import CeleryTask
 from app.routers import auth, projects, analyses, stream, export, billing, waitlist
-from app.routers import uploads, insights, share, feedback as feedback_router, chat, search, ingest, github, events
+from app.routers import uploads, insights, share, feedback as feedback_router, chat, search, ingest, events, slack as slack_router
+from app.routers import admin as admin_router
 if settings.SENTRY_DSN:
     import sentry_sdk
     from sentry_sdk.integrations.fastapi import FastApiIntegration
@@ -26,17 +35,36 @@ if settings.SENTRY_DSN:
         send_default_pii=False,
     )
 
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    # Ensure Celery's result-backend tables exist in Postgres
+    from celery.backends.database.models import ResultModelBase
+    ResultModelBase.metadata.create_all(engine)
+    yield
+
+
 app = FastAPI(
     title="PMRead API",
     version="1.0.0",
     docs_url="/api/docs" if settings.ENVIRONMENT == "development" else None,
     redoc_url=None,
+    lifespan=lifespan,
 )
 
-app.add_middleware(SessionMiddleware, secret_key=settings.JWT_SECRET)
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.SESSION_SECRET,
+    https_only=settings.ENVIRONMENT != "development",
+    same_site="lax",
+)
+# M3 fix: only include localhost in development — never expose in production
+_cors_origins = [settings.FRONTEND_URL]
+if settings.ENVIRONMENT == "development":
+    _cors_origins.append("http://localhost:3000")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.FRONTEND_URL, "http://localhost:3000"],
+    allow_origins=_cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -47,9 +75,14 @@ app.add_middleware(
 
 class AdminAuth(AuthenticationBackend):
     async def login(self, request: Request) -> bool:
+        import secrets as _secrets
         form = await request.form()
-        username_ok = form.get("username") == settings.ADMIN_USERNAME
-        password_ok = form.get("password") == settings.ADMIN_PASSWORD
+        username_ok = _secrets.compare_digest(
+            str(form.get("username", "")), settings.ADMIN_USERNAME
+        )
+        password_ok = _secrets.compare_digest(
+            str(form.get("password", "")), settings.ADMIN_PASSWORD
+        )
         if username_ok and password_ok:
             request.session["admin_authenticated"] = True
             return True
@@ -89,7 +122,7 @@ class ProjectAdmin(ModelView, model=Project):
     column_list = [Project.name, Project.user_id, Project.created_at]
     column_sortable_list = [Project.created_at]
     column_default_sort = [(Project.created_at, True)]
-    can_delete = True
+    can_delete = False  # M11 fix: prevent accidental cascade-delete of customer data
 
 
 class AnalysisAdmin(ModelView, model=Analysis):
@@ -124,11 +157,85 @@ class FeedbackAdmin(ModelView, model=Feedback):
     can_delete = True
 
 
+class FoundingMemberAdmin(ModelView, model=FoundingMember):
+    name = "Founding Member"
+    name_plural = "Founding Members"
+    icon = "fa-solid fa-star"
+    column_list = [FoundingMember.email, FoundingMember.claimed_by, FoundingMember.claimed_at, FoundingMember.added_at]
+    column_searchable_list = [FoundingMember.email]
+    column_sortable_list = [FoundingMember.added_at, FoundingMember.claimed_at]
+    column_default_sort = [(FoundingMember.added_at, True)]
+    can_delete = True
+
+
+class UploadedDocAdmin(ModelView, model=UploadedDoc):
+    name = "Uploaded Doc"
+    name_plural = "Uploaded Docs"
+    icon = "fa-solid fa-file-arrow-up"
+    column_list = [UploadedDoc.original_name, UploadedDoc.file_type, UploadedDoc.insight_status, UploadedDoc.project_id, UploadedDoc.created_at]
+    column_sortable_list = [UploadedDoc.created_at]
+    column_default_sort = [(UploadedDoc.created_at, True)]
+    can_delete = True
+
+
+class SessionAdmin(ModelView, model=Session):
+    name = "Session"
+    name_plural = "Sessions"
+    icon = "fa-solid fa-clock"
+    column_list = [Session.user_id, Session.created_at, Session.expires_at]
+    column_sortable_list = [Session.created_at, Session.expires_at]
+    column_default_sort = [(Session.created_at, True)]
+    can_delete = True
+
+
+class WaitlistAdmin(ModelView, model=WaitlistEmail):
+    name = "Waitlist"
+    name_plural = "Waitlist"
+    icon = "fa-solid fa-envelope"
+    column_list = [WaitlistEmail.email, WaitlistEmail.created_at]
+    column_searchable_list = [WaitlistEmail.email]
+    column_sortable_list = [WaitlistEmail.created_at]
+    column_default_sort = [(WaitlistEmail.created_at, True)]
+    can_delete = True
+
+
+class GithubChunkAdmin(ModelView, model=GithubCodeChunk):
+    name = "GitHub Chunk"
+    name_plural = "GitHub Chunks"
+    icon = "fa-brands fa-github"
+    column_list = [GithubCodeChunk.project_id, GithubCodeChunk.file_path, GithubCodeChunk.file_summary, GithubCodeChunk.created_at]
+    column_searchable_list = [GithubCodeChunk.file_path]
+    column_sortable_list = [GithubCodeChunk.created_at]
+    column_default_sort = [(GithubCodeChunk.created_at, True)]
+    can_create = False
+    can_edit = False
+    can_delete = True
+
+
 admin.add_view(UserAdmin)
 admin.add_view(ProjectAdmin)
 admin.add_view(AnalysisAdmin)
 admin.add_view(InsightAdmin)
 admin.add_view(FeedbackAdmin)
+admin.add_view(FoundingMemberAdmin)
+admin.add_view(UploadedDocAdmin)
+admin.add_view(SessionAdmin)
+admin.add_view(WaitlistAdmin)
+class CeleryTaskAdmin(ModelView, model=CeleryTask):
+    name = "Celery Task"
+    name_plural = "Celery Tasks"
+    icon = "fa-solid fa-list-check"
+    column_list = [CeleryTask.task_id, CeleryTask.name, CeleryTask.status, CeleryTask.worker, CeleryTask.queue, CeleryTask.date_done]
+    column_searchable_list = [CeleryTask.task_id, CeleryTask.name]
+    column_sortable_list = [CeleryTask.date_done, CeleryTask.status]
+    column_default_sort = [(CeleryTask.date_done, True)]
+    can_create = False
+    can_edit = False
+    can_delete = True
+
+
+admin.add_view(GithubChunkAdmin)
+admin.add_view(CeleryTaskAdmin)
 
 app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
 app.include_router(projects.router, prefix="/api/projects", tags=["projects"])
@@ -144,8 +251,10 @@ app.include_router(feedback_router.router, prefix="/api/feedback", tags=["feedba
 app.include_router(chat.router, prefix="/api/projects", tags=["chat"])
 app.include_router(search.router, prefix="/api/search", tags=["search"])
 app.include_router(ingest.router, prefix="/api/ingest", tags=["ingest"])
-app.include_router(github.router, prefix="/api/github", tags=["github"])
+app.include_router(slack_router.router, prefix="/api/projects", tags=["slack"])
+# app.include_router(github.router, prefix="/api/github", tags=["github"])  # coming soon
 app.include_router(events.router, prefix="/api/projects", tags=["events"])
+app.include_router(admin_router.router, prefix="/api/admin", tags=["admin"])
 
 
 @app.get("/api/health")

@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Loader2, Send } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Loader2, Send, Trash2 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 import { apiFetch } from "@/lib/api";
 
 interface Message {
@@ -14,6 +15,8 @@ interface Message {
 interface AskTabProps {
   projectId: string;
   hasInsights: boolean;
+  isPro: boolean;
+  githubConnected: boolean; // kept in props for compat, unused until codebase feature ships
 }
 
 const EXAMPLE_QUESTIONS = [
@@ -23,12 +26,39 @@ const EXAMPLE_QUESTIONS = [
   "Summarise the biggest pain points",
 ];
 
+const MAX_STORED = 20;
+
+function chatKey(projectId: string) {
+  return `pmread_chat_${projectId}`;
+}
+
+function loadHistory(projectId: string): Message[] {
+  if (typeof window === "undefined") return [];
+  try {
+    const raw = localStorage.getItem(chatKey(projectId));
+    return raw ? (JSON.parse(raw) as Message[]) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveHistory(projectId: string, messages: Message[]) {
+  try {
+    const completed = messages.filter((m) => m.answer);
+    localStorage.setItem(chatKey(projectId), JSON.stringify(completed.slice(-MAX_STORED)));
+  } catch {}
+}
+
 export default function AskTab({ projectId, hasInsights }: AskTabProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(() => loadHistory(projectId));
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
-  const nextId = useRef(1);
+  const nextId = useRef((loadHistory(projectId).length + 1));
   const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    saveHistory(projectId, messages);
+  }, [projectId, messages]);
 
   async function handleAsk(q?: string) {
     const text = (q ?? question).trim();
@@ -37,13 +67,13 @@ export default function AskTab({ projectId, hasInsights }: AskTabProps) {
     setLoading(true);
 
     const id = nextId.current++;
-    // Optimistic: show question immediately
     setMessages((prev) => [...prev, { id, question: text, answer: "", quotes: [] }]);
+    setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
 
     try {
       const res = await apiFetch<{ answer: string; quotes: string[] }>(
         `/projects/${projectId}/chat`,
-        { method: "POST", body: JSON.stringify({ question: text }) }
+        { method: "POST", body: JSON.stringify({ question: text, use_codebase: false }) }
       );
       setMessages((prev) =>
         prev.map((m) => m.id === id ? { ...m, answer: res.answer, quotes: res.quotes } : m)
@@ -58,6 +88,11 @@ export default function AskTab({ projectId, hasInsights }: AskTabProps) {
     }
   }
 
+  function clearHistory() {
+    setMessages([]);
+    localStorage.removeItem(chatKey(projectId));
+  }
+
   if (!hasInsights) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -65,18 +100,49 @@ export default function AskTab({ projectId, hasInsights }: AskTabProps) {
           <span className="text-2xl">💬</span>
         </div>
         <p className="text-sm font-medium text-gray-700 mb-1">No insights yet</p>
-        <p className="text-sm text-gray-400">Upload files first to start asking questions about your customers.</p>
+        <p className="text-sm text-gray-400 mb-4">Upload files first to start asking questions about your customers.</p>
+        <div className="flex flex-wrap items-center justify-center gap-3 text-xs text-gray-400">
+          <span>Need customer data?</span>
+          <a href="/templates/user-interview-script" target="_blank" rel="noopener noreferrer" className="text-[#7F77DD] hover:underline">
+            Interview script →
+          </a>
+          <a href="/templates/empathy-map" target="_blank" rel="noopener noreferrer" className="text-[#7F77DD] hover:underline">
+            Empathy map →
+          </a>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="flex flex-col h-full min-h-[500px]">
+
+      {/* Header */}
+      <div className="sticky top-0 z-10 bg-gray-50 flex items-center justify-between mb-4 pb-3 pt-1 border-b border-gray-100">
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-400 font-medium">Context:</span>
+          <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-purple-50 border border-purple-200 text-xs font-medium text-purple-700">
+            <span className="w-1.5 h-1.5 rounded-full bg-purple-500" />
+            Insights
+          </span>
+        </div>
+        {messages.length > 0 && (
+          <button
+            onClick={clearHistory}
+            className="flex items-center gap-1 text-xs text-gray-400 hover:text-red-500 transition-colors"
+            title="Clear conversation"
+          >
+            <Trash2 size={11} />
+            Clear
+          </button>
+        )}
+      </div>
+
       {/* Conversation */}
-      <div className="flex-1 space-y-5 pb-4">
+      <div className="flex-1 space-y-6 pb-4">
         {messages.length === 0 && (
-          <div className="py-6">
-            <p className="text-sm text-gray-500 mb-4">Ask anything about your customer insights. Try:</p>
+          <div className="py-4">
+            <p className="text-sm text-gray-500 mb-3">Ask anything about your customer insights. Try:</p>
             <div className="flex flex-wrap gap-2">
               {EXAMPLE_QUESTIONS.map((q) => (
                 <button
@@ -88,31 +154,50 @@ export default function AskTab({ projectId, hasInsights }: AskTabProps) {
                 </button>
               ))}
             </div>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-4 pt-3 border-t border-gray-100">
+              <span className="text-[11px] text-gray-300">Research frameworks:</span>
+              <a href="/glossary/jobs-to-be-done" target="_blank" rel="noopener noreferrer" className="text-[11px] text-gray-400 hover:text-[#7F77DD] transition-colors">Jobs to Be Done</a>
+              <a href="/glossary/north-star-metric" target="_blank" rel="noopener noreferrer" className="text-[11px] text-gray-400 hover:text-[#7F77DD] transition-colors">North Star Metric</a>
+              <a href="/glossary/product-discovery" target="_blank" rel="noopener noreferrer" className="text-[11px] text-gray-400 hover:text-[#7F77DD] transition-colors">Product Discovery</a>
+            </div>
           </div>
         )}
 
         {messages.map((msg) => (
-          <div key={msg.id} className="space-y-2">
-            {/* Question bubble */}
+          <div key={msg.id} className="space-y-3">
             <div className="flex justify-end">
-              <div className="bg-[#7F77DD] text-white text-sm rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[80%]">
+              <div className="bg-[#7F77DD] text-white text-sm rounded-2xl rounded-tr-sm px-4 py-2.5 max-w-[78%] leading-relaxed">
                 {msg.question}
               </div>
             </div>
-
-            {/* Answer */}
-            <div className="flex justify-start">
-              <div className="bg-white border border-gray-100 rounded-2xl rounded-tl-sm px-4 py-3 max-w-[85%] space-y-3">
+            <div className="flex justify-start gap-2.5">
+              <div className="w-6 h-6 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <span className="text-[10px] font-bold text-[#7F77DD]">AI</span>
+              </div>
+              <div className="bg-white border border-gray-200 rounded-2xl rounded-tl-sm px-4 py-3.5 max-w-[85%] space-y-3 shadow-sm">
                 {msg.answer ? (
                   <>
-                    <p className="text-sm text-gray-800 leading-relaxed">{msg.answer}</p>
+                    <ReactMarkdown
+                      components={{
+                        p: ({ children }) => <p className="text-sm text-gray-900 leading-relaxed my-1">{children}</p>,
+                        strong: ({ children }) => <strong className="font-semibold text-gray-900">{children}</strong>,
+                        em: ({ children }) => <em className="italic text-gray-800">{children}</em>,
+                        ul: ({ children }) => <ul className="list-disc pl-4 my-1 space-y-0.5">{children}</ul>,
+                        ol: ({ children }) => <ol className="list-decimal pl-4 my-1 space-y-0.5">{children}</ol>,
+                        li: ({ children }) => <li className="text-sm text-gray-900 leading-relaxed">{children}</li>,
+                        code: ({ children }) => <code className="text-[#7F77DD] bg-purple-50 px-1 py-0.5 rounded text-xs font-mono">{children}</code>,
+                        pre: ({ children }) => <pre className="overflow-auto text-wrap bg-gray-50 rounded-lg p-3 text-xs font-mono my-2">{children}</pre>,
+                        h3: ({ children }) => <h3 className="text-sm font-semibold text-gray-900 mt-2 mb-1">{children}</h3>,
+                        h4: ({ children }) => <h4 className="text-sm font-semibold text-gray-900 mt-1.5 mb-0.5">{children}</h4>,
+                      }}
+                    >
+                      {msg.answer}
+                    </ReactMarkdown>
                     {msg.quotes.length > 0 && (
-                      <div className="space-y-1.5 pt-1 border-t border-gray-50">
+                      <div className="space-y-2 pt-2 border-t border-gray-100">
+                        <p className="text-[11px] font-medium text-gray-400 uppercase tracking-wide">From your insights</p>
                         {msg.quotes.map((q, i) => (
-                          <blockquote
-                            key={i}
-                            className="border-l-2 border-[#7F77DD] pl-3 text-xs text-gray-500 italic"
-                          >
+                          <blockquote key={i} className="border-l-2 border-[#7F77DD]/40 pl-3 text-xs text-gray-600 italic leading-relaxed">
                             &ldquo;{q}&rdquo;
                           </blockquote>
                         ))}
@@ -122,28 +207,24 @@ export default function AskTab({ projectId, hasInsights }: AskTabProps) {
                 ) : (
                   <div className="flex items-center gap-2 text-sm text-gray-400">
                     <Loader2 size={13} className="animate-spin" />
-                    Thinking...
+                    Thinking…
                   </div>
                 )}
               </div>
             </div>
           </div>
         ))}
-
         <div ref={bottomRef} />
       </div>
 
       {/* Input */}
       <div className="sticky bottom-0 pt-3 bg-gray-50">
-        <div className="flex gap-2 items-end bg-white border border-gray-200 rounded-xl px-3 py-2 focus-within:ring-2 focus-within:ring-[#7F77DD]/40">
+        <div className="flex gap-2 items-end bg-white border border-gray-200 rounded-xl px-3 py-2.5 focus-within:ring-2 focus-within:ring-[#7F77DD]/40 shadow-sm">
           <textarea
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                handleAsk();
-              }
+              if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleAsk(); }
             }}
             placeholder="Ask about your customers…"
             rows={1}

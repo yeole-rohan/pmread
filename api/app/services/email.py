@@ -174,6 +174,65 @@ RESET_PASSWORD_HTML = """
 """
 
 
+PRO_WELCOME_HTML = """
+<!DOCTYPE html>
+<html>
+<body style="font-family: sans-serif; max-width: 520px; margin: 40px auto; color: #1a1a1a;">
+  <div style="margin-bottom: 24px;">
+    <span style="background: #7F77DD; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; letter-spacing: 1px;">PMREAD</span>
+  </div>
+
+  <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 4px;">You're on Pro 🎉</h2>
+  <p style="color: #555; font-size: 15px; margin-top: 4px;">Hi {name}, your upgrade is confirmed. Here's what you can do now.</p>
+
+  <div style="background: #f8f7ff; border-radius: 12px; padding: 20px 24px; margin: 24px 0;">
+    <div style="margin-bottom: 12px;">
+      <span style="font-size: 18px;">📄</span>
+      <strong style="font-size: 14px; color: #1a1a1a; margin-left: 8px;">15 PRDs per month</strong>
+      <p style="font-size: 13px; color: #666; margin: 4px 0 0 30px;">Generate evidence-backed PRDs from your customer data. Resets on the 1st.</p>
+    </div>
+    <div style="margin-bottom: 12px;">
+      <span style="font-size: 18px;">💬</span>
+      <strong style="font-size: 14px; color: #1a1a1a; margin-left: 8px;">Slack ingestion</strong>
+      <p style="font-size: 13px; color: #666; margin: 4px 0 0 30px;">Connect a Slack channel and pull customer feedback directly into your insight board.</p>
+    </div>
+    <div style="margin-bottom: 12px;">
+      <span style="font-size: 18px;">🐙</span>
+      <strong style="font-size: 14px; color: #1a1a1a; margin-left: 8px;">GitHub codebase context</strong>
+      <p style="font-size: 13px; color: #666; margin: 4px 0 0 30px;">Link a repo and your PRDs get engineering tasks that reference real files and APIs — not generic placeholders.</p>
+    </div>
+    <div style="margin-bottom: 12px;">
+      <span style="font-size: 18px;">📤</span>
+      <strong style="font-size: 14px; color: #1a1a1a; margin-left: 8px;">Markdown + PDF export</strong>
+      <p style="font-size: 13px; color: #666; margin: 4px 0 0 30px;">Export any PRD as a clean Markdown file or formatted PDF ready to share with your team.</p>
+    </div>
+    <div>
+      <span style="font-size: 18px;">🔍</span>
+      <strong style="font-size: 14px; color: #1a1a1a; margin-left: 8px;">Ask with codebase context</strong>
+      <p style="font-size: 13px; color: #666; margin: 4px 0 0 30px;">Ask questions about your customers and codebase together — "does SSO exist?" gets a real answer from your code.</p>
+    </div>
+  </div>
+
+  <p style="margin-top: 28px;">
+    <a href="{app_url}"
+       style="background: #7F77DD; color: white; padding: 12px 24px;
+              border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-block;">
+      Open PMRead →
+    </a>
+  </p>
+
+  <p style="font-size: 13px; color: #888; margin-top: 24px;">
+    Questions? Reply to this email — I read every one.<br>
+    — Rohan, PMRead
+  </p>
+
+  <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;">
+  <p style="color: #aaa; font-size: 12px;">PMRead · Built in India 🇮🇳</p>
+</body>
+</html>
+"""
+
+
 async def send_verification_email(email: str, token: str, name: str) -> None:
     verify_url = f"{settings.FRONTEND_URL}/api/auth/verify-email?token={token}"
 

@@ -2,7 +2,7 @@
 import urllib.parse
 
 import httpx
-from fastapi import APIRouter, Depends, HTTPException, Query, Request
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, Request
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from sqlalchemy.orm import Session as DBSession
@@ -59,17 +59,20 @@ async def github_callback(
     if not user_id:
         return RedirectResponse(f"{settings.FRONTEND_URL}/settings?github=error")
 
-    async with httpx.AsyncClient() as client:
-        resp = await client.post(
-            GITHUB_TOKEN_URL,
-            headers={"Accept": "application/json"},
-            data={
-                "client_id": settings.GITHUB_CLIENT_ID,
-                "client_secret": settings.GITHUB_CLIENT_SECRET,
-                "code": code,
-                "redirect_uri": _callback_uri(),
-            },
-        )
+    try:
+        async with httpx.AsyncClient(timeout=15) as client:
+            resp = await client.post(
+                GITHUB_TOKEN_URL,
+                headers={"Accept": "application/json"},
+                data={
+                    "client_id": settings.GITHUB_CLIENT_ID,
+                    "client_secret": settings.GITHUB_CLIENT_SECRET,
+                    "code": code,
+                    "redirect_uri": _callback_uri(),
+                },
+            )
+    except (httpx.TimeoutException, httpx.RequestError):
+        return RedirectResponse(f"{settings.FRONTEND_URL}/settings?github=error")
 
     data = resp.json()
     access_token = data.get("access_token")
@@ -104,12 +107,17 @@ async def list_repos(current_user: User = Depends(get_current_user)):
     if not current_user.github_access_token:
         raise HTTPException(status_code=403, detail={"error": "GitHub not connected", "code": "NOT_CONNECTED"})
 
-    async with httpx.AsyncClient() as client:
-        resp = await client.get(
-            f"{GITHUB_API_BASE}/user/repos",
-            headers=_gh_headers(current_user.github_access_token),
-            params={"sort": "pushed", "per_page": 50, "affiliation": "owner,collaborator"},
-        )
+    try:
+        async with httpx.AsyncClient(timeout=15) as client:
+            resp = await client.get(
+                f"{GITHUB_API_BASE}/user/repos",
+                headers=_gh_headers(current_user.github_access_token),
+                params={"sort": "pushed", "per_page": 50, "affiliation": "owner,collaborator"},
+            )
+    except httpx.TimeoutException:
+        raise HTTPException(status_code=504, detail={"error": "GitHub API timed out. Try again.", "code": "GH_TIMEOUT"})
+    except httpx.RequestError:
+        raise HTTPException(status_code=502, detail={"error": "Could not reach GitHub API.", "code": "GH_UNREACHABLE"})
 
     if resp.status_code != 200:
         raise HTTPException(status_code=502, detail={"error": "GitHub API error", "code": "GH_API_ERROR"})
@@ -137,6 +145,7 @@ class SetRepoRequest(BaseModel):
 async def set_project_repo(
     project_id: str,
     body: SetRepoRequest,
+    background_tasks: BackgroundTasks,
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
@@ -146,22 +155,26 @@ async def set_project_repo(
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
 
+    if body.repo_full_name is not None and current_user.plan != "pro":
+        raise HTTPException(status_code=403, detail={"error": "GitHub repo linking requires a Pro plan.", "code": "PRO_REQUIRED"})
+
     repo_changed = project.github_repo != body.repo_full_name
     project.github_repo = body.repo_full_name
 
     if body.repo_full_name is None:
-        # Disconnecting — clear chunks and status
         project.github_index_status = None
         from app.models.github_chunk import GithubCodeChunk
         db.query(GithubCodeChunk).filter(GithubCodeChunk.project_id == project_id).delete()
     elif repo_changed and current_user.github_access_token:
-        # New or changed repo — dispatch to Celery worker (non-blocking)
         project.github_index_status = "indexing"
-        from app.tasks.github_index import index_github_repo_task
-        index_github_repo_task.delay(
+        from app.services.github_indexer import index_github_repo
+        from app.database import SessionLocal
+        background_tasks.add_task(
+            index_github_repo,
             project_id,
             body.repo_full_name,
             current_user.github_access_token,
+            SessionLocal,
         )
 
     db.commit()

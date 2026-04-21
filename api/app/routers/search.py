@@ -5,9 +5,11 @@ from sqlalchemy.orm import Session as DBSession
 
 from app.auth import get_current_user
 from app.database import get_db
+from app.models.analysis import Analysis
 from app.models.insight import Insight
 from app.models.project import Project
 from app.models.user import User
+from app.schemas.analysis import split_question
 
 router = APIRouter()
 
@@ -21,7 +23,7 @@ async def search(
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
-    """Full-text ILIKE search across insights and project names."""
+    """Full-text ILIKE search across insights, project names, and PRD titles."""
     term = f"%{q}%"
 
     # Project search (always global — only user's own projects)
@@ -60,4 +62,30 @@ async def search(
         for i in ins_q
     ]
 
-    return {"projects": projects, "insights": insights}
+    # PRD search — search question field, completed PRDs only
+    prd_q = db.query(Analysis).join(
+        Project, Analysis.project_id == Project.id
+    ).filter(
+        Project.user_id == current_user.id,
+        Analysis.status == "complete",
+        Analysis.question.ilike(term),
+    )
+
+    if project_id:
+        try:
+            prd_q = prd_q.filter(Analysis.project_id == uuid.UUID(project_id))
+        except ValueError:
+            pass
+
+    prd_q = prd_q.order_by(Analysis.created_at.desc()).limit(10).all()
+
+    prds = [
+        {
+            "id": str(a.id),
+            "project_id": str(a.project_id),
+            "title": split_question(a.question)[0],
+        }
+        for a in prd_q
+    ]
+
+    return {"projects": projects, "insights": insights, "prds": prds}
