@@ -274,7 +274,14 @@ function SettingsContent() {
                   )}
                 </p>
                 {user.plan === "pro" && !isCancelling && (
-                  <p className="text-xs text-gray-500 mt-0.5">15 PRDs/month · unlimited uploads &amp; insights</p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    15 PRDs/month · unlimited uploads &amp; insights
+                    {user.plan_renews_at && (
+                      <span className="ml-1.5 text-gray-400">
+                        · Renews {new Date(user.plan_renews_at).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                      </span>
+                    )}
+                  </p>
                 )}
                 {isCancelling && (
                   <p className="text-xs text-amber-600 mt-0.5">

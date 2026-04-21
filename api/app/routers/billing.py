@@ -151,8 +151,10 @@ async def razorpay_verify_payment(
     try:
         sub = client.subscription.fetch(body.razorpay_subscription_id)
         plan_id = sub.get("plan_id", "")
+        current_end_ts = sub.get("current_end")
     except Exception:
         plan_id = ""
+        current_end_ts = None
     billing_period = "annual" if (
         settings.RAZORPAY_PRO_ANNUAL_PLAN_ID and plan_id == settings.RAZORPAY_PRO_ANNUAL_PLAN_ID
     ) else "monthly"
@@ -160,6 +162,9 @@ async def razorpay_verify_payment(
     current_user.plan = "pro"
     current_user.billing_provider = "razorpay"
     current_user.billing_period = billing_period
+    current_user.plan_renews_at = (
+        datetime.fromtimestamp(current_end_ts, tz=timezone.utc) if current_end_ts else None
+    )
     current_user.razorpay_sub_id = body.razorpay_subscription_id
     current_user.razorpay_payment_id = body.razorpay_payment_id
     current_user.plan_started_at = datetime.now(timezone.utc)
@@ -201,6 +206,7 @@ async def razorpay_cancel_subscription(
         current_end = sub.get("current_end")
         if current_end:
             current_user.plan_expires_at = datetime.fromtimestamp(current_end, tz=timezone.utc)
+            current_user.plan_renews_at = None
             db.commit()
     except Exception:
         pass  # Non-fatal — webhook will set plan_expires_at when it fires

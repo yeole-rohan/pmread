@@ -53,6 +53,7 @@ def _user_response(user: User) -> UserOut:
         billing_period=user.billing_period,
         plan_started_at=user.plan_started_at,
         plan_expires_at=user.plan_expires_at,
+        plan_renews_at=user.plan_renews_at,
         analyses_used=user.analyses_used,
         prds_generated_this_month=user.prds_generated_this_month,
         prds_reset_at=user.prds_reset_at,
