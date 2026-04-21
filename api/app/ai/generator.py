@@ -50,17 +50,16 @@ async def run_analysis(
     date_from: str | None = None,
     date_to: str | None = None,
     user_id: str | None = None,
+    user_plan: str = "free",
 ) -> None:
     """
     Generate a PRD from project insights, optionally filtered by type and recency.
-    Tries Claude first, falls back to Grok if Claude is rate-limited or unavailable.
+    Free plan uses grok-3-mini; Pro/Team/Studio use Claude Sonnet (grok as fallback).
     Called as a FastAPI background task.
     """
     from datetime import datetime, timezone, timedelta
     from app.models.analysis import Analysis
     from app.models.insight import Insight
-    from app.models.project import Project
-    from app.models.user import User
 
     db = db_factory()
     try:
@@ -103,23 +102,8 @@ async def run_analysis(
 
         context = build_insight_context(insights)
 
-        # ── GitHub codebase context ────────────────────────────────────────────
+        # GitHub codebase context — coming soon
         code_context = ""
-        project = db.query(Project).filter(Project.id == analysis.project_id).first()
-        if project and project.github_repo:
-            if project.github_index_status == "ready":
-                from app.services.github_indexer import search_code_chunks
-                await emit_sse(analysis_id, {"type": "status", "message": "Searching codebase for relevant context..."})
-                code_context = search_code_chunks(str(analysis.project_id), analysis.question, db)
-            if not code_context and user_id:
-                # Fallback: README + open issues + merged PRs (no embeddings needed)
-                user = db.query(User).filter(User.id == user_id).first()
-                if user and user.github_access_token:
-                    from app.routers.github import fetch_github_context
-                    try:
-                        code_context = await fetch_github_context(project.github_repo, user.github_access_token)
-                    except Exception:
-                        pass
 
         user_message = build_prd_user_message(analysis.question, context, code_context)
 
@@ -147,6 +131,7 @@ async def run_analysis(
             user_message=user_message,
             max_tokens=4096,
             on_chunk=on_chunk,
+            prefer_provider="xai" if user_plan == "free" else None,
         )
 
         # on_chunk already accumulated full_response, but use result.full_text
@@ -177,7 +162,9 @@ async def run_analysis(
             analysis = db.query(Analysis).filter(Analysis.id == analysis_id).first()
             if analysis:
                 analysis.status = "failed"
-                analysis.error_message = str(e)
+                # H10 fix: store full error internally, expose only a generic message to the client
+                analysis.error_message = "PRD generation failed. Our team has been notified."
+                analysis._internal_error = str(e)  # logged but not returned via API
                 db.commit()
         except Exception:
             pass

@@ -9,11 +9,13 @@ class UserOut(BaseModel):
     display_name: str | None
     plan: str
     billing_provider: str | None
+    billing_period: str | None = None
     plan_started_at: datetime | None
     plan_expires_at: datetime | None
     analyses_used: int
     prds_generated_this_month: int
     prds_reset_at: datetime | None
+    prd_credits: int
     email_verified: bool
     digest_enabled: bool
     github_connected: bool

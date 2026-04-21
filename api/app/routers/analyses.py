@@ -16,9 +16,13 @@ from app.models.project import Project
 from app.models.user import User
 from app.ai.generator import run_analysis, get_or_create_queue
 from app.ai.context import build_insight_context
-from app.ai.prompts import VALIDATE_SYSTEM_PROMPT, build_validate_user_message, DOC_WRITER_PROMPTS, build_doc_writer_message
+from app.ai.prompts import (
+    VALIDATE_SYSTEM_PROMPT, build_validate_user_message,
+    DOC_WRITER_PROMPTS, build_doc_writer_message,
+    EXTEND_PRD_SYSTEM_PROMPT, build_extend_prd_user_message,
+)
 from app.ai.utils import extract_project_name
-from app.services.prd_service import check_and_increment_prd_limit, PLAN_PRD_LIMITS
+from app.services.prd_service import check_and_increment_prd_limit, try_use_prd_credit, PLAN_PRD_LIMITS
 from app.schemas.analysis import AnalysisListItem, AnalysisDetail, CreatePRDResponse, ShareResponse
 
 router = APIRouter()
@@ -51,18 +55,21 @@ async def create_prd(
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "PROJECT_NOT_FOUND"})
 
-    # PRD limit check with monthly reset (atomic — no race condition)
-    allowed = check_and_increment_prd_limit(str(current_user.id), current_user.plan, db)
-    if not allowed:
-        limit = PLAN_PRD_LIMITS.get(current_user.plan, 0)
-        raise HTTPException(
-            status_code=402,
-            detail={
-                "error": f"You've used your {limit} {'free ' if current_user.plan == 'free' else ''}PRDs this month. Resets on the 1st.",
-                "code": "PRD_LIMIT_REACHED",
-                "upgrade_url": "/settings?upgrade=true",
-            },
-        )
+    # Founding-member credits take priority — never expire, bypass monthly plan limit
+    used_credit = try_use_prd_credit(str(current_user.id), db)
+    if not used_credit:
+        # No credits — fall back to plan monthly limit
+        allowed = check_and_increment_prd_limit(str(current_user.id), current_user.plan, db)
+        if not allowed:
+            limit = PLAN_PRD_LIMITS.get(current_user.plan, 0)
+            raise HTTPException(
+                status_code=402,
+                detail={
+                    "error": f"You've used your {limit} {'free ' if current_user.plan == 'free' else ''}PRDs this month. Resets on the 1st.",
+                    "code": "PRD_LIMIT_REACHED",
+                    "upgrade_url": "/settings?upgrade=true",
+                },
+            )
 
     # Auto-name project if still default
     if project.name == "New Project":
@@ -92,6 +99,7 @@ async def create_prd(
         body.date_from,
         body.date_to,
         str(current_user.id),
+        current_user.plan,
     )
 
     return CreatePRDResponse(analysis_id=str(analysis.id), status="processing")
@@ -116,6 +124,13 @@ async def list_prds(
         .all()
     )
 
+    # Compute new_insights_count for each PRD without N+1 queries.
+    # Fetch all insight timestamps once, then compare in Python.
+    insight_dates = [
+        row[0]
+        for row in db.query(Insight.created_at).filter(Insight.project_id == project_id).all()
+    ]
+
     return [
         AnalysisListItem(
             id=str(a.id),
@@ -124,6 +139,8 @@ async def list_prds(
             status=a.status,
             brief_summary=(a.brief or {}).get("proposed_feature", "")[:120] if a.brief else None,
             created_at=a.created_at,
+            extension_count=a.extension_count,
+            new_insights_count=sum(1 for d in insight_dates if d > a.created_at),
         )
         for a in analyses
     ]
@@ -147,6 +164,7 @@ async def get_prd(
         question=analysis.question,
         status=analysis.status,
         brief=analysis.brief,
+        extensions=analysis.extensions or [],
         error_message=analysis.error_message,
         share_token=analysis.share_token,
         created_at=analysis.created_at,
@@ -280,6 +298,126 @@ async def write_doc(
     db.commit()
 
     return {"doc_type": doc_type, "content": content}
+
+
+@router.get("/{analysis_id}/new-insights")
+async def get_new_insights(
+    analysis_id: str,
+    current_user: User = Depends(get_current_user),
+    db: DBSession = Depends(get_db),
+):
+    """Return insights added to the project after this PRD was generated."""
+    analysis = db.query(Analysis).filter(
+        Analysis.id == analysis_id, Analysis.user_id == current_user.id
+    ).first()
+    if not analysis:
+        raise HTTPException(status_code=404, detail={"error": "PRD not found", "code": "ANALYSIS_NOT_FOUND"})
+
+    insights = (
+        db.query(Insight)
+        .filter(
+            Insight.project_id == analysis.project_id,
+            Insight.created_at > analysis.created_at,
+        )
+        .order_by(Insight.frequency.desc(), Insight.created_at.desc())
+        .all()
+    )
+
+    return [
+        {
+            "id": str(i.id),
+            "type": i.type,
+            "content": i.content,
+            "quote": i.quote,
+            "frequency": i.frequency,
+            "created_at": i.created_at.isoformat(),
+        }
+        for i in insights
+    ]
+
+
+class ExtendPRDRequest(BaseModel):
+    insight_ids: list[str]
+
+
+@router.post("/{analysis_id}/extend")
+async def extend_prd(
+    analysis_id: str,
+    body: ExtendPRDRequest,
+    current_user: User = Depends(get_current_user),
+    db: DBSession = Depends(get_db),
+):
+    """
+    Append a new section to an existing PRD using cherry-picked insights.
+    Pro only. Max 3 extensions per PRD. Does not decrement monthly PRD counter.
+    """
+    if current_user.plan != "pro":
+        raise HTTPException(
+            status_code=402,
+            detail={"error": "PRD extension requires Pro", "code": "PRO_REQUIRED"},
+        )
+
+    analysis = db.query(Analysis).filter(
+        Analysis.id == analysis_id, Analysis.user_id == current_user.id
+    ).first()
+    if not analysis:
+        raise HTTPException(status_code=404, detail={"error": "PRD not found", "code": "ANALYSIS_NOT_FOUND"})
+    if analysis.status != "complete":
+        raise HTTPException(status_code=400, detail={"error": "PRD must be complete to extend", "code": "NOT_COMPLETE"})
+    if analysis.extension_count >= 3:
+        raise HTTPException(
+            status_code=400,
+            detail={"error": "Maximum 3 extensions per PRD reached. Generate a new PRD to start fresh.", "code": "EXTENSION_LIMIT_REACHED"},
+        )
+    if not body.insight_ids:
+        raise HTTPException(status_code=400, detail={"error": "Select at least one insight", "code": "NO_INSIGHTS"})
+
+    insights = (
+        db.query(Insight)
+        .filter(
+            Insight.id.in_(body.insight_ids),
+            Insight.project_id == analysis.project_id,
+        )
+        .all()
+    )
+    if not insights:
+        raise HTTPException(status_code=400, detail={"error": "No valid insights found", "code": "NO_INSIGHTS"})
+
+    context = build_insight_context(insights)
+    user_message = build_extend_prd_user_message(analysis.brief_markdown or "", context)
+
+    from app.services.llm_providers import generate_text
+    result = await generate_text(
+        system_prompt=EXTEND_PRD_SYSTEM_PROMPT,
+        user_message=user_message,
+        max_tokens=1024,
+    )
+
+    now = datetime.now(timezone.utc)
+    update_label = f"Update {analysis.extension_count + 1}"
+    date_str = now.strftime("%b %d, %Y")
+
+    new_extension = {
+        "label": update_label,
+        "date": date_str,
+        "created_at": now.isoformat(),
+        "content": result,
+        "insight_ids": body.insight_ids,
+    }
+
+    current_extensions = list(analysis.extensions or [])
+    current_extensions.append(new_extension)
+    analysis.extensions = current_extensions
+    analysis.extension_count += 1
+    analysis.extended_at = now
+    db.commit()
+
+    return {
+        "success": True,
+        "extension_count": analysis.extension_count,
+        "extensions_remaining": 3 - analysis.extension_count,
+        "extension": new_extension,
+    }
 
 
 @router.delete("/{analysis_id}")

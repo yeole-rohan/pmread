@@ -1,11 +1,11 @@
 """
 Multi-model provider abstraction.
 
-Embeddings priority:  xAI (free tier) → OpenAI → fail gracefully
-Generation priority:  Anthropic Claude (streaming) → xAI Grok (streaming fallback)
+Embeddings priority:  VoyageAI → OpenAI → fail gracefully
+Generation priority:  Anthropic Claude (streaming) → Groq Llama (streaming fallback)
 
-All xAI calls use the OpenAI SDK pointed at https://api.x.ai/v1.
-The xAI API is fully OpenAI-compatible; only the base_url and API key differ.
+All Groq calls use the OpenAI SDK pointed at https://api.groq.com/openai/v1.
+The Groq API is fully OpenAI-compatible; only the base_url and API key differ.
 
 Adding a new provider later:
   1. Add its API key + model name to config.py
@@ -16,8 +16,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import AsyncIterator
-
 from app.config import settings
 
 logger = logging.getLogger(__name__)
@@ -25,8 +23,14 @@ logger = logging.getLogger(__name__)
 # ── Provider registries ────────────────────────────────────────────────────────
 
 EMBED_PROVIDERS: list[dict] = [
-    # OpenAI — only provider with a stable embeddings API.
-    # xAI (Grok) is generation-only; it does not expose an embeddings endpoint.
+    # VoyageAI — purpose-built for code retrieval; voyage-code-3 outputs 1024-dim vectors.
+    {
+        "name": "voyageai",
+        "key_attr": "VOYAGE_API_KEY",
+        "base_url": "https://api.voyageai.com/v1",
+        "model": "voyage-code-3",
+    },
+    # OpenAI — fallback if VOYAGE_API_KEY not set.
     {
         "name": "openai",
         "key_attr": "OPENAI_API_KEY",
@@ -36,18 +40,18 @@ EMBED_PROVIDERS: list[dict] = [
 ]
 
 GEN_PROVIDERS: list[dict] = [
-    # Claude — best for nuanced PRDs; streaming via Anthropic SDK
+    # Claude — Pro users; best quality
     {
         "name": "anthropic",
         "key_attr": "ANTHROPIC_API_KEY",
         "model": "claude-sonnet-4-6",
     },
-    # Grok — fallback on rate-limit / outage; streaming via OpenAI-compatible SDK
+    # Groq — free-tier users; fast Llama inference, generous free quota
     {
-        "name": "xai",
-        "key_attr": "XAI_API_KEY",
-        "base_url": "https://api.x.ai/v1",
-        "model": "grok-3-latest",  # upgrade to grok-3-mini for lower latency if needed
+        "name": "groq",
+        "key_attr": "GROQ_API_KEY",
+        "base_url": "https://api.groq.com/openai/v1",
+        "model": "llama-3.3-70b-versatile",
     },
 ]
 
@@ -114,17 +118,26 @@ async def stream_generation(
     user_message: str,
     max_tokens: int = 4096,
     on_chunk: "asyncio.coroutines.Coroutine | None" = None,
+    prefer_provider: str | None = None,
 ) -> GenerationResult:
     """
     Stream a generation request, yielding text chunks via on_chunk callback.
     Tries providers in GEN_PROVIDERS order; skips any without a key configured.
 
+    prefer_provider: when set (e.g. "groq"), that provider runs first; others are
+                     used as fallback only. When None, the default priority order applies.
     on_chunk: async callable(text: str) called for each streamed chunk.
     Returns GenerationResult with the final full text + token count.
     """
     last_error: Exception | None = None
 
-    for provider in GEN_PROVIDERS:
+    if prefer_provider:
+        ordered = [p for p in GEN_PROVIDERS if p["name"] == prefer_provider]
+        ordered += [p for p in GEN_PROVIDERS if p["name"] != prefer_provider]
+    else:
+        ordered = GEN_PROVIDERS
+
+    for provider in ordered:
         key = _get_key(provider)
         if not key:
             continue
@@ -147,6 +160,22 @@ async def stream_generation(
             continue
 
     raise RuntimeError(f"All generation providers failed. Last error: {last_error}")
+
+
+async def generate_text(
+    system_prompt: str,
+    user_message: str,
+    max_tokens: int = 1024,
+    prefer_provider: str | None = None,
+) -> str:
+    """Non-streaming generation. Wraps stream_generation and returns the full text."""
+    result = await stream_generation(
+        system_prompt=system_prompt,
+        user_message=user_message,
+        max_tokens=max_tokens,
+        prefer_provider=prefer_provider,
+    )
+    return result.full_text
 
 
 async def _stream_anthropic(
@@ -195,10 +224,10 @@ async def _stream_openai_compat(
 
     full_response = ""
     buffer = ""
-    # xAI / OpenAI-compat doesn't give precise token counts in stream;
-    # we track completion_tokens via usage in the final chunk when stream_options is set.
     tokens_used = 0
 
+    # stream_options/include_usage is OpenAI-specific; Groq and others may reject it
+    extra = {} if provider["name"] != "openai" else {"stream_options": {"include_usage": True}}
     stream = await client.chat.completions.create(
         model=provider["model"],
         max_tokens=max_tokens,
@@ -207,7 +236,7 @@ async def _stream_openai_compat(
             {"role": "user", "content": user_message},
         ],
         stream=True,
-        stream_options={"include_usage": True},
+        **extra,
     )
 
     async for chunk in stream:

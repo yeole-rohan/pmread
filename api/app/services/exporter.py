@@ -19,6 +19,18 @@ def _safe(text: str) -> str:
         .replace("\u201c", '"').replace("\u201d", '"')
         .replace("\u2022", "-").replace("\u2026", "...")
         .replace("\u00a0", " ")
+        # arrows
+        .replace("\u2192", "->").replace("\u2190", "<-")
+        .replace("\u2194", "<->").replace("\u21d2", "=>")
+        .replace("\u2794", "->").replace("\u27a1", "->")
+        # math / comparison
+        .replace("\u2265", ">=").replace("\u2264", "<=")
+        .replace("\u2260", "!=").replace("\u00d7", "x")
+        .replace("\u00f7", "/").replace("\u00b1", "+/-")
+        # misc
+        .replace("\u2713", "v").replace("\u2717", "x")
+        .replace("\u2605", "*").replace("\u2606", "*")
+        .replace("\u00ae", "(R)").replace("\u2122", "(TM)")
         .encode("latin-1", errors="replace").decode("latin-1")
     )
 
@@ -109,7 +121,80 @@ class PRDPdf(FPDF):
         self.ln(1)
 
 
-def generate_pdf(brief: dict, output_path: str) -> None:
+AMBER = (180, 120, 20)
+
+
+def _strip_inline(text: str) -> str:
+    """Remove inline markdown markers (*bold*, _italic_, `code`) for plain PDF text."""
+    text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
+    text = re.sub(r"\*(.+?)\*", r"\1", text)
+    text = re.sub(r"__(.+?)__", r"\1", text)
+    text = re.sub(r"_(.+?)_", r"\1", text)
+    text = re.sub(r"`(.+?)`", r"\1", text)
+    return text.strip()
+
+
+def render_markdown_block(pdf: "PRDPdf", content: str) -> None:
+    """Render markdown prose into the PDF — handles headings, bullets, and paragraphs."""
+    lines = content.splitlines()
+    i = 0
+    while i < len(lines):
+        line = lines[i].rstrip()
+
+        # Skip blank lines (add small spacing)
+        if not line:
+            pdf.ln(1)
+            i += 1
+            continue
+
+        # ATX headings ## and ###
+        if line.startswith("### "):
+            pdf.set_font("Helvetica", "B", 9)
+            pdf.set_text_color(*GRAY)
+            pdf.cell(0, 5, _safe(_strip_inline(line[4:])), ln=True)
+            pdf.ln(1)
+        elif line.startswith("## "):
+            pdf.set_font("Helvetica", "B", 10)
+            pdf.set_text_color(26, 26, 26)
+            pdf.cell(0, 6, _safe(_strip_inline(line[3:])), ln=True)
+            pdf.ln(1)
+        # Bullet: - item or * item
+        elif re.match(r"^[-*]\s+", line):
+            text = re.sub(r"^[-*]\s+", "", line)
+            pdf.set_font("Helvetica", "", 10)
+            pdf.set_text_color(26, 26, 26)
+            pdf.set_x(pdf.l_margin + 4)
+            pdf.cell(4, 5.5, "-", ln=False)
+            pdf.set_x(pdf.l_margin + 8)
+            pdf.multi_cell(pdf.epw - 8, 5.5, _safe(_strip_inline(text)))
+        # Numbered list: 1. item
+        elif re.match(r"^\d+\.\s+", line):
+            text = re.sub(r"^\d+\.\s+", "", line)
+            num = re.match(r"^(\d+)\.", line).group(1)
+            pdf.set_font("Helvetica", "", 10)
+            pdf.set_text_color(26, 26, 26)
+            pdf.set_x(pdf.l_margin + 4)
+            pdf.cell(6, 5.5, f"{num}.", ln=False)
+            pdf.set_x(pdf.l_margin + 10)
+            pdf.multi_cell(pdf.epw - 10, 5.5, _safe(_strip_inline(text)))
+        # Plain paragraph
+        else:
+            # Collect consecutive non-blank, non-special lines into one paragraph
+            para_lines = []
+            while i < len(lines) and lines[i].rstrip() and not re.match(r"^(#{1,3}\s|[-*]\s|\d+\.\s)", lines[i]):
+                para_lines.append(lines[i].rstrip())
+                i += 1
+            para = " ".join(para_lines)
+            pdf.set_font("Helvetica", "", 10)
+            pdf.set_text_color(26, 26, 26)
+            pdf.multi_cell(pdf.epw, 5.5, _safe(_strip_inline(para)))
+            pdf.ln(1)
+            continue  # i already advanced
+
+        i += 1
+
+
+def generate_pdf(brief: dict, output_path: str, extensions: list[dict] | None = None) -> None:
     pdf = PRDPdf(orientation="P", unit="mm", format="A4")
     pdf.set_auto_page_break(auto=True, margin=16)
     pdf.add_page()
@@ -208,5 +293,22 @@ def generate_pdf(brief: dict, output_path: str) -> None:
         pdf.section_title("Open Questions")
         for q in questions:
             pdf.bullet(q)
+
+    # ── Extensions ───────────────────────────
+    for ext in (extensions or []):
+        pdf.ln(6)
+        pdf.set_draw_color(*AMBER)
+        pdf.set_line_width(0.4)
+        pdf.line(pdf.l_margin, pdf.get_y(), pdf.l_margin + pdf.epw, pdf.get_y())
+        pdf.ln(3)
+        pdf.set_font("Helvetica", "B", 9)
+        pdf.set_text_color(*AMBER)
+        label = f"{ext.get('label', 'Update')} — {ext.get('date', '')}"
+        pdf.cell(0, 7, _safe(label.upper()), ln=True)
+        pdf.set_draw_color(*AMBER)
+        pdf.set_line_width(0.3)
+        pdf.line(pdf.get_x(), pdf.get_y(), pdf.get_x() + pdf.epw, pdf.get_y())
+        pdf.ln(2)
+        render_markdown_block(pdf, ext.get("content", ""))
 
     pdf.output(output_path)

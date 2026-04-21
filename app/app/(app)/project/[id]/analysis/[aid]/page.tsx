@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, AlertTriangle, RefreshCw, Check, Link2, Copy } from "lucide-react";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
 import BriefRenderer, { buildMarkdown, useCopy, useDownload } from "@/components/BriefRenderer";
 import CoveragePanel from "@/components/CoveragePanel";
 import DocWriterPanel from "@/components/DocWriterPanel";
@@ -14,7 +15,7 @@ import UpgradeModal from "@/components/UpgradeModal";
 import { useAnalysisStream } from "@/lib/useAnalysisStream";
 import { useUser } from "@/lib/useUser";
 import { apiFetch, getToken } from "@/lib/api";
-import { Analysis } from "@/lib/types";
+import { Analysis, PRDExtension } from "@/lib/types";
 import { trackEvent } from "@/lib/analytics";
 
 const PRD_SECTIONS = [
@@ -34,6 +35,35 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", {
     month: "long", day: "numeric", year: "numeric",
   });
+}
+
+function ExtensionCard({ ext }: { ext: PRDExtension }) {
+  return (
+    <div className="bg-white rounded-xl border border-amber-100 overflow-hidden">
+      <div className="flex items-center gap-2 px-5 py-3.5 border-b border-amber-50">
+        <span className="text-xs font-semibold text-amber-600 uppercase tracking-wider">{ext.label}</span>
+        <span className="text-xs text-gray-400">— {ext.date}</span>
+        {ext.insight_ids?.length > 0 && (
+          <span className="ml-auto text-xs text-gray-400">{ext.insight_ids.length} insight{ext.insight_ids.length !== 1 ? "s" : ""} used</span>
+        )}
+      </div>
+      <div className="px-5 py-4">
+        <ReactMarkdown
+          components={{
+            p: ({ children }) => <p className="text-sm text-gray-700 leading-relaxed my-1.5">{children}</p>,
+            ul: ({ children }) => <ul className="list-disc pl-4 my-1.5 space-y-1">{children}</ul>,
+            ol: ({ children }) => <ol className="list-decimal pl-4 my-1.5 space-y-1">{children}</ol>,
+            li: ({ children }) => <li className="text-sm text-gray-700 leading-relaxed">{children}</li>,
+            strong: ({ children }) => <strong className="font-semibold text-gray-900">{children}</strong>,
+            h3: ({ children }) => <h3 className="text-sm font-semibold text-gray-900 mt-3 mb-1">{children}</h3>,
+            h4: ({ children }) => <h4 className="text-sm font-semibold text-gray-800 mt-2 mb-0.5">{children}</h4>,
+          }}
+        >
+          {ext.content}
+        </ReactMarkdown>
+      </div>
+    </div>
+  );
 }
 
 export default function AnalysisPage() {
@@ -103,8 +133,9 @@ export default function AnalysisPage() {
   const isComplete = (analysis?.status === "complete" && analysis?.brief) || stream.brief;
   const brief = stream.brief || analysis?.brief;
 
-  // Export hooks — derive text from brief when available
-  const allText = brief ? buildMarkdown(brief) : "";
+  // Export hooks — derive text from brief + extensions when available
+  const extensions = analysis?.extensions ?? [];
+  const allText = brief ? buildMarkdown(brief, extensions) : "";
   const { copied: copiedAll, copy: copyAll } = useCopy(allText);
   const token = getToken();
   const apiBase = process.env.NEXT_PUBLIC_API_URL || "/api";
@@ -191,9 +222,24 @@ export default function AnalysisPage() {
               </span>
             )}
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 leading-snug mb-3">
-            {analysis.question}
-          </h1>
+          <h1 className="text-2xl font-bold text-gray-900 leading-snug mb-3">{analysis.title || analysis.question}</h1>
+          {analysis.additional_context && (
+            <div className="mb-3 bg-gray-50 border border-gray-100 rounded-xl px-4 py-3">
+              <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-2">Additional context</p>
+              <div className="space-y-1.5">
+                {analysis.additional_context.replace("Additional context:", "").trim().split(/Q: /).filter(Boolean).map((block, i) => {
+                  const [q, ...aParts] = block.split(/ A: /);
+                  const a = aParts.join(" A: ").trim();
+                  return (
+                    <div key={i} className="text-xs text-gray-600 leading-relaxed">
+                      <span className="font-medium text-gray-500">Q: </span>{q.trim()}
+                      {a && <><br /><span className="font-medium text-gray-500">A: </span>{a}</>}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           {isComplete && (
             <div className="flex items-center justify-between">
               <p className="text-sm text-gray-400">{formatDate(analysis.created_at)}</p>
@@ -311,13 +357,19 @@ export default function AnalysisPage() {
               cachedValidation={(brief as any).validation ?? null}
             />
             <BriefRenderer brief={brief} />
+
+            {/* Extension cards */}
+            {extensions.map((ext) => (
+              <ExtensionCard key={ext.label} ext={ext} />
+            ))}
+
             <DocWriterPanel
               analysisId={analysisId}
               cachedDocs={brief as unknown as Record<string, string>}
             />
             <JiraExportPanel
               tasks={brief.engineering_tasks ?? []}
-              prdTitle={analysis.question}
+              prdTitle={analysis.title || analysis.question}
             />
           </div>
         )}

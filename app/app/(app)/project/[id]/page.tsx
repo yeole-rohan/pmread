@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Upload, FileText, RefreshCw, X, Loader2 } from "lucide-react";
 import { useUser } from "@/lib/useUser";
-import { useProjectData, useEmptyProjectCleanup } from "@/lib/useProjectData";
+import { useProjectData, useEmptyProjectCleanup, invalidateProjectCache } from "@/lib/useProjectData";
 import { PLAN_PRD_LIMITS } from "@/lib/constants";
 import { InsightType } from "@/lib/types";
 import InsightsBoard from "@/components/InsightsBoard";
@@ -25,6 +25,7 @@ export default function ProjectPage() {
   const projectId = params.id as string;
   const { user, mutate: mutateUser } = useUser();
   const searchParams = useSearchParams();
+  const highlightId = searchParams.get("highlight");
 
   const [tab, setTab] = useState<Tab>(
     searchParams.get("tab") === "prds" ? "prds" : "insights"
@@ -53,6 +54,8 @@ export default function ProjectPage() {
     setShowUpload(false);
     trackEvent("upload_files");
     startExtracting();
+    // Invalidate all project caches so files tab, insights, and PRDs refetch fresh data
+    invalidateProjectCache(projectId);
   }
 
   async function handlePRDCreated(analysisId: string) {
@@ -211,6 +214,7 @@ export default function ProjectPage() {
           <GithubRepoPicker
             projectId={projectId}
             githubConnected={!!user?.github_connected}
+            isPro={user?.plan === "pro"}
           />
           {tab === "insights" && (
             <>
@@ -251,13 +255,19 @@ export default function ProjectPage() {
           grouped={insights}
           onDelete={handleDeleteInsight}
           onStar={handleStarInsight}
+          highlightId={highlightId}
         />
       )}
       {tab === "prds" && (
-        <PrdList projectId={projectId} prds={prds} />
+        <PrdList projectId={projectId} prds={prds} isPro={user?.plan === "pro"} />
       )}
       {tab === "ask" && (
-        <AskTab projectId={projectId} hasInsights={insightTotal > 0} />
+        <AskTab
+          projectId={projectId}
+          hasInsights={insightTotal > 0}
+          isPro={user?.plan === "pro"}
+          githubConnected={!!user?.github_connected}
+        />
       )}
       {tab === "files" && (
         <FilesTab projectId={projectId} />
@@ -268,6 +278,7 @@ export default function ProjectPage() {
         open={showUpload}
         onClose={() => setShowUpload(false)}
         onUploaded={handleUploaded}
+        isPro={user?.plan === "pro"}
       />
       <GeneratePRDModal
         projectId={projectId}

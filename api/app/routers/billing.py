@@ -2,7 +2,7 @@ import hashlib
 import hmac as hmac_module
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, Request
+from fastapi import APIRouter, Body, Depends, HTTPException, Request
 from pydantic import BaseModel
 from sqlalchemy.orm import Session as DBSession
 
@@ -15,34 +15,80 @@ router = APIRouter()
 
 
 # ─────────────────────────────────────────────
-# Razorpay
+# Helpers
 # ─────────────────────────────────────────────
+
+def _razorpay_client():
+    import razorpay
+    return razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+
+
+def _require_razorpay():
+    if not settings.RAZORPAY_KEY_ID or not settings.RAZORPAY_KEY_SECRET:
+        raise HTTPException(
+            status_code=503,
+            detail={"error": "Razorpay not configured", "code": "NOT_CONFIGURED"},
+        )
+
+
+def _plan_id_for(billing: str) -> str:
+    """Return the Razorpay Plan ID for the requested billing period."""
+    if billing == "annual":
+        if not settings.RAZORPAY_PRO_ANNUAL_PLAN_ID:
+            raise HTTPException(
+                status_code=503,
+                detail={"error": "Annual Razorpay plan not configured", "code": "NOT_CONFIGURED"},
+            )
+        return settings.RAZORPAY_PRO_ANNUAL_PLAN_ID
+    if not settings.RAZORPAY_PRO_PLAN_ID:
+        raise HTTPException(
+            status_code=503,
+            detail={"error": "Monthly Razorpay plan not configured", "code": "NOT_CONFIGURED"},
+        )
+    return settings.RAZORPAY_PRO_PLAN_ID
+
+
+# ─────────────────────────────────────────────
+# Create subscription
+# ─────────────────────────────────────────────
+
+class CreateSubscriptionRequest(BaseModel):
+    billing: str = "monthly"   # "monthly" | "annual"
+
 
 @router.post("/razorpay/create-subscription")
 async def razorpay_create_subscription(
+    body: CreateSubscriptionRequest = Body(default_factory=CreateSubscriptionRequest),
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
     """
-    Creates a Razorpay subscription and returns the subscription_id + key_id.
-    Frontend opens the Razorpay checkout widget with these values.
+    Creates a Razorpay subscription and returns subscription_id + key_id.
+    The frontend opens the Razorpay checkout widget with these values.
     """
-    if not settings.RAZORPAY_KEY_ID or not settings.RAZORPAY_KEY_SECRET:
-        raise HTTPException(status_code=503, detail={"error": "Razorpay not configured", "code": "NOT_CONFIGURED"})
-    if not settings.RAZORPAY_PRO_PLAN_ID:
-        raise HTTPException(status_code=503, detail={"error": "Razorpay plan not configured", "code": "NOT_CONFIGURED"})
+    _require_razorpay()
+    plan_id = _plan_id_for(body.billing)
+    client = _razorpay_client()
 
-    import razorpay
-    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+    # total_count: Razorpay requires >= 1.
+    # Use 120 for monthly (10 years), 10 for annual (10 years).
+    total_count = 10 if body.billing == "annual" else 120
+
+    description = (
+        "15 PRDs/month · All exports · Unlimited uploads · Billed annually"
+        if body.billing == "annual"
+        else "15 PRDs/month · All exports · Unlimited uploads"
+    )
 
     subscription = client.subscription.create({
-        "plan_id": settings.RAZORPAY_PRO_PLAN_ID,
+        "plan_id": plan_id,
         "customer_notify": 1,
         "quantity": 1,
-        "total_count": 120,  # 120 months (Razorpay requires >= 1; use large number for open-ended)
+        "total_count": total_count,
         "notes": {
             "pmread_user_id": str(current_user.id),
             "email": current_user.email,
+            "billing_period": body.billing,
         },
     })
 
@@ -50,7 +96,8 @@ async def razorpay_create_subscription(
         "subscription_id": subscription["id"],
         "key_id": settings.RAZORPAY_KEY_ID,
         "name": "PMRead Pro",
-        "description": "15 PRDs/month · All exports · Unlimited uploads",
+        "description": description,
+        "billing": body.billing,
         "prefill": {
             "email": current_user.email,
             "name": current_user.display_name or "",
@@ -58,10 +105,15 @@ async def razorpay_create_subscription(
     }
 
 
+# ─────────────────────────────────────────────
+# Verify payment
+# ─────────────────────────────────────────────
+
 class RazorpayVerifyRequest(BaseModel):
     razorpay_payment_id: str
     razorpay_subscription_id: str
     razorpay_signature: str
+    # billing_period intentionally removed — derived server-side from Razorpay (C4 fix)
 
 
 @router.post("/razorpay/verify")
@@ -72,10 +124,14 @@ async def razorpay_verify_payment(
 ):
     """
     Called by the frontend after the Razorpay widget reports success.
-    Verifies the HMAC signature, then upgrades the user.
+    Verifies HMAC signature, then upgrades the user to Pro.
+    billing_period is derived from the Razorpay subscription — never trusted from client.
     """
     if not settings.RAZORPAY_KEY_SECRET:
-        raise HTTPException(status_code=503, detail={"error": "Razorpay not configured", "code": "NOT_CONFIGURED"})
+        raise HTTPException(
+            status_code=503,
+            detail={"error": "Razorpay not configured", "code": "NOT_CONFIGURED"},
+        )
 
     msg = f"{body.razorpay_payment_id}|{body.razorpay_subscription_id}"
     expected = hmac_module.new(
@@ -85,45 +141,85 @@ async def razorpay_verify_payment(
     ).hexdigest()
 
     if not hmac_module.compare_digest(expected, body.razorpay_signature):
-        raise HTTPException(status_code=400, detail={"error": "Invalid payment signature", "code": "INVALID_SIGNATURE"})
+        raise HTTPException(
+            status_code=400,
+            detail={"error": "Invalid payment signature", "code": "INVALID_SIGNATURE"},
+        )
+
+    # Derive billing_period server-side — never trust the client body (C4 fix)
+    client = _razorpay_client()
+    try:
+        sub = client.subscription.fetch(body.razorpay_subscription_id)
+        plan_id = sub.get("plan_id", "")
+    except Exception:
+        plan_id = ""
+    billing_period = "annual" if (
+        settings.RAZORPAY_PRO_ANNUAL_PLAN_ID and plan_id == settings.RAZORPAY_PRO_ANNUAL_PLAN_ID
+    ) else "monthly"
 
     current_user.plan = "pro"
     current_user.billing_provider = "razorpay"
+    current_user.billing_period = billing_period
     current_user.razorpay_sub_id = body.razorpay_subscription_id
     current_user.razorpay_payment_id = body.razorpay_payment_id
     current_user.plan_started_at = datetime.now(timezone.utc)
     current_user.plan_expires_at = None
     db.commit()
 
+    from app.tasks.email_tasks import send_pro_welcome_email_task
+    send_pro_welcome_email_task.delay(
+        current_user.email,
+        current_user.display_name or "",
+    )
+
     return {"success": True}
 
+
+# ─────────────────────────────────────────────
+# Cancel subscription
+# ─────────────────────────────────────────────
 
 @router.post("/razorpay/cancel")
 async def razorpay_cancel_subscription(
     current_user: User = Depends(get_current_user),
+    db: DBSession = Depends(get_db),
 ):
     """Cancel the current user's Razorpay subscription at end of billing cycle."""
     if not current_user.razorpay_sub_id:
-        raise HTTPException(status_code=400, detail={"error": "No active Razorpay subscription", "code": "NO_SUBSCRIPTION"})
-    if not settings.RAZORPAY_KEY_SECRET:
-        raise HTTPException(status_code=503, detail={"error": "Razorpay not configured", "code": "NOT_CONFIGURED"})
-
-    import razorpay
-    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+        raise HTTPException(
+            status_code=400,
+            detail={"error": "No active Razorpay subscription", "code": "NO_SUBSCRIPTION"},
+        )
+    _require_razorpay()
+    client = _razorpay_client()
     client.subscription.cancel(current_user.razorpay_sub_id, {"cancel_at_cycle_end": 1})
+
+    # Fetch subscription to get current billing period end date so the UI
+    # can show "Active until <date>" and hide the cancel button immediately.
+    try:
+        sub = client.subscription.fetch(current_user.razorpay_sub_id)
+        current_end = sub.get("current_end")
+        if current_end:
+            current_user.plan_expires_at = datetime.fromtimestamp(current_end, tz=timezone.utc)
+            db.commit()
+    except Exception:
+        pass  # Non-fatal — webhook will set plan_expires_at when it fires
 
     return {"success": True, "message": "Subscription will cancel at end of billing period"}
 
 
+# ─────────────────────────────────────────────
+# Webhook
+# ─────────────────────────────────────────────
+
 @router.post("/webhook/razorpay")
 async def razorpay_webhook(request: Request, db: DBSession = Depends(get_db)):
-    """Handles subscription lifecycle events from Razorpay dashboard."""
+    """Handles subscription lifecycle events pushed from Razorpay dashboard."""
     if not settings.RAZORPAY_KEY_SECRET:
         raise HTTPException(status_code=503)
 
     payload = await request.body()
     sig = request.headers.get("x-razorpay-signature", "")
-
     expected = hmac_module.new(
         settings.RAZORPAY_KEY_SECRET.encode(),
         payload,
@@ -142,12 +238,17 @@ async def razorpay_webhook(request: Request, db: DBSession = Depends(get_db)):
         payment_entity = event["payload"].get("payment", {}).get("entity", {})
         sub_id = entity["id"]
         payment_id = payment_entity.get("id")
+        # Determine billing period from notes if available
+        notes = entity.get("notes", {})
+        billing_period = notes.get("billing_period", "monthly")
+
         user = db.query(User).filter(User.razorpay_sub_id == sub_id).first()
         if user:
             if payment_id and user.razorpay_payment_id == payment_id:
-                return {"received": True}  # already processed
+                return {"received": True}  # idempotent — already processed
             user.plan = "pro"
             user.billing_provider = "razorpay"
+            user.billing_period = billing_period
             user.plan_expires_at = None
             if payment_id:
                 user.razorpay_payment_id = payment_id
@@ -161,6 +262,7 @@ async def razorpay_webhook(request: Request, db: DBSession = Depends(get_db)):
         if user:
             user.plan = "free"
             user.billing_provider = None
+            user.billing_period = None
             user.razorpay_sub_id = None
             user.plan_expires_at = (
                 datetime.fromtimestamp(ended_at, tz=timezone.utc) if ended_at else None
@@ -168,12 +270,14 @@ async def razorpay_webhook(request: Request, db: DBSession = Depends(get_db)):
             db.commit()
 
     elif event_type == "subscription.halted":
+        # Payment failed after retries — downgrade immediately
         entity = event["payload"]["subscription"]["entity"]
         sub_id = entity["id"]
         user = db.query(User).filter(User.razorpay_sub_id == sub_id).first()
         if user:
             user.plan = "free"
             user.billing_provider = None
+            user.billing_period = None
             user.razorpay_sub_id = None
             user.plan_expires_at = None
             db.commit()
