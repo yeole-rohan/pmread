@@ -10,7 +10,7 @@ Two environments on the same VPS:
 
 | Environment | Folder          | Domain                        | API port | Frontend port |
 |-------------|-----------------|-------------------------------|----------|---------------|
-| Staging     | ~/pmread-stage  | staging-pmread.rohanyeole.com | 8001     | 3001          |
+| Staging     | ~/pmread-stage  | staging-pmread.rohanyeole.com | 8005     | 3005          |
 | Production  | ~/pmread-prod   | pmread.org                    | 8006     | 3006          |
 
 Both environments share the same VPS. Each has its own:
@@ -218,7 +218,7 @@ After=network.target postgresql.service
 User=ubuntu
 WorkingDirectory=/home/ubuntu/pmread-stage/api
 EnvironmentFile=/home/ubuntu/pmread-stage/.env
-ExecStart=/home/ubuntu/pmread-stage/api/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8001
+ExecStart=/home/ubuntu/pmread-stage/api/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8005
 Restart=always
 RestartSec=5
 
@@ -341,7 +341,7 @@ pm2 startup   # follow the printed command (sudo env PATH=... pm2 startup system
 
 | Environment | API port | Frontend port |
 |---|---|---|
-| Staging | 8001 | 3001 |
+| Staging | 8005 | 3005 |
 | Production | 8006 | 3006 |
 
 ### Daily PM2 commands
@@ -405,7 +405,7 @@ server {
     add_header X-Robots-Tag "noindex, nofollow" always;
 
     location /api/ {
-        proxy_pass http://127.0.0.1:8001;
+        proxy_pass http://127.0.0.1:8005;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-Proto https;
@@ -413,7 +413,7 @@ server {
     }
 
     location / {
-        proxy_pass http://127.0.0.1:3001;
+        proxy_pass http://127.0.0.1:3005;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-Proto https;
@@ -663,8 +663,8 @@ Happens when the old process didn't release the port before the new one tried to
 # Find which process holds the port
 sudo lsof -i :3006          # prod frontend
 sudo lsof -i :8006          # prod API
-sudo lsof -i :3001          # stage frontend
-sudo lsof -i :8001          # stage API
+sudo lsof -i :3005          # stage frontend
+sudo lsof -i :8005          # stage API
 
 # Kill it by PID (replace 12345 with actual PID from lsof output)
 sudo kill -9 12345
@@ -731,8 +731,8 @@ uvicorn app.main:app --host 127.0.0.1 --port 8006
 
 | Service | Port | Managed by |
 |---|---|---|
-| API (FastAPI/uvicorn) | 8001 | systemd `pmread-stage-api` |
-| Frontend (Next.js) | 3001 | pm2 `pmread-stage-frontend` |
+| API (FastAPI/uvicorn) | 8005 | systemd `pmread-stage-api` |
+| Frontend (Next.js) | 3005 | pm2 `pmread-stage-frontend` |
 | Celery worker | — | systemd `pmread-stage-worker` |
 | Redis | 6379 db1 | system redis-server |
 | Postgres | 5432 | system postgresql |
