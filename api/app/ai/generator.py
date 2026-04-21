@@ -60,8 +60,6 @@ async def run_analysis(
     from datetime import datetime, timezone, timedelta
     from app.models.analysis import Analysis
     from app.models.insight import Insight
-    from app.models.project import Project
-    from app.models.user import User
 
     db = db_factory()
     try:

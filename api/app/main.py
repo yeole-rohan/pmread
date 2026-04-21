@@ -20,9 +20,8 @@ from app.models.session import Session
 from app.models.waitlist import WaitlistEmail
 from app.models.github_chunk import GithubCodeChunk
 from app.models.celery_task import CeleryTask
-from app.models.slack_channel import SlackChannel
 from app.routers import auth, projects, analyses, stream, export, billing, waitlist
-from app.routers import uploads, insights, share, feedback as feedback_router, chat, search, ingest, github, events, slack as slack_router
+from app.routers import uploads, insights, share, feedback as feedback_router, chat, search, ingest, events, slack as slack_router
 from app.routers import admin as admin_router
 if settings.SENTRY_DSN:
     import sentry_sdk
