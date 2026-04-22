@@ -10,10 +10,12 @@ permissions:
   contents: read
 
 jobs:
-  # ── CI — runs on every PR targeting main ─────────────────────────────────
+  # ── CI — runs on push to stage AND on every PR targeting main ────────────
   ci:
     name: CI checks
-    if: github.event_name == 'pull_request'
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/stage') ||
+      github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
     steps:
@@ -51,9 +53,10 @@ jobs:
       - name: Lint API (ruff)
         run: pip install -q ruff && ruff check api/app
 
-  # ── Stage deploy ─────────────────────────────────────────────────────────
+  # ── Stage deploy — only runs after CI passes on push to stage ────────────
   stage-deploy:
     name: Deploy to Staging
+    needs: [ci]
     if: github.event_name == 'push' && github.ref == 'refs/heads/stage'
     runs-on: ubuntu-latest
 
@@ -102,7 +105,7 @@ jobs:
 
             echo "--- Stage deploy complete ---"
 
-  # ── Prod deploy — triggered by merge into main ────────────────────────────
+  # ── Prod deploy — triggered only by merge (push) into main ───────────────
   prod-deploy:
     name: Deploy to Production
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
