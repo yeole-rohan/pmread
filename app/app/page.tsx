@@ -257,7 +257,7 @@ export default function HomePage() {
 
       <main>
         {/* ── Hero ─────────────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden pt-20 pb-24 sm:pt-28 sm:pb-32">
+        <section className="relative overflow-hidden pt-14 pb-16 sm:pt-20 sm:pb-20">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-50/70 via-white to-white pointer-events-none" />
           <div className="relative mx-auto px-4 sm:px-6 text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-50 border border-purple-100 text-xs font-semibold text-purple-700 mb-6">
@@ -269,7 +269,7 @@ export default function HomePage() {
               Customer Evidence <span className="text-[#7F77DD]">to Engineering Spec</span>
             </h1>
 
-            <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto mb-10 leading-relaxed">
+            <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto mb-8 leading-relaxed">
               Upload interviews, transcripts, and feedback. PMRead extracts insights,
               tracks frequency across all your sources, and generates a spec where
               every requirement links back to what customers actually said.
@@ -293,39 +293,32 @@ export default function HomePage() {
               Free forever · No credit card required · 2 PRDs/month on the free plan
             </p>
 
-            {/* App preview — replace with real screenshot or demo GIF */}
-            <div className="mt-16 rounded-2xl max-w-4xl m-auto border border-gray-200 bg-gray-50 overflow-hidden shadow-xl ring-1 ring-gray-900/5">
-              <div className="bg-gray-100 px-4 py-2.5 flex items-center gap-2 border-b border-gray-200">
-                <div className="flex gap-1.5">
-                  <div className="w-3 h-3 rounded-full bg-gray-300" />
-                  <div className="w-3 h-3 rounded-full bg-gray-300" />
-                  <div className="w-3 h-3 rounded-full bg-gray-300" />
-                </div>
-                <div className="flex-1 ml-3 bg-white rounded px-3 py-1 text-xs text-gray-400 text-left">
-                  pmread.rohanyeole.com/project/...
-                </div>
-              </div>
-              <div className="p-10 flex items-center justify-center min-h-[300px]">
-                <div className="text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-purple-100 flex items-center justify-center mx-auto mb-4">
-                    <Play size={24} className="text-[#7F77DD] ml-1" />
-                  </div>
-                  <p className="text-sm text-gray-400 font-medium">
-                    Product demo coming soon
-                  </p>
-                  <p className="text-xs text-gray-300 mt-1">
-                    [ Replace with a 30-second screen recording or animated GIF ]
-                  </p>
+            {/* Product demo — thumbnail linking to YouTube */}
+            <a
+              href="https://www.youtube.com/watch?v=M8R3bTm6VZk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group mt-10 block rounded-2xl max-w-4xl mx-auto overflow-hidden shadow-xl ring-1 ring-gray-900/5 relative"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/75%25%20PM%20WORK%20GONE.png"
+                alt="PMRead product walkthrough — 75% of PM work automated"
+                className="w-full block"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
+                <div className="w-16 h-16 rounded-full bg-white/90 group-hover:bg-white flex items-center justify-center shadow-lg transition-colors">
+                  <Play size={24} className="text-[#7F77DD] ml-1" fill="currentColor" />
                 </div>
               </div>
-            </div>
+            </a>
           </div>
         </section>
 
         {/* ── PM Workflow Chart ────────────────────────────────────────── */}
-        <section className="py-20 sm:py-28 bg-white border-t border-gray-100">
+        <section className="py-12 sm:py-16 bg-white border-t border-gray-100">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-12">
+            <div className="text-center mb-8">
               <p className="text-xs font-semibold tracking-widest text-[#7F77DD] uppercase mb-3">
                 Time comparison
               </p>
@@ -364,9 +357,9 @@ export default function HomePage() {
         </section>
 
         {/* ── Stats ────────────────────────────────────────────────────── */}
-        <section className="py-20 sm:py-28 bg-gray-950">
+        <section className="py-12 sm:py-16 bg-gray-950">
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-14">
+            <div className="text-center mb-8">
               <p className="text-xs font-semibold tracking-widest text-purple-400 uppercase mb-3">
                 The overhead problem
               </p>
@@ -411,9 +404,9 @@ export default function HomePage() {
         </section>
 
         {/* ── How it works ─────────────────────────────────────────────── */}
-        <section id="how-it-works" className="py-20 sm:py-28 scroll-mt-16">
+        <section id="how-it-works" className="py-12 sm:py-16 scroll-mt-16">
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-16">
+            <div className="text-center mb-8">
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                 Research to PRD in three steps
               </h2>
@@ -443,9 +436,9 @@ export default function HomePage() {
         </section>
 
         {/* ── Features ─────────────────────────────────────────────────── */}
-        <section id="features" className="py-20 sm:py-28 bg-gray-50">
+        <section id="features" className="py-12 sm:py-16 bg-gray-50">
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-16">
+            <div className="text-center mb-8">
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                 Built for how PMs actually work
               </h2>
@@ -459,9 +452,9 @@ export default function HomePage() {
         </section>
 
         {/* ── Differentiators ──────────────────────────────────────────── */}
-        <section className="py-20 sm:py-28">
+        <section className="py-12 sm:py-16">
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-14">
+            <div className="text-center mb-8">
               <p className="text-xs font-semibold tracking-widest text-[#7F77DD] uppercase mb-3">
                 Why PMRead
               </p>
@@ -497,9 +490,9 @@ export default function HomePage() {
         </section>
 
         {/* ── Free tools ───────────────────────────────────────────────── */}
-        <section className="py-20 sm:py-28">
+        <section className="py-12 sm:py-16">
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            <div className="text-center mb-12">
+            <div className="text-center mb-8">
               <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
                 Free tools — no signup required
               </h2>
@@ -533,12 +526,12 @@ export default function HomePage() {
         </section>
 
         {/* ── Pricing preview ──────────────────────────────────────────── */}
-        <section className="py-20 sm:py-28 bg-gray-50">
+        <section className="py-12 sm:py-16 bg-gray-50">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
               Start free, upgrade when you&apos;re ready
             </h2>
-            <p className="text-gray-500 text-lg mb-12">
+            <p className="text-gray-500 text-lg mb-8">
               No credit card required to start.
             </p>
 
@@ -617,9 +610,9 @@ export default function HomePage() {
         </section>
 
         {/* ── Testimonials ─────────────────────────────────────────────── */}
-        <section className="py-20 sm:py-28">
+        <section className="py-12 sm:py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-8">
               PMs ship faster with PMRead
             </h2>
             <div className="grid md:grid-cols-2 gap-6">
@@ -646,7 +639,7 @@ export default function HomePage() {
         </section>
 
         {/* ── Final CTA ────────────────────────────────────────────────── */}
-        <section className="py-20 sm:py-28 bg-[#7F77DD]">
+        <section className="py-12 sm:py-16 bg-[#7F77DD]">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
               Build specs your engineers can trust
