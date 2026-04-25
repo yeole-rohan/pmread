@@ -6,7 +6,7 @@ import { getAuthor } from "@/lib/authors";
 import BlogRenderer, { extractToc } from "@/components/BlogRenderer";
 import AuthorChip from "@/components/AuthorChip";
 import BlogSidebarCta from "@/components/BlogSidebarCta";
-import { SITE_URL as BASE } from "@/lib/site";
+import { SITE_URL as BASE, TWITTER_HANDLE } from "@/lib/site";
 
 export function generateStaticParams() {
   return getAllPosts().map((p) => ({ slug: p.slug }));
@@ -22,7 +22,7 @@ export async function generateMetadata({
   if (!post) return {};
   const author = getAuthor(post.author);
   return {
-    title: { absolute: `${post.title} | PMRead Blog` },
+    title: { absolute: `${post.title}` },
     description: post.description,
     alternates: { canonical: `${BASE}/blog/${post.slug}` },
     openGraph: {
@@ -37,6 +37,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
+      site: TWITTER_HANDLE,
+      creator: TWITTER_HANDLE,
       title: post.title,
       description: post.description,
       images: [`${BASE}/blog/${post.slug}.svg`],

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import InterviewPrepTool from "./InterviewPrepTool";
 
-import { SITE_URL as BASE } from "@/lib/site";
+import { SITE_URL as BASE, TWITTER_HANDLE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "PM Interview Prep Tool — Questions from JD + Resume",
@@ -16,6 +16,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
     title: "PM Interview Prep Tool | PMRead",
     description: "Paste a JD + your resume → get likely PM interview questions with answers from your own experience. Free.",
   },

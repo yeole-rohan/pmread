@@ -1,4 +1,4 @@
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, TWITTER_HANDLE } from "@/lib/site";
 import type { Metadata } from "next";
 import FeaturePrioritizationTool from "./FeaturePrioritizationTool";
 import Link from "next/link";
@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
     title: "Free RICE Feature Prioritization Calculator | PMRead",
     description: "Score and rank product features using the RICE framework. Free prioritization tool for product managers.",
   },

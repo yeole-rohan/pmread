@@ -5,7 +5,7 @@ import { TEMPLATES, getTemplate } from "@/lib/templates";
 import TemplateCopyBlock from "@/components/TemplateCopyBlock";
 import TemplateViewTracker from "@/components/TemplateViewTracker";
 
-import { SITE_URL as BASE } from "@/lib/site";
+import { SITE_URL as BASE, TWITTER_HANDLE } from "@/lib/site";
 
 export function generateStaticParams() {
   return TEMPLATES.map((t) => ({ slug: t.slug }));
@@ -31,6 +31,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
+      site: TWITTER_HANDLE,
+      creator: TWITTER_HANDLE,
       title: `Free ${template.title} | PMRead`,
       description: template.metaDescription,
     },
