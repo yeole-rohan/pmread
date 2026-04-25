@@ -6,12 +6,27 @@ on:
 
 jobs:
   backend:
-    name: Backend — lint & security
+    name: Backend — lint, security & tests
     runs-on: ubuntu-latest
 
     defaults:
       run:
         working-directory: api
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: pmread_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
       - uses: actions/checkout@v4
@@ -36,23 +51,21 @@ jobs:
 
       - name: Security — safety (dependency CVEs)
         run: safety check --file requirements.txt --full-report
-        continue-on-error: true   # advisory; don't hard-fail on transitive CVEs
+        continue-on-error: true
 
-      - name: Run tests
+      - name: Unit tests (no DB)
+        run: pytest tests/unit/ -q
+
+      - name: Integration tests (PostgreSQL)
         env:
-          DATABASE_URL: sqlite:///./test.db
-          SECRET_KEY: ci-test-secret-key-not-used-in-prod
-          ANTHROPIC_API_KEY: dummy
+          TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/pmread_test
+          JWT_SECRET: ci-test-jwt-secret-not-used-in-prod
           FRONTEND_URL: http://localhost:3000
-          RAZORPAY_KEY_ID: dummy
-          RAZORPAY_KEY_SECRET: dummy
-          CELERY_BROKER_URL: memory://
-        run: |
-          pip install pytest pytest-asyncio httpx
-          pytest app/tests/ -v --tb=short 2>/dev/null || echo "No tests found — skipping"
+          ANTHROPIC_API_KEY: dummy
+        run: pytest tests/integration/ -q
 
   frontend:
-    name: Frontend — type-check & audit
+    name: Frontend — type-check, tests & audit
     runs-on: ubuntu-latest
 
     defaults:
@@ -74,6 +87,9 @@ jobs:
 
       - name: Type-check (tsc)
         run: npx tsc --noEmit
+
+      - name: Unit tests (Vitest)
+        run: npm test
 
       - name: Security — npm audit
         run: npm audit --audit-level=high

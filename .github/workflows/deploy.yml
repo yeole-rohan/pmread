@@ -18,8 +18,25 @@ jobs:
       github.event_name == 'pull_request'
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: pmread_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
     steps:
       - uses: actions/checkout@v4
+
+      # ── Frontend ────────────────────────────────────────────────────────
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -36,22 +53,41 @@ jobs:
         run: npx tsc --noEmit
         working-directory: app
 
+      - name: Frontend tests (Vitest)
+        run: npm test
+        working-directory: app
+
       - name: Build frontend (dry-run)
         run: npm run build
         working-directory: app
         env:
           NEXT_PUBLIC_SITE_URL: https://pmread.org
 
+      # ── Backend ─────────────────────────────────────────────────────────
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install API dependencies
         run: pip install -q -r api/requirements.txt
 
       - name: Lint API (ruff)
         run: pip install -q ruff && ruff check api/app
+
+      - name: Backend unit tests
+        run: python -m pytest tests/unit/ -q
+        working-directory: api
+
+      - name: Backend integration tests (PostgreSQL)
+        env:
+          TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/pmread_test
+          JWT_SECRET: ci-test-jwt-secret-not-used-in-prod
+          FRONTEND_URL: http://localhost:3000
+          ANTHROPIC_API_KEY: dummy
+        run: python -m pytest tests/integration/ -q
+        working-directory: api
 
   # ── Stage deploy — only runs after CI passes on push to stage ────────────
   stage-deploy:
