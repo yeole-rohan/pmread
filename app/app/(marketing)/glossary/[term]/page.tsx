@@ -19,7 +19,7 @@ export async function generateMetadata({
   if (!entry) return {};
 
   return {
-    title: `${entry.term} — PM Glossary | PMRead`,
+    title: { absolute: `${entry.term} — PM Glossary | PMRead` },
     description: entry.metaDescription,
     alternates: { canonical: `${BASE}/glossary/${entry.slug}` },
     openGraph: {

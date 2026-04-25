@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Free Product Management Tools — No Signup Required | PMRead",
+  title: { absolute: "Free PM Tools — No Signup Required | PMRead" },
   description:
     "Free AI tools for product managers: PRD generator, feedback analyzer, user story generator, persona creator, RICE calculator, meeting cost calculator, metric story generator, and PM interview prep.",
   alternates: { canonical: `${SITE_URL}/tools` },

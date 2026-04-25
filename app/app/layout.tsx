@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, TWITTER_HANDLE, DEFAULT_OG_IMAGE } from "@/lib/site";
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-geist" });
 
@@ -20,8 +20,13 @@ export const metadata: Metadata = {
     type: "website",
     url: SITE_URL,
     siteName: "PMRead",
+    images: [DEFAULT_OG_IMAGE],
   },
-  twitter: { card: "summary_large_image" },
+  twitter: {
+    card: "summary_large_image",
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
+  },
   verification: { google: "xueZ9q7sAS6VO8lAIskvJovfMinZGQZiGJ4uqPNbNgs", other: { "msvalidate.01": "1F44885A78C356C4A0627DAC299F6302" } },
   robots: process.env.NEXT_PUBLIC_NOINDEX === "true"
     ? { index: false, follow: false }

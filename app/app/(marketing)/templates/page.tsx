@@ -6,7 +6,7 @@ import TemplatesClient from "@/components/TemplatesClient";
 import { SITE_URL as BASE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Free PM Templates — Copy-Paste Ready | PMRead",
+  title: { absolute: "Free PM Templates — Copy-Paste Ready | PMRead" },
   description:
     "Free PM templates: PRD, OKR, product roadmap, buyer persona, user stories, and more. Written by PMs, copy-paste ready, no signup required.",
   alternates: { canonical: `${BASE}/templates` },

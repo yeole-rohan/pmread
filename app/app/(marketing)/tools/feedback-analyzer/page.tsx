@@ -4,7 +4,7 @@ import FeedbackAnalyzerTool from "./FeedbackAnalyzerTool";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Free Customer Feedback Analyzer | PMRead",
+  title: { absolute: "Free Customer Feedback Analyzer | PMRead" },
   description:
     "Paste raw customer feedback and instantly extract key themes, pain points, and feature requests. Free AI feedback analysis tool — no signup required.",
   alternates: { canonical: `${SITE_URL}/tools/feedback-analyzer` },

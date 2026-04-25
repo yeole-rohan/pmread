@@ -20,7 +20,7 @@ import FeaturesSection from "@/components/FeaturesSection";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "PMRead — Customer Evidence to Engineering Spec",
+  title: { absolute: "PMRead — Customer Evidence to Engineering Spec" },
   description:
     "Upload customer interviews and feedback. PMRead extracts insights, ranks by frequency, and generates a PRD with every claim traced to real customer evidence.",
   keywords: [

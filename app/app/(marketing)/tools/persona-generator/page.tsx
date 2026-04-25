@@ -4,7 +4,7 @@ import PersonaGeneratorTool from "./PersonaGeneratorTool";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Free AI Persona Generator — User Persona Creator | PMRead",
+  title: { absolute: "Free AI Persona Generator — User Persona Creator | PMRead" },
   description:
     "Turn bullet points about your users into a structured persona card. Free AI persona generator for product managers — no signup required.",
   alternates: { canonical: `${SITE_URL}/tools/persona-generator` },

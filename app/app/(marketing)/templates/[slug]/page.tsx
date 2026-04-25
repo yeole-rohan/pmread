@@ -21,7 +21,7 @@ export async function generateMetadata({
   if (!template) return {};
 
   return {
-    title: `Free ${template.title} for Product Managers | PMRead`,
+    title: { absolute: `Free ${template.title} for Product Managers | PMRead` },
     description: template.metaDescription,
     alternates: { canonical: `${BASE}/templates/${template.slug}` },
     openGraph: {

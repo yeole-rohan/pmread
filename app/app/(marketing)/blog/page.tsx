@@ -6,7 +6,7 @@ import AuthorChip from "@/components/AuthorChip";
 import { SITE_URL as BASE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Product Management Blog — PMRead",
+  title: { absolute: "Product Management Blog — PMRead" },
   description:
     "Practical product management guides: PRD writing, customer research, feature prioritization, OKRs, and AI workflows. Written by PMs, for PMs.",
   alternates: { canonical: `${BASE}/blog` },
@@ -66,7 +66,7 @@ export default function BlogIndexPage() {
                 className="group block bg-white rounded-2xl border border-gray-200 hover:border-[#7F77DD]/40 hover:shadow-sm overflow-hidden transition-all mb-10"
               >
                 <div className="relative h-56 sm:h-72 overflow-hidden bg-gray-100">
-                  <img src={`/blog/${featured.slug}.svg`} alt="" className="w-full h-full object-cover" />
+                  <img src={`/blog/${featured.slug}.svg`} alt={`Featured image for: ${featured.title}`} className="w-full h-full object-cover" />
                   <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-[#7F77DD] text-white text-xs font-semibold">
                     Featured
                   </span>
@@ -100,7 +100,7 @@ export default function BlogIndexPage() {
                     className="group bg-white rounded-2xl border border-gray-200 hover:border-[#7F77DD]/40 hover:shadow-sm overflow-hidden transition-all flex flex-col"
                   >
                     <div className="h-36 overflow-hidden bg-gray-100 flex-shrink-0">
-                      <img src={`/blog/${post.slug}.svg`} alt="" className="w-full h-full object-cover" />
+                      <img src={`/blog/${post.slug}.svg`} alt={`Featured image for: ${post.title}`} className="w-full h-full object-cover" />
                     </div>
                     <div className="p-5 flex flex-col flex-1">
                       <span className="text-[10px] font-semibold text-[#7F77DD] uppercase tracking-widest mb-1">
