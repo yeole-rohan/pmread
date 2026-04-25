@@ -44,7 +44,7 @@ function NavCTA() {
 
 const NAV_LINKS = [
   { label: "Pricing", href: "/pricing" },
-  { label: "Blog", href: "/blog", soon: true },
+  { label: "Blog", href: "/blog" },
   { label: "About", href: "/about" },
 ];
 

@@ -141,8 +141,8 @@ const HOW_IT_WORKS = [
 const DIFFERENTIATORS = [
   {
     icon: Quote,
-    title: "PRDs grounded in evidence, not prompts",
-    body: "Every other AI tool generates from what you type. PMRead generates from what your customers actually said — with citations. \"7 of your last 15 customers mentioned this\" is not a hallucination. It's your data.",
+    title: "Real evidence. Not synthetic interviews.",
+    body: "Some AI tools run \"synthetic user interviews\" — they give you answers shaped by the prompt, not by customers. PMRead only works from what your customers actually said. Upload a transcript, and every insight traces back to a real quote. \"7 of 15 customers mentioned this\" is not a hallucination. It's your data.",
   },
   {
     icon: GitBranch,

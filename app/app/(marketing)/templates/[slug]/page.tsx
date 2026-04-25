@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { TEMPLATES, getTemplate } from "@/lib/templates";
 import TemplateCopyBlock from "@/components/TemplateCopyBlock";
+import TemplateViewTracker from "@/components/TemplateViewTracker";
 
 import { SITE_URL as BASE } from "@/lib/site";
 
@@ -120,7 +121,13 @@ export default async function TemplatePage({
           </div>
 
           {/* Template copy block */}
-          <TemplateCopyBlock content={template.content} filename={template.filename} />
+          <TemplateViewTracker slug={template.slug} templateName={template.title} />
+          <TemplateCopyBlock
+            content={template.content}
+            filename={template.filename}
+            slug={template.slug}
+            templateName={template.title}
+          />
 
           {/* How to use */}
           <div className="mt-12 space-y-4">

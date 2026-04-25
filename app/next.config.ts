@@ -8,9 +8,9 @@ const PROD_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 // Prod CSP: strict — only allow the configured API origin.
 const CSP_PROD = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://cdn.razorpay.com",
+  "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://cdn.razorpay.com https://www.googletagmanager.com",
   "style-src 'self' 'unsafe-inline'",
-  `connect-src 'self' ${PROD_API_URL} https://api.razorpay.com https://lumberjack.razorpay.com`,
+  `connect-src 'self' ${PROD_API_URL} https://api.razorpay.com https://lumberjack.razorpay.com https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com`,
   "frame-src https://api.razorpay.com",
   "img-src 'self' data: https:",
   "font-src 'self'",
@@ -24,9 +24,9 @@ const CSP_PROD = [
 // unsafe-eval needed for Next.js source maps; ws:// needed for HMR websocket.
 const CSP_DEV = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://cdn.razorpay.com",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://checkout.razorpay.com https://cdn.razorpay.com https://www.googletagmanager.com",
   "style-src 'self' 'unsafe-inline'",
-  "connect-src 'self' http://localhost:* https://localhost:* ws://localhost:* wss://localhost:* https://api.razorpay.com https://lumberjack.razorpay.com",
+  "connect-src 'self' http://localhost:* https://localhost:* ws://localhost:* wss://localhost:* https://api.razorpay.com https://lumberjack.razorpay.com https://www.google-analytics.com https://analytics.google.com https://www.googletagmanager.com",
   "frame-src https://api.razorpay.com",
   "img-src 'self' data: https: http:",
   "font-src 'self' data:",
