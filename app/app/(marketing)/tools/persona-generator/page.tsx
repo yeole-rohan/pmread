@@ -1,4 +1,4 @@
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, TWITTER_HANDLE } from "@/lib/site";
 import type { Metadata } from "next";
 import PersonaGeneratorTool from "./PersonaGeneratorTool";
 import Link from "next/link";
@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
     title: "Free AI Persona Generator | PMRead",
     description: "Paste notes about your user and get a full persona card with goals, frustrations, a memorable quote, and recommended product qualities.",
   },

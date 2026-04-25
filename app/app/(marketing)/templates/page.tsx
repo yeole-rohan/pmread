@@ -3,7 +3,7 @@ import Link from "next/link";
 import { TEMPLATES } from "@/lib/templates";
 import TemplatesClient from "@/components/TemplatesClient";
 
-import { SITE_URL as BASE } from "@/lib/site";
+import { SITE_URL as BASE, TWITTER_HANDLE } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: { absolute: "Free PM Templates — Copy-Paste Ready | PMRead" },
@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
     title: "Free PM Templates | PMRead",
     description:
       "Free product management templates — PRD, OKR, roadmap, persona, user stories and more. Copy-paste ready, no signup.",

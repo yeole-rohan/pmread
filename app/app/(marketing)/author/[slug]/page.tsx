@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getAllPosts } from "@/lib/blog";
 import { AUTHORS, getAuthor } from "@/lib/authors";
 import AuthorAvatar from "@/components/AuthorAvatar";
-import { SITE_URL as BASE } from "@/lib/site";
+import { SITE_URL as BASE, TWITTER_HANDLE } from "@/lib/site";
 
 export function generateStaticParams() {
   return Object.keys(AUTHORS).map((slug) => ({ slug }));
@@ -19,18 +19,20 @@ export async function generateMetadata({
   const author = getAuthor(slug);
   if (!author) return {};
   return {
-    title: { absolute: `${author.name} — ${author.role} | PMRead Blog` },
+    title: { absolute: `${author.name} — ${author.role}` },
     description: author.bio,
     alternates: { canonical: `${BASE}/author/${author.slug}` },
     openGraph: {
-      title: `${author.name} | PMRead Blog`,
+      title: `${author.name}`,
       description: author.bio,
       url: `${BASE}/author/${author.slug}`,
       images: [{ url: author.avatar, width: 600, height: 600, alt: `${author.name} — ${author.role}` }],
     },
     twitter: {
       card: "summary",
-      title: `${author.name} | PMRead Blog`,
+      site: TWITTER_HANDLE,
+      creator: TWITTER_HANDLE,
+      title: `${author.name}`,
       description: author.bio,
       images: [author.avatar],
     },
