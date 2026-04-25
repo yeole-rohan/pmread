@@ -67,29 +67,19 @@ export default function MarketingNav() {
 
         {/* Desktop nav links */}
         <div className="hidden md:flex items-center gap-6">
-          {NAV_LINKS.map(({ label, href, soon }) =>
-            soon ? (
-              <span
-                key={href}
-                className="text-sm text-gray-300 font-medium cursor-default select-none"
-                title="Coming soon"
-              >
-                {label}
-              </span>
-            ) : (
-              <Link
-                key={href}
-                href={href}
-                className={`text-sm font-medium transition-colors ${
-                  pathname === href
-                    ? "text-gray-900"
-                    : "text-gray-500 hover:text-gray-900"
-                }`}
-              >
-                {label}
-              </Link>
-            )
-          )}
+          {NAV_LINKS.map(({ label, href }) => (
+            <Link
+              key={href}
+              href={href}
+              className={`text-sm font-medium transition-colors ${
+                pathname === href
+                  ? "text-gray-900"
+                  : "text-gray-500 hover:text-gray-900"
+              }`}
+            >
+              {label}
+            </Link>
+          ))}
         </div>
 
         {/* Desktop CTAs */}
@@ -111,25 +101,16 @@ export default function MarketingNav() {
       {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden border-t border-gray-100 bg-white px-4 py-4 space-y-1">
-          {NAV_LINKS.map(({ label, href, soon }) =>
-            soon ? (
-              <span
-                key={href}
-                className="block text-sm text-gray-300 font-medium py-2 cursor-default"
-              >
-                {label} <span className="text-xs">(coming soon)</span>
-              </span>
-            ) : (
-              <Link
-                key={href}
-                href={href}
-                className="block text-sm text-gray-700 font-medium py-2 hover:text-[#7F77DD] transition-colors"
-                onClick={() => setMobileOpen(false)}
-              >
-                {label}
-              </Link>
-            )
-          )}
+          {NAV_LINKS.map(({ label, href }) => (
+            <Link
+              key={href}
+              href={href}
+              className="block text-sm text-gray-700 font-medium py-2 hover:text-[#7F77DD] transition-colors"
+              onClick={() => setMobileOpen(false)}
+            >
+              {label}
+            </Link>
+          ))}
           <div className="pt-3 border-t border-gray-100 flex flex-col gap-2">
             <Link
               href="/login"
