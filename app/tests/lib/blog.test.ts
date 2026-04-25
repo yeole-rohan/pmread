@@ -65,7 +65,7 @@ function setupFs(files: Record<string, string>) {
     const key = Object.keys(files).find(
       (k) => k === name || k === `${slug}.md`
     );
-    return (key ? files[key] : "") as unknown as Buffer;
+    return (key ? files[key] : "") as unknown as string;
   });
 }
 
@@ -130,7 +130,7 @@ describe("getPost", () => {
 
   it("returns parsed post when file exists", () => {
     vi.mocked(fs.existsSync).mockReturnValue(true);
-    vi.mocked(fs.readFileSync).mockReturnValue(POST_B as unknown as Buffer);
+    vi.mocked(fs.readFileSync).mockReturnValue(POST_B as unknown as string);
     const post = getPost("beta-post");
     expect(post).not.toBeNull();
     expect(post!.title).toBe("Beta Post");
@@ -139,7 +139,7 @@ describe("getPost", () => {
 
   it("returns body content", () => {
     vi.mocked(fs.existsSync).mockReturnValue(true);
-    vi.mocked(fs.readFileSync).mockReturnValue(POST_B as unknown as Buffer);
+    vi.mocked(fs.readFileSync).mockReturnValue(POST_B as unknown as string);
     const post = getPost("beta-post");
     expect(post!.body).toContain("Body of beta post");
   });
