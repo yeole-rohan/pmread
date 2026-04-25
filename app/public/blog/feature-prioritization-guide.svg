@@ -1,0 +1,71 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F8F7FF"/>
+      <stop offset="100%" stop-color="#F0EDFF"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- 2x2 matrix frame -->
+  <rect x="230" y="90" width="740" height="460" rx="16" fill="white" stroke="#E5E7EB" stroke-width="2"/>
+
+  <!-- Dividing lines -->
+  <line x1="600" y1="90" x2="600" y2="550" stroke="#E5E7EB" stroke-width="2"/>
+  <line x1="230" y1="320" x2="970" y2="320" stroke="#E5E7EB" stroke-width="2"/>
+
+  <!-- Q1: Top-left — High impact, High effort (Do carefully) -->
+  <rect x="230" y="90" width="370" height="230" rx="16" fill="#F5F3FF"/>
+  <!-- Quadrant icon: gear (effort) + arrow up (impact) -->
+  <circle cx="370" cy="195" r="40" fill="#7F77DD" opacity="0.1"/>
+  <!-- Gear shape -->
+  <circle cx="370" cy="195" r="22" fill="none" stroke="#7F77DD" stroke-width="3" opacity="0.6"/>
+  <circle cx="370" cy="195" r="10" fill="white"/>
+  <rect x="366" y="169" width="8" height="10" rx="3" fill="#7F77DD" opacity="0.6"/>
+  <rect x="366" y="211" width="8" height="10" rx="3" fill="#7F77DD" opacity="0.6"/>
+  <rect x="344" y="191" width="10" height="8" rx="3" fill="#7F77DD" opacity="0.6"/>
+  <rect x="386" y="191" width="10" height="8" rx="3" fill="#7F77DD" opacity="0.6"/>
+  <!-- Effort label lines -->
+  <rect x="430" y="182" width="110" height="8" rx="4" fill="#7F77DD" opacity="0.4"/>
+  <rect x="430" y="198" width="80" height="6" rx="3" fill="#9CA3AF" opacity="0.4"/>
+  <rect x="430" y="212" width="95" height="6" rx="3" fill="#9CA3AF" opacity="0.35"/>
+
+  <!-- Q2: Top-right — High impact, Low effort ⭐ DO NOW -->
+  <rect x="600" y="90" width="370" height="230" rx="16" fill="#EDE9FE"/>
+  <!-- Star badge -->
+  <circle cx="740" cy="195" r="46" fill="#7F77DD" opacity="0.12"/>
+  <polygon points="740,158 750,186 780,186 757,203 765,231 740,214 715,231 723,203 700,186 730,186"
+           fill="#7F77DD" opacity="0.85"/>
+  <!-- "Do Now" badge -->
+  <rect x="790" y="175" width="110" height="28" rx="14" fill="#7F77DD" opacity="0.15"/>
+  <rect x="805" y="182" width="80" height="8" rx="4" fill="#7F77DD" opacity="0.6"/>
+  <rect x="805" y="196" width="60" height="6" rx="3" fill="#7F77DD" opacity="0.35"/>
+
+  <!-- Q3: Bottom-left — Low impact, High effort (avoid) -->
+  <rect x="230" y="320" width="370" height="230" rx="16" fill="#F9FAFB"/>
+  <!-- X / skip icon -->
+  <circle cx="370" cy="430" r="36" fill="#E5E7EB" opacity="0.8"/>
+  <line x1="352" y1="412" x2="388" y2="448" stroke="#9CA3AF" stroke-width="4" stroke-linecap="round"/>
+  <line x1="388" y1="412" x2="352" y2="448" stroke="#9CA3AF" stroke-width="4" stroke-linecap="round"/>
+  <rect x="430" y="420" width="90" height="8" rx="4" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="430" y="436" width="110" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+
+  <!-- Q4: Bottom-right — Low impact, Low effort (quick wins / later) -->
+  <rect x="600" y="320" width="370" height="230" rx="16" fill="#F9FAFB"/>
+  <!-- Bookmark / later icon -->
+  <path d="M720 396 L720 462 L746 446 L772 462 L772 396 Z" fill="#C4B5FD" opacity="0.7"/>
+  <!-- Clock mini -->
+  <circle cx="840" cy="430" r="28" fill="none" stroke="#C4B5FD" stroke-width="3"/>
+  <line x1="840" y1="415" x2="840" y2="430" stroke="#A78BFA" stroke-width="2.5" stroke-linecap="round"/>
+  <line x1="840" y1="430" x2="852" y2="438" stroke="#A78BFA" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Axis arrow labels -->
+  <line x1="230" y1="600" x2="970" y2="600" stroke="#7F77DD" stroke-width="2" opacity="0.3"/>
+  <polygon points="970,600 958,595 958,605" fill="#7F77DD" opacity="0.3"/>
+  <line x1="150" y1="550" x2="150" y2="90" stroke="#7F77DD" stroke-width="2" opacity="0.3"/>
+  <polygon points="150,90 145,102 155,102" fill="#7F77DD" opacity="0.3"/>
+
+  <!-- Axis label lines -->
+  <rect x="530" y="608" width="80" height="8" rx="4" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="110" y="310" width="8" height="80" rx="4" fill="#9CA3AF" opacity="0.3"/>
+</svg>

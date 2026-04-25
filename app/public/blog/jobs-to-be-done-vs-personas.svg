@@ -1,0 +1,102 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F8F7FF"/>
+      <stop offset="100%" stop-color="#ECFDF5"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- LEFT PANEL: Persona card -->
+  <rect x="100" y="90" width="420" height="450" rx="20" fill="white" stroke="#E5E7EB" stroke-width="1.5"/>
+  <rect x="100" y="90" width="420" height="70" rx="20" fill="#7F77DD" opacity="0.9"/>
+  <rect x="100" y="140" width="420" height="20" fill="#7F77DD" opacity="0.9"/>
+
+  <!-- Avatar circle in header -->
+  <circle cx="200" cy="125" r="28" fill="white" opacity="0.2"/>
+  <circle cx="200" cy="118" r="14" fill="white" opacity="0.7"/>
+  <path d="M175 148 Q200 135 225 148" stroke="white" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+
+  <!-- Persona name placeholder -->
+  <rect x="240" y="112" width="100" height="10" rx="5" fill="white" opacity="0.7"/>
+  <rect x="240" y="128" width="70" height="8" rx="4" fill="white" opacity="0.4"/>
+
+  <!-- Persona attribute rows -->
+  <circle cx="136" cy="202" r="6" fill="#7F77DD" opacity="0.4"/>
+  <rect x="154" y="196" width="80" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="154" y="209" width="280" height="6" rx="3" fill="#9CA3AF" opacity="0.4"/>
+
+  <circle cx="136" cy="247" r="6" fill="#7F77DD" opacity="0.4"/>
+  <rect x="154" y="241" width="60" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="154" y="254" width="250" height="6" rx="3" fill="#9CA3AF" opacity="0.4"/>
+  <rect x="154" y="267" width="220" height="6" rx="3" fill="#9CA3AF" opacity="0.35"/>
+
+  <circle cx="136" cy="300" r="6" fill="#7F77DD" opacity="0.4"/>
+  <rect x="154" y="294" width="90" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="154" y="307" width="260" height="6" rx="3" fill="#9CA3AF" opacity="0.4"/>
+
+  <!-- Tool badges -->
+  <rect x="134" y="340" width="70" height="24" rx="12" fill="#F5F3FF"/>
+  <rect x="148" y="348" width="42" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="216" y="340" width="80" height="24" rx="12" fill="#F5F3FF"/>
+  <rect x="228" y="348" width="54" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="308" y="340" width="60" height="24" rx="12" fill="#F5F3FF"/>
+  <rect x="320" y="348" width="36" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+
+  <!-- Persona label at bottom -->
+  <rect x="134" y="460" width="70" height="10" rx="5" fill="#7F77DD" opacity="0.3"/>
+  <rect x="134" y="477" width="250" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="134" y="491" width="220" height="7" rx="3" fill="#9CA3AF" opacity="0.25"/>
+
+  <!-- VS divider -->
+  <circle cx="600" cy="315" r="36" fill="#7F77DD"/>
+  <rect x="580" y="309" width="40" height="8" rx="4" fill="white" opacity="0.8"/>
+  <rect x="585" y="321" width="30" height="8" rx="4" fill="white" opacity="0.5"/>
+
+  <!-- RIGHT PANEL: JTBD card -->
+  <rect x="680" y="90" width="420" height="450" rx="20" fill="white" stroke="#E5E7EB" stroke-width="1.5"/>
+  <rect x="680" y="90" width="420" height="70" rx="20" fill="#0D9488" opacity="0.85"/>
+  <rect x="680" y="140" width="420" height="20" fill="#0D9488" opacity="0.85"/>
+
+  <!-- "Hire" icon -->
+  <circle cx="760" cy="125" r="24" fill="white" opacity="0.2"/>
+  <path d="M748 118 L772 118 L772 132 L748 132 Z" fill="white" opacity="0.5" rx="3"/>
+  <path d="M756 110 L764 110 L764 118 L756 118 Z" fill="white" opacity="0.5"/>
+
+  <!-- Job/trigger -->
+  <rect x="795" y="112" width="120" height="10" rx="5" fill="white" opacity="0.7"/>
+  <rect x="795" y="128" width="80" height="8" rx="4" fill="white" opacity="0.4"/>
+
+  <!-- The 4 forces -->
+  <!-- Push arrow up-right (away from old) -->
+  <circle cx="716" cy="215" r="22" fill="#ECFDF5"/>
+  <path d="M704 227 L728 203" stroke="#0D9488" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="728,203 718,206 725,213" fill="#0D9488"/>
+  <rect x="750" y="204" width="90" height="7" rx="3" fill="#0D9488" opacity="0.5"/>
+  <rect x="750" y="217" width="250" height="6" rx="3" fill="#9CA3AF" opacity="0.4"/>
+  <rect x="750" y="229" width="210" height="6" rx="3" fill="#9CA3AF" opacity="0.35"/>
+
+  <!-- Pull arrow down-right (toward new) -->
+  <circle cx="716" cy="285" r="22" fill="#F5F3FF"/>
+  <path d="M704 273 L728 297" stroke="#7F77DD" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="728,297 718,294 725,287" fill="#7F77DD"/>
+  <rect x="750" y="274" width="90" height="7" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <rect x="750" y="287" width="200" height="6" rx="3" fill="#9CA3AF" opacity="0.4"/>
+
+  <!-- Anxiety (zigzag) -->
+  <circle cx="716" cy="355" r="22" fill="#FFF7ED"/>
+  <path d="M704 360 L710 350 L718 360 L726 350 L732 358" stroke="#F59E0B" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="750" y="344" width="80" height="7" rx="3" fill="#F59E0B" opacity="0.5"/>
+  <rect x="750" y="357" width="230" height="6" rx="3" fill="#9CA3AF" opacity="0.35"/>
+
+  <!-- Habit (circular arrow) -->
+  <circle cx="716" cy="425" r="22" fill="#FDF2F8"/>
+  <path d="M704 425 A12 12 0 1 1 714 437" stroke="#EC4899" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <polygon points="714,437 708,431 720,430" fill="#EC4899"/>
+  <rect x="750" y="414" width="70" height="7" rx="3" fill="#EC4899" opacity="0.4"/>
+  <rect x="750" y="427" width="220" height="6" rx="3" fill="#9CA3AF" opacity="0.35"/>
+
+  <!-- Background decoration -->
+  <circle cx="90" cy="560" r="50" fill="#7F77DD" opacity="0.04"/>
+  <circle cx="1110" cy="100" r="60" fill="#0D9488" opacity="0.04"/>
+</svg>

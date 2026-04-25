@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { TEMPLATES, TEMPLATE_CATEGORIES } from "@/lib/templates";
+import { TEMPLATES } from "@/lib/templates";
+import TemplatesClient from "@/components/TemplatesClient";
 
-import { SITE_URL as BASE } from "@/lib/site";
+import { SITE_URL as BASE, TWITTER_HANDLE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Free PM Templates — Copy-Paste Ready | PMRead",
+  title: { absolute: "Free PM Templates — Copy-Paste Ready | PMRead" },
   description:
     "Free PM templates: PRD, OKR, product roadmap, buyer persona, user stories, and more. Written by PMs, copy-paste ready, no signup required.",
   alternates: { canonical: `${BASE}/templates` },
@@ -17,6 +18,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
     title: "Free PM Templates | PMRead",
     description:
       "Free product management templates — PRD, OKR, roadmap, persona, user stories and more. Copy-paste ready, no signup.",
@@ -107,39 +110,8 @@ export default function TemplatesPage() {
             </p>
           </div>
 
-          {/* Template grid — grouped by category */}
-          {TEMPLATE_CATEGORIES.map((category) => {
-            const items = TEMPLATES.filter((t) => t.category === category);
-            if (items.length === 0) return null;
-            return (
-              <div key={category} className="mb-10">
-                <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
-                  {category}
-                </h2>
-                <div className="space-y-3">
-                  {items.map((template) => (
-                    <Link
-                      key={template.slug}
-                      href={`/templates/${template.slug}`}
-                      className="group flex items-start justify-between gap-4 bg-white rounded-2xl border border-gray-200 hover:border-[#7F77DD]/40 hover:shadow-sm p-5 transition-all"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-base font-semibold text-gray-900 group-hover:text-[#7F77DD] transition-colors mb-1">
-                          {template.title}
-                        </h3>
-                        <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">
-                          {template.description}
-                        </p>
-                      </div>
-                      <span className="shrink-0 text-sm font-semibold text-[#7F77DD] group-hover:translate-x-0.5 transition-transform mt-0.5 whitespace-nowrap">
-                        Use template →
-                      </span>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+          {/* Template grid — search + grouped by category */}
+          <TemplatesClient templates={TEMPLATES} />
 
           {/* FAQ */}
           <div className="mt-4">

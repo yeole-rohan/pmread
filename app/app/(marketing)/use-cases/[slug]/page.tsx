@@ -19,7 +19,7 @@ export async function generateMetadata({
   const uc = getUseCase(slug);
   if (!uc) return {};
   return {
-    title: `${uc.headline} | PMRead`,
+    title: { absolute: `${uc.headline} | PMRead` },
     description: uc.metaDescription,
     alternates: { canonical: `${BASE}/use-cases/${uc.slug}` },
     openGraph: {

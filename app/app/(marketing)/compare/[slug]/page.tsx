@@ -19,7 +19,7 @@ export async function generateMetadata({
   const comp = getComparison(slug);
   if (!comp) return {};
   return {
-    title: `${comp.headline} | PMRead`,
+    title: { absolute: `${comp.headline} | PMRead` },
     description: comp.metaDescription,
     alternates: { canonical: `${BASE}/compare/${comp.slug}` },
     openGraph: {

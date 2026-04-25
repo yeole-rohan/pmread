@@ -1,0 +1,119 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F8F7FF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+    <linearGradient id="bar1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7F77DD"/>
+      <stop offset="100%" stop-color="#4B44A8"/>
+    </linearGradient>
+    <linearGradient id="bar2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#5EEAD4"/>
+      <stop offset="100%" stop-color="#0D9488"/>
+    </linearGradient>
+    <linearGradient id="bar3" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FCD34D"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- ===== OBJECTIVE (top, centred) ===== -->
+  <rect x="380" y="60" width="440" height="90" rx="18" fill="#7F77DD" opacity="0.92"/>
+  <!-- "O" label strip -->
+  <rect x="380" y="60" width="56" height="90" rx="18" fill="#4B44A8" opacity="0.9"/>
+  <rect x="393" y="90" width="30" height="10" rx="5" fill="white" opacity="0.7"/>
+  <!-- Objective text lines -->
+  <rect x="452" y="84" width="220" height="11" rx="5" fill="white" opacity="0.85"/>
+  <rect x="452" y="103" width="170" height="8" rx="4" fill="white" opacity="0.45"/>
+  <rect x="452" y="118" width="190" height="7" rx="3" fill="white" opacity="0.3"/>
+
+  <!-- ===== CONNECTOR LINES from Objective to KRs ===== -->
+  <!-- Left KR line -->
+  <path d="M480 150 L480 175 L250 175 L250 220" stroke="#7F77DD" stroke-width="2" stroke-dasharray="6 4" fill="none" opacity="0.4"/>
+  <!-- Centre KR line -->
+  <path d="M600 150 L600 220" stroke="#7F77DD" stroke-width="2" stroke-dasharray="6 4" fill="none" opacity="0.4"/>
+  <!-- Right KR line -->
+  <path d="M720 150 L720 175 L950 175 L950 220" stroke="#7F77DD" stroke-width="2" stroke-dasharray="6 4" fill="none" opacity="0.4"/>
+
+  <!-- ===== KR 1 (left) ===== -->
+  <rect x="100" y="220" width="300" height="320" rx="16" fill="white" stroke="#E5E7EB" stroke-width="1.5"/>
+  <!-- KR header -->
+  <rect x="100" y="220" width="300" height="48" rx="16" fill="#7F77DD" opacity="0.12"/>
+  <rect x="100" y="250" width="300" height="18" fill="#7F77DD" opacity="0.12"/>
+  <circle cx="128" cy="244" r="14" fill="#7F77DD" opacity="0.2"/>
+  <rect x="125" y="239" width="6" height="10" rx="2" fill="#7F77DD" opacity="0.7"/>
+  <rect x="150" y="238" width="100" height="9" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="150" y="252" width="70" height="6" rx="3" fill="#9CA3AF" opacity="0.4"/>
+
+  <!-- Progress arc KR1 — 72% -->
+  <circle cx="250" cy="350" r="64" fill="none" stroke="#E5E7EB" stroke-width="10"/>
+  <circle cx="250" cy="350" r="64" fill="none" stroke="url(#bar1)" stroke-width="10"
+          stroke-dasharray="289 401" stroke-dashoffset="100" stroke-linecap="round"
+          transform="rotate(-90 250 350)"/>
+  <!-- Percentage in centre -->
+  <rect x="228" y="340" width="44" height="14" rx="7" fill="#7F77DD" opacity="0.15"/>
+  <rect x="232" y="344" width="36" height="6" rx="3" fill="#7F77DD" opacity="0.6"/>
+
+  <!-- KR1 metric rows -->
+  <rect x="120" y="434" width="80" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="120" y="447" width="180" height="7" rx="3" fill="#7F77DD" opacity="0.25"/>
+  <rect x="120" y="461" width="140" height="7" rx="3" fill="#9CA3AF" opacity="0.2"/>
+  <rect x="120" y="476" width="160" height="7" rx="3" fill="#9CA3AF" opacity="0.2"/>
+  <!-- Status badge -->
+  <rect x="120" y="500" width="80" height="22" rx="11" fill="#F5F3FF"/>
+  <rect x="130" y="506" width="60" height="10" rx="5" fill="#7F77DD" opacity="0.4"/>
+
+  <!-- ===== KR 2 (centre) ===== -->
+  <rect x="450" y="220" width="300" height="320" rx="16" fill="white" stroke="#E5E7EB" stroke-width="1.5"/>
+  <rect x="450" y="220" width="300" height="48" rx="16" fill="#0D9488" opacity="0.1"/>
+  <rect x="450" y="250" width="300" height="18" fill="#0D9488" opacity="0.1"/>
+  <circle cx="478" cy="244" r="14" fill="#0D9488" opacity="0.2"/>
+  <rect x="475" y="239" width="6" height="10" rx="2" fill="#0D9488" opacity="0.7"/>
+  <rect x="500" y="238" width="110" height="9" rx="4" fill="#0D9488" opacity="0.45"/>
+  <rect x="500" y="252" width="80" height="6" rx="3" fill="#9CA3AF" opacity="0.4"/>
+
+  <!-- Progress arc KR2 — 55% -->
+  <circle cx="600" cy="350" r="64" fill="none" stroke="#E5E7EB" stroke-width="10"/>
+  <circle cx="600" cy="350" r="64" fill="none" stroke="url(#bar2)" stroke-width="10"
+          stroke-dasharray="221 401" stroke-dashoffset="100" stroke-linecap="round"
+          transform="rotate(-90 600 350)"/>
+  <rect x="578" y="340" width="44" height="14" rx="7" fill="#0D9488" opacity="0.12"/>
+  <rect x="582" y="344" width="36" height="6" rx="3" fill="#0D9488" opacity="0.55"/>
+
+  <rect x="470" y="434" width="80" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="470" y="447" width="200" height="7" rx="3" fill="#0D9488" opacity="0.2"/>
+  <rect x="470" y="461" width="160" height="7" rx="3" fill="#9CA3AF" opacity="0.2"/>
+  <rect x="470" y="476" width="180" height="7" rx="3" fill="#9CA3AF" opacity="0.2"/>
+  <rect x="470" y="500" width="80" height="22" rx="11" fill="#ECFDF5"/>
+  <rect x="480" y="506" width="60" height="10" rx="5" fill="#0D9488" opacity="0.35"/>
+
+  <!-- ===== KR 3 (right) ===== -->
+  <rect x="800" y="220" width="300" height="320" rx="16" fill="white" stroke="#E5E7EB" stroke-width="1.5"/>
+  <rect x="800" y="220" width="300" height="48" rx="16" fill="#F59E0B" opacity="0.1"/>
+  <rect x="800" y="250" width="300" height="18" fill="#F59E0B" opacity="0.1"/>
+  <circle cx="828" cy="244" r="14" fill="#F59E0B" opacity="0.2"/>
+  <rect x="825" y="239" width="6" height="10" rx="2" fill="#F59E0B" opacity="0.7"/>
+  <rect x="850" y="238" width="90" height="9" rx="4" fill="#F59E0B" opacity="0.5"/>
+  <rect x="850" y="252" width="65" height="6" rx="3" fill="#9CA3AF" opacity="0.4"/>
+
+  <!-- Progress arc KR3 — 30% -->
+  <circle cx="950" cy="350" r="64" fill="none" stroke="#E5E7EB" stroke-width="10"/>
+  <circle cx="950" cy="350" r="64" fill="none" stroke="url(#bar3)" stroke-width="10"
+          stroke-dasharray="121 401" stroke-dashoffset="100" stroke-linecap="round"
+          transform="rotate(-90 950 350)"/>
+  <rect x="928" y="340" width="44" height="14" rx="7" fill="#F59E0B" opacity="0.12"/>
+  <rect x="932" y="344" width="36" height="6" rx="3" fill="#F59E0B" opacity="0.6"/>
+
+  <rect x="820" y="434" width="80" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="820" y="447" width="160" height="7" rx="3" fill="#F59E0B" opacity="0.22"/>
+  <rect x="820" y="461" width="200" height="7" rx="3" fill="#9CA3AF" opacity="0.2"/>
+  <rect x="820" y="476" width="140" height="7" rx="3" fill="#9CA3AF" opacity="0.2"/>
+  <rect x="820" y="500" width="80" height="22" rx="11" fill="#FFF7ED"/>
+  <rect x="830" y="506" width="60" height="10" rx="5" fill="#F59E0B" opacity="0.4"/>
+
+  <!-- Background decoration -->
+  <circle cx="80" cy="100" r="55" fill="#7F77DD" opacity="0.04"/>
+  <circle cx="1120" cy="540" r="65" fill="#A78BFA" opacity="0.04"/>
+</svg>

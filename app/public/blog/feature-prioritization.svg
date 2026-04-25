@@ -1,0 +1,152 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F8F7FF"/>
+      <stop offset="100%" stop-color="#F0EDFF"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- THREE FRAMEWORK CARDS SIDE BY SIDE -->
+
+  <!-- ===== CARD 1: RICE ===== -->
+  <rect x="80" y="90" width="310" height="450" rx="18" fill="white" stroke="#E5E7EB" stroke-width="1.5"/>
+  <!-- Header band -->
+  <rect x="80" y="90" width="310" height="56" rx="18" fill="#7F77DD" opacity="0.85"/>
+  <rect x="80" y="128" width="310" height="18" fill="#7F77DD" opacity="0.85"/>
+  <!-- RICE label placeholder -->
+  <rect x="110" y="108" width="60" height="12" rx="6" fill="white" opacity="0.8"/>
+  <rect x="178" y="110" width="110" height="8" rx="4" fill="white" opacity="0.4"/>
+
+  <!-- RICE formula hint row -->
+  <rect x="100" y="166" width="32" height="18" rx="4" fill="#7F77DD" opacity="0.15"/>
+  <rect x="104" y="170" width="24" height="10" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <rect x="140" y="168" width="12" height="14" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="158" y="166" width="32" height="18" rx="4" fill="#7F77DD" opacity="0.15"/>
+  <rect x="162" y="170" width="24" height="10" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <rect x="196" y="168" width="12" height="14" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="214" y="166" width="32" height="18" rx="4" fill="#7F77DD" opacity="0.15"/>
+  <rect x="218" y="170" width="24" height="10" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <rect x="250" y="168" width="12" height="14" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="268" y="166" width="32" height="18" rx="4" fill="#4B44A8" opacity="0.25"/>
+  <rect x="272" y="170" width="24" height="10" rx="3" fill="#4B44A8" opacity="0.6"/>
+
+  <!-- 4 scored feature rows in RICE card -->
+  <!-- Row 1 (longest = highest score) -->
+  <rect x="100" y="210" width="60" height="8" rx="4" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="100" y="224" width="240" height="14" rx="7" fill="#7F77DD" opacity="0.8"/>
+  <rect x="350" y="224" width="24" height="14" rx="7" fill="#4B44A8"/>
+
+  <!-- Row 2 -->
+  <rect x="100" y="252" width="50" height="8" rx="4" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="100" y="266" width="180" height="14" rx="7" fill="#7F77DD" opacity="0.55"/>
+  <rect x="290" y="266" width="24" height="14" rx="7" fill="#7F77DD" opacity="0.75"/>
+
+  <!-- Row 3 -->
+  <rect x="100" y="294" width="70" height="8" rx="4" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="100" y="308" width="130" height="14" rx="7" fill="#A78BFA" opacity="0.55"/>
+  <rect x="240" y="308" width="24" height="14" rx="7" fill="#A78BFA" opacity="0.8"/>
+
+  <!-- Row 4 -->
+  <rect x="100" y="336" width="55" height="8" rx="4" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="100" y="350" width="90" height="14" rx="7" fill="#C4B5FD" opacity="0.5"/>
+  <rect x="200" y="350" width="24" height="14" rx="7" fill="#C4B5FD" opacity="0.7"/>
+
+  <!-- "Score" label area -->
+  <rect x="100" y="400" width="60" height="8" rx="4" fill="#7F77DD" opacity="0.2"/>
+  <rect x="100" y="415" width="240" height="1" fill="#E5E7EB"/>
+  <rect x="100" y="430" width="120" height="7" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="100" y="445" width="90" height="7" rx="3" fill="#9CA3AF" opacity="0.2"/>
+
+  <!-- ===== CARD 2: MoSCoW ===== -->
+  <rect x="445" y="90" width="310" height="450" rx="18" fill="white" stroke="#E5E7EB" stroke-width="1.5"/>
+  <rect x="445" y="90" width="310" height="56" rx="18" fill="#0D9488" opacity="0.8"/>
+  <rect x="445" y="128" width="310" height="18" fill="#0D9488" opacity="0.8"/>
+  <rect x="475" y="108" width="80" height="12" rx="6" fill="white" opacity="0.8"/>
+  <rect x="563" y="110" width="90" height="8" rx="4" fill="white" opacity="0.4"/>
+
+  <!-- Must Have bucket -->
+  <rect x="465" y="165" width="270" height="64" rx="10" fill="#ECFDF5"/>
+  <rect x="465" y="165" width="4" height="64" rx="2" fill="#0D9488"/>
+  <rect x="480" y="178" width="55" height="9" rx="4" fill="#0D9488" opacity="0.6"/>
+  <rect x="480" y="194" width="180" height="6" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="480" y="207" width="140" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+
+  <!-- Should Have bucket -->
+  <rect x="465" y="243" width="270" height="64" rx="10" fill="#F0FDFA"/>
+  <rect x="465" y="243" width="4" height="64" rx="2" fill="#5EEAD4"/>
+  <rect x="480" y="256" width="65" height="9" rx="4" fill="#0D9488" opacity="0.4"/>
+  <rect x="480" y="272" width="160" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="480" y="285" width="120" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+
+  <!-- Could Have bucket -->
+  <rect x="465" y="321" width="270" height="50" rx="10" fill="#F9FAFB"/>
+  <rect x="465" y="321" width="4" height="50" rx="2" fill="#D1D5DB"/>
+  <rect x="480" y="334" width="60" height="9" rx="4" fill="#9CA3AF" opacity="0.5"/>
+  <rect x="480" y="350" width="140" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+
+  <!-- Won't Have bucket -->
+  <rect x="465" y="385" width="270" height="50" rx="10" fill="#FFF1F2"/>
+  <rect x="465" y="385" width="4" height="50" rx="2" fill="#FDA4AF"/>
+  <rect x="480" y="398" width="65" height="9" rx="4" fill="#FB7185" opacity="0.5"/>
+  <rect x="480" y="414" width="110" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+
+  <!-- ===== CARD 3: Weighted Scoring ===== -->
+  <rect x="810" y="90" width="310" height="450" rx="18" fill="white" stroke="#E5E7EB" stroke-width="1.5"/>
+  <rect x="810" y="90" width="310" height="56" rx="18" fill="#F59E0B" opacity="0.8"/>
+  <rect x="810" y="128" width="310" height="18" fill="#F59E0B" opacity="0.8"/>
+  <rect x="840" y="108" width="100" height="12" rx="6" fill="white" opacity="0.8"/>
+  <rect x="948" y="110" width="80" height="8" rx="4" fill="white" opacity="0.4"/>
+
+  <!-- Column headers -->
+  <rect x="830" y="165" width="80" height="8" rx="4" fill="#9CA3AF" opacity="0.4"/>
+  <rect x="950" y="165" width="40" height="8" rx="4" fill="#F59E0B" opacity="0.4"/>
+  <rect x="1000" y="165" width="40" height="8" rx="4" fill="#F59E0B" opacity="0.4"/>
+  <rect x="1050" y="165" width="50" height="8" rx="4" fill="#9CA3AF" opacity="0.4"/>
+  <!-- Divider -->
+  <line x1="830" y1="180" x2="1100" y2="180" stroke="#E5E7EB" stroke-width="1"/>
+
+  <!-- Row 1 -->
+  <rect x="830" y="192" width="90" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="950" y="190" width="36" height="12" rx="6" fill="#F59E0B" opacity="0.4"/>
+  <rect x="1000" y="190" width="36" height="12" rx="6" fill="#F59E0B" opacity="0.6"/>
+  <rect x="1050" y="190" width="50" height="12" rx="6" fill="#F59E0B" opacity="0.75"/>
+
+  <!-- Row 2 -->
+  <rect x="830" y="218" width="70" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="950" y="216" width="36" height="12" rx="6" fill="#F59E0B" opacity="0.6"/>
+  <rect x="1000" y="216" width="36" height="12" rx="6" fill="#F59E0B" opacity="0.3"/>
+  <rect x="1050" y="216" width="50" height="12" rx="6" fill="#F59E0B" opacity="0.5"/>
+
+  <!-- Row 3 -->
+  <rect x="830" y="244" width="80" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="950" y="242" width="36" height="12" rx="6" fill="#F59E0B" opacity="0.25"/>
+  <rect x="1000" y="242" width="36" height="12" rx="6" fill="#F59E0B" opacity="0.5"/>
+  <rect x="1050" y="242" width="50" height="12" rx="6" fill="#F59E0B" opacity="0.35"/>
+
+  <!-- Row 4 -->
+  <rect x="830" y="270" width="60" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="950" y="268" width="36" height="12" rx="6" fill="#D1D5DB" opacity="0.7"/>
+  <rect x="1000" y="268" width="36" height="12" rx="6" fill="#D1D5DB" opacity="0.5"/>
+  <rect x="1050" y="268" width="50" height="12" rx="6" fill="#D1D5DB" opacity="0.5"/>
+
+  <!-- Divider + total row -->
+  <line x1="830" y1="292" x2="1100" y2="292" stroke="#E5E7EB" stroke-width="1.5"/>
+  <rect x="830" y="300" width="55" height="8" rx="4" fill="#F59E0B" opacity="0.3"/>
+  <rect x="1050" y="298" width="50" height="14" rx="7" fill="#F59E0B" opacity="0.7"/>
+
+  <!-- Criteria weights mini legend -->
+  <rect x="830" y="340" width="60" height="8" rx="4" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="830" y="358" width="110" height="12" rx="6" fill="#FFF7ED"/>
+  <rect x="836" y="362" width="98" height="4" rx="2" fill="#F59E0B" opacity="0.35"/>
+  <rect x="830" y="378" width="95" height="12" rx="6" fill="#FFF7ED"/>
+  <rect x="836" y="382" width="60" height="4" rx="2" fill="#F59E0B" opacity="0.25"/>
+
+  <!-- Bottom note area -->
+  <rect x="830" y="420" width="260" height="40" rx="10" fill="#FFFBEB"/>
+  <rect x="842" y="432" width="236" height="6" rx="3" fill="#F59E0B" opacity="0.3"/>
+  <rect x="842" y="445" width="180" height="5" rx="2" fill="#9CA3AF" opacity="0.2"/>
+
+  <!-- Background decoration -->
+  <circle cx="600" cy="580" r="60" fill="#7F77DD" opacity="0.03"/>
+</svg>
