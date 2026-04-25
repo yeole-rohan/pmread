@@ -18,6 +18,7 @@ export const AUTHORS: Record<string, Author> = {
     avatar: "/authors/rohanyeole.png",
     initials: "RY",
     linkedin: "https://linkedin.com/in/yeole-rohan",
+    twitter: "https://x.com/RohanYeole99904",
   },
 };
 

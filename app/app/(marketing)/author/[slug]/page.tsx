@@ -19,13 +19,20 @@ export async function generateMetadata({
   const author = getAuthor(slug);
   if (!author) return {};
   return {
-    title: `${author.name} — ${author.role} | PMRead Blog`,
+    title: { absolute: `${author.name} — ${author.role} | PMRead Blog` },
     description: author.bio,
     alternates: { canonical: `${BASE}/author/${author.slug}` },
     openGraph: {
       title: `${author.name} | PMRead Blog`,
       description: author.bio,
       url: `${BASE}/author/${author.slug}`,
+      images: [{ url: author.avatar, width: 600, height: 600, alt: `${author.name} — ${author.role}` }],
+    },
+    twitter: {
+      card: "summary",
+      title: `${author.name} | PMRead Blog`,
+      description: author.bio,
+      images: [author.avatar],
     },
   };
 }
@@ -116,7 +123,7 @@ export default async function AuthorPage({
                   className="group flex items-start gap-4 bg-white rounded-2xl border border-gray-200 hover:border-[#7F77DD]/40 hover:shadow-sm p-5 transition-all"
                 >
                   <div className="w-20 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                    <img src={`/blog/${post.slug}.svg`} alt="" className="w-full h-full object-cover" />
+                    <img src={`/blog/${post.slug}.svg`} alt={`Featured image for: ${post.title}`} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <span className="text-[10px] font-semibold text-[#7F77DD] uppercase tracking-wider">

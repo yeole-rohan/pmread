@@ -4,7 +4,7 @@ import UserStoryGeneratorTool from "./UserStoryGeneratorTool";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Free AI User Story Generator | PMRead",
+  title: { absolute: "Free AI User Story Generator | PMRead" },
   description:
     "Generate user stories and acceptance criteria from a feature description. Free AI user story generator for product managers — no signup required.",
   alternates: { canonical: `${SITE_URL}/tools/user-story-generator` },

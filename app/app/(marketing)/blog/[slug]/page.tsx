@@ -22,7 +22,7 @@ export async function generateMetadata({
   if (!post) return {};
   const author = getAuthor(post.author);
   return {
-    title: `${post.title} | PMRead Blog`,
+    title: { absolute: `${post.title} | PMRead Blog` },
     description: post.description,
     alternates: { canonical: `${BASE}/blog/${post.slug}` },
     openGraph: {
@@ -97,7 +97,7 @@ export default async function BlogPostPage({
             {/* Main content */}
             <article>
               <div className="rounded-2xl overflow-hidden mb-8 bg-gray-100 h-64 sm:h-80">
-                <img src={`/blog/${post.slug}.svg`} alt="" className="w-full h-full object-cover" />
+                <img src={`/blog/${post.slug}.svg`} alt={`Featured image for: ${post.title}`} className="w-full h-full object-cover" />
               </div>
 
               <span className="text-xs font-semibold text-[#7F77DD] uppercase tracking-widest">
@@ -146,7 +146,7 @@ export default async function BlogPostPage({
                         className="group flex items-start gap-4 bg-white rounded-xl border border-gray-200 hover:border-[#7F77DD]/40 p-4 transition-all"
                       >
                         <div className="w-16 h-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                          <img src={`/blog/${r.slug}.svg`} alt="" className="w-full h-full object-cover" />
+                          <img src={`/blog/${r.slug}.svg`} alt={`Featured image for: ${r.title}`} className="w-full h-full object-cover" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm font-semibold text-gray-900 group-hover:text-[#7F77DD] transition-colors leading-snug">

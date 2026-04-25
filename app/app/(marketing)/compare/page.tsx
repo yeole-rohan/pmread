@@ -6,7 +6,7 @@ import { COMPARISONS } from "@/lib/comparisons";
 import { SITE_URL as BASE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "PMRead vs Alternatives — Tool Comparisons | PMRead",
+  title: { absolute: "PMRead vs Alternatives — Tool Comparisons" },
   description:
     "See how PMRead compares to Dovetail, Productboard, Notion AI, and other PM tools. Honest feature-by-feature breakdowns to help you pick the right tool.",
   alternates: { canonical: `${BASE}/compare` },
