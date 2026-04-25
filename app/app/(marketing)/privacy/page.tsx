@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — PMRead",
+  title: { absolute: "Privacy Policy — PMRead" },
   description:
     "PMRead's privacy policy. How we collect, use, and protect your data.",
   alternates: { canonical: SITE_URL + '/privacy' },

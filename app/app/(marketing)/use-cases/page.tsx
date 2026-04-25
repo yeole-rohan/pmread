@@ -6,7 +6,7 @@ import { USE_CASES } from "@/lib/use-cases";
 import { SITE_URL as BASE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "PMRead Use Cases — Who It's Built For | PMRead",
+  title: { absolute: "PMRead Use Cases — Who It's Built For" },
   description:
     "PMRead helps product managers across Indian startups, fintech, B2B SaaS, and consumer apps turn customer feedback into evidence-backed PRDs. See how.",
   alternates: { canonical: `${BASE}/use-cases` },

@@ -1,10 +1,10 @@
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, TWITTER_HANDLE } from "@/lib/site";
 import type { Metadata } from "next";
 import PRDGeneratorTool from "./PRDGeneratorTool";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Free AI PRD Generator | PMRead",
+  title: { absolute: "Free AI PRD Generator | PMRead" },
   description:
     "Generate a full product requirements document from a problem statement in seconds. Free AI PRD generator — no signup required.",
   alternates: { canonical: `${SITE_URL}/tools/prd-generator` },
@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
     title: "Free AI PRD Generator | PMRead",
     description: "Turn a problem statement into a full PRD with user stories, acceptance criteria, and success metrics.",
   },

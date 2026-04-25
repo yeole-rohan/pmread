@@ -3,8 +3,9 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { TEMPLATES, getTemplate } from "@/lib/templates";
 import TemplateCopyBlock from "@/components/TemplateCopyBlock";
+import TemplateViewTracker from "@/components/TemplateViewTracker";
 
-import { SITE_URL as BASE } from "@/lib/site";
+import { SITE_URL as BASE, TWITTER_HANDLE } from "@/lib/site";
 
 export function generateStaticParams() {
   return TEMPLATES.map((t) => ({ slug: t.slug }));
@@ -20,7 +21,7 @@ export async function generateMetadata({
   if (!template) return {};
 
   return {
-    title: `Free ${template.title} for Product Managers | PMRead`,
+    title: { absolute: `Free ${template.title} for Product Managers | PMRead` },
     description: template.metaDescription,
     alternates: { canonical: `${BASE}/templates/${template.slug}` },
     openGraph: {
@@ -30,6 +31,8 @@ export async function generateMetadata({
     },
     twitter: {
       card: "summary_large_image",
+      site: TWITTER_HANDLE,
+      creator: TWITTER_HANDLE,
       title: `Free ${template.title} | PMRead`,
       description: template.metaDescription,
     },
@@ -120,7 +123,13 @@ export default async function TemplatePage({
           </div>
 
           {/* Template copy block */}
-          <TemplateCopyBlock content={template.content} filename={template.filename} />
+          <TemplateViewTracker slug={template.slug} templateName={template.title} />
+          <TemplateCopyBlock
+            content={template.content}
+            filename={template.filename}
+            slug={template.slug}
+            templateName={template.title}
+          />
 
           {/* How to use */}
           <div className="mt-12 space-y-4">

@@ -19,7 +19,7 @@ export async function generateMetadata({
   const integration = getIntegration(slug);
   if (!integration) return {};
   return {
-    title: `${integration.headline} | PMRead`,
+    title: { absolute: `${integration.headline} | PMRead` },
     description: integration.metaDescription,
     alternates: { canonical: `${BASE}/integrations/${integration.slug}` },
     openGraph: {

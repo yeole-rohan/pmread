@@ -216,48 +216,40 @@ const INTEGRATION_PAGES: MetadataRoute.Sitemap = [
 }));
 
 // Blog slugs — add as posts are published
-const BLOG_SLUGS: string[] = [
+// Batch 1 (published 2026-04-24): 10 high-volume evergreen posts
+const BATCH_1_BLOG_SLUGS = [
   "how-to-write-a-prd",
+  "how-to-write-user-stories",
+  "how-to-measure-product-market-fit",
+  "north-star-metric",
+  "how-to-build-product-roadmap",
+  "feature-prioritization-guide",
+  "jobs-to-be-done-vs-personas",
   "customer-feedback-analysis",
   "feature-prioritization",
-  "feature-prioritization-guide",
-  "user-interviews-roadmap",
-  "jobs-to-be-done-vs-personas",
-  "how-to-write-user-stories",
-  "north-star-metric",
-  "how-to-measure-product-market-fit",
   "okr-guide-product-managers",
-  "customer-discovery-sprint",
-  "prd-vs-brd-vs-mrd",
-  "rice-scoring-framework",
-  "first-90-days-as-a-pm",
-  "product-led-growth-startups",
-  "product-manager-kpi",
-  "product-management-india",
-  "break-into-product-management-india",
-  "tam-sam-som",
-  "backlog-prioritization",
-  "ai-for-product-managers",
-  "ai-tools-for-product-managers",
-  "dovetail-vs-pmread",
-  "productboard-vs-pmread",
-  "notion-ai-vs-pmread",
-  "best-prd-tools",
-];
+] as const;
 
 const BLOG_PAGES: MetadataRoute.Sitemap = [
   {
     url: `${BASE}/blog`,
-    lastModified: new Date("2026-04-25"),
-    changeFrequency: "daily",
+    lastModified: new Date("2026-04-24"),
+    changeFrequency: "weekly",
     priority: 0.8,
   },
-  ...BLOG_SLUGS.map((slug) => ({
+  ...BATCH_1_BLOG_SLUGS.map((slug) => ({
     url: `${BASE}/blog/${slug}`,
-    lastModified: new Date("2026-04-25"),
+    lastModified: new Date("2026-04-24"),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   })),
+  // Author pages
+  {
+    url: `${BASE}/author/rohan-yeole`,
+    lastModified: new Date("2026-04-24"),
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
+  },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
