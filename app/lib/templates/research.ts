@@ -152,6 +152,7 @@ export const researchTemplates: Template[] = [
         a: "In priority order: customer interviews (most valuable), sales call recordings, support ticket themes, survey data, CRM data. Analytics can tell you what users do but not why they do it — pair quantitative data with qualitative interviews for the most useful personas.",
       },
     ],
+    keywords: ["buyer persona template", "user persona template free", "customer persona format", "persona card template", "free persona template product management"],
   },
 
   {

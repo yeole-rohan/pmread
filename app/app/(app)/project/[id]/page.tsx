@@ -6,11 +6,11 @@ import { Upload, FileText, RefreshCw, X, Loader2 } from "lucide-react";
 import { useUser } from "@/lib/useUser";
 import { useProjectData, useEmptyProjectCleanup, invalidateProjectCache } from "@/lib/useProjectData";
 import { PLAN_PRD_LIMITS } from "@/lib/constants";
-import { InsightType } from "@/lib/types";
 import InsightsBoard from "@/components/InsightsBoard";
 import PrdList from "@/components/PrdList";
 import AskTab from "@/components/AskTab";
 import FilesTab from "@/components/FilesTab";
+import SampleProjectView from "@/components/SampleProjectView";
 import UploadModal from "@/components/UploadModal";
 import GeneratePRDModal from "@/components/GeneratePRDModal";
 import UpgradeModal from "@/components/UpgradeModal";
@@ -94,8 +94,13 @@ export default function ProjectPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-6">
 
-      {/* Onboarding checklist */}
-      {!allStepsDone && insightTotal === 0 && prdsUsed === 0 && (
+      {/* Sample project view — shown only when project has no data and is not currently extracting */}
+      {insightTotal === 0 && prds.length === 0 && !extracting && (
+        <SampleProjectView onUpload={() => setShowUpload(true)} />
+      )}
+
+      {/* Onboarding checklist — shown once user has started but not finished all steps */}
+      {!allStepsDone && insightTotal > 0 && prdsUsed === 0 && (
         <div className="mb-6 bg-purple-50 border border-purple-100 rounded-xl p-4">
           <p className="text-xs font-semibold text-purple-700 uppercase tracking-wide mb-3">
             Get started
@@ -155,122 +160,126 @@ export default function ProjectPage() {
         </div>
       )}
 
-      {/* Tabs + actions */}
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
-          <button
-            onClick={() => setTab("insights")}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-              tab === "insights"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            Insights
-            {insightTotal > 0 && (
-              <span className="ml-1.5 text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-full">
-                {insightTotal}
-              </span>
-            )}
-          </button>
-          <button
-            onClick={() => setTab("prds")}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-              tab === "prds"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            PRDs
-            {prds.length > 0 && (
-              <span className="ml-1.5 text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-full">
-                {prds.length}
-              </span>
-            )}
-          </button>
-          <button
-            onClick={() => setTab("ask")}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-              tab === "ask"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            Ask
-          </button>
-          <button
-            onClick={() => setTab("files")}
-            className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
-              tab === "files"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            Files
-          </button>
-        </div>
+      {/* Tabs + content — hidden while sample view is active */}
+      {(insightTotal > 0 || prds.length > 0) && (
+        <>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+              <button
+                onClick={() => setTab("insights")}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                  tab === "insights"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Insights
+                {insightTotal > 0 && (
+                  <span className="ml-1.5 text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-full">
+                    {insightTotal}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => setTab("prds")}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                  tab === "prds"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                PRDs
+                {prds.length > 0 && (
+                  <span className="ml-1.5 text-xs bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded-full">
+                    {prds.length}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => setTab("ask")}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                  tab === "ask"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Ask
+              </button>
+              <button
+                onClick={() => setTab("files")}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                  tab === "files"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Files
+              </button>
+            </div>
 
-        <div className="flex items-center gap-2">
-          <GithubRepoPicker
-            projectId={projectId}
-            githubConnected={!!user?.github_connected}
-            isPro={user?.plan === "pro"}
-          />
+            <div className="flex items-center gap-2">
+              <GithubRepoPicker
+                projectId={projectId}
+                githubConnected={!!user?.github_connected}
+                isPro={user?.plan === "pro"}
+              />
+              {tab === "insights" && (
+                <>
+                  <button
+                    onClick={refreshInsights}
+                    disabled={refreshing}
+                    className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 disabled:opacity-50 cursor-pointer"
+                    title="Refresh"
+                  >
+                    <RefreshCw size={15} className={refreshing ? "animate-spin" : ""} />
+                  </button>
+                  <button
+                    onClick={() => setShowUpload(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#7F77DD] hover:bg-[#6b64c4] text-white text-sm font-medium rounded-lg transition-colors cursor-pointer"
+                  >
+                    <Upload size={14} />
+                    Upload files
+                  </button>
+                </>
+              )}
+              {tab === "prds" && (
+                <button
+                  onClick={() => {
+                    if (prdsUsed >= prdLimit) setShowUpgrade(true);
+                    else setShowGeneratePRD(true);
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-[#7F77DD] hover:bg-[#6b64c4] text-white text-sm font-medium rounded-lg transition-colors cursor-pointer"
+                >
+                  <FileText size={14} />
+                  Generate PRD
+                </button>
+              )}
+            </div>
+          </div>
+
           {tab === "insights" && (
-            <>
-              <button
-                onClick={refreshInsights}
-                disabled={refreshing}
-                className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 disabled:opacity-50 cursor-pointer"
-                title="Refresh"
-              >
-                <RefreshCw size={15} className={refreshing ? "animate-spin" : ""} />
-              </button>
-              <button
-                onClick={() => setShowUpload(true)}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#7F77DD] hover:bg-[#6b64c4] text-white text-sm font-medium rounded-lg transition-colors cursor-pointer"
-              >
-                <Upload size={14} />
-                Upload files
-              </button>
-            </>
+            <InsightsBoard
+              grouped={insights}
+              onDelete={handleDeleteInsight}
+              onStar={handleStarInsight}
+              highlightId={highlightId}
+            />
           )}
           {tab === "prds" && (
-            <button
-              onClick={() => {
-                if (prdsUsed >= prdLimit) setShowUpgrade(true);
-                else setShowGeneratePRD(true);
-              }}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#7F77DD] hover:bg-[#6b64c4] text-white text-sm font-medium rounded-lg transition-colors cursor-pointer"
-            >
-              <FileText size={14} />
-              Generate PRD
-            </button>
+            <PrdList projectId={projectId} prds={prds} isPro={user?.plan === "pro"} />
           )}
-        </div>
-      </div>
-
-      {tab === "insights" && (
-        <InsightsBoard
-          grouped={insights}
-          onDelete={handleDeleteInsight}
-          onStar={handleStarInsight}
-          highlightId={highlightId}
-        />
-      )}
-      {tab === "prds" && (
-        <PrdList projectId={projectId} prds={prds} isPro={user?.plan === "pro"} />
-      )}
-      {tab === "ask" && (
-        <AskTab
-          projectId={projectId}
-          hasInsights={insightTotal > 0}
-          isPro={user?.plan === "pro"}
-          githubConnected={!!user?.github_connected}
-        />
-      )}
-      {tab === "files" && (
-        <FilesTab projectId={projectId} />
+          {tab === "ask" && (
+            <AskTab
+              projectId={projectId}
+              hasInsights={insightTotal > 0}
+              isPro={user?.plan === "pro"}
+              githubConnected={!!user?.github_connected}
+            />
+          )}
+          {tab === "files" && (
+            <FilesTab projectId={projectId} />
+          )}
+        </>
       )}
 
       <UploadModal

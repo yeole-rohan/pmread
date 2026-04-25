@@ -7,7 +7,7 @@ import { SITE_URL as BASE } from "@/lib/site";
 export const metadata: Metadata = {
   title: { absolute: "Product Management Glossary — PMRead" },
   description:
-    "Definitions of essential product management terms — PRD, OKR, RICE scoring, North Star Metric, Jobs to Be Done, MoSCoW, and more. Written for PMs by PMs.",
+    "Product management glossary — plain-English definitions of PRD, OKR, RICE scoring, North Star Metric, Jobs to Be Done, MoSCoW, and 50+ PM terms.",
   alternates: { canonical: `${BASE}/glossary` },
   openGraph: {
     title: "Product Management Glossary",
@@ -25,6 +25,8 @@ const jsonLd = {
       name: "Product Management Glossary",
       description: "Definitions of essential product management terms.",
       url: `${BASE}/glossary`,
+      keywords:
+        "product management glossary, prd meaning, product management terminology, what is a prd, okr definition, rice scoring definition",
       hasDefinedTerm: GLOSSARY.map((t) => ({
         "@type": "DefinedTerm",
         name: t.term,
@@ -62,8 +64,8 @@ export default function GlossaryIndexPage() {
               Product Management Glossary
             </h1>
             <p className="text-gray-500 max-w-xl mx-auto">
-              Clear definitions of the frameworks, metrics, and processes every PM
-              needs to know — no jargon, no filler.
+              Plain-English definitions for every PM term you need — PRD, OKR, RICE scoring,
+              North Star Metric, Jobs to Be Done, MoSCoW, and 50+ more. No jargon, no filler.
             </p>
           </div>
 

@@ -180,6 +180,7 @@ Plot competitors on two axes most relevant to your market (e.g. Price vs. Depth 
         a: "A competitive analysis is an internal strategic document covering the full landscape. A battle card is a 1-page sales tool for handling objections about a specific competitor in real time. Build the analysis first, then distill it into battle cards per competitor.",
       },
     ],
+    keywords: ["competitive analysis template", "competitor analysis framework", "competitive research template", "competitive analysis product management", "competitor comparison template"],
   },
 
   // ─── 8. Go-to-Market Template ─────────────────────────────────────────────,
@@ -326,6 +327,7 @@ Plot competitors on two axes most relevant to your market (e.g. Price vs. Depth 
         a: "No. For small, well-understood improvements (under a week of work, single team), a ticket with acceptance criteria is enough. Reserve the brief format for new capabilities, cross-team initiatives, or anything with ambiguity about whether the problem is worth solving.",
       },
     ],
+    keywords: ["product brief template", "product brief format", "one pager product template", "product spec template", "product brief example"],
   },
 
   // ─── 12. Lean Canvas ──────────────────────────────────────────────────────,
@@ -514,6 +516,7 @@ How do customers solve this today?
         a: "Most early-stage products can't. Leave it honest: 'Not yet established — building toward X.' The danger is filling this cell with something soft like 'our team is passionate' — that's not an unfair advantage. Think network effects, proprietary data, regulatory barriers, or deep domain expertise.",
       },
     ],
+    keywords: ["lean canvas template", "lean startup canvas", "business model canvas product manager", "lean canvas free", "lean canvas example"],
   },
 
   // ─── 13. North Star Metric Framework ──────────────────────────────────────,
@@ -667,6 +670,7 @@ Use this in your next all-hands or team meeting.
         a: "Teams should share one company-level NSM. What differs is the input metrics each team owns. The growth team owns activation rate; the retention team owns D30 retention; the monetisation team owns conversion to paid. Each team's input metric should feed the shared NSM.",
       },
     ],
+    keywords: ["north star metric template", "north star metric framework", "nsm product management", "north star metric examples", "product north star metric"],
   },
 
   // ─── 14. Jobs to be Done (JTBD) ───────────────────────────────────────────,
@@ -833,6 +837,7 @@ Break the main job into the sequence of steps the customer takes.
         a: "No. JTBD works as well or better in B2B. The job is often more clearly articulated in B2B because customers are hiring your product to accomplish a professional outcome they can describe precisely. The switch interview is especially powerful in B2B — buyers often remember exactly when and why they decided to evaluate alternatives.",
       },
     ],
+    keywords: ["jobs to be done template", "jtbd framework template", "jobs to be done product management", "jtbd template free", "jobs to be done examples"],
   },
 
   // ─── 15. Customer Journey Map ─────────────────────────────────────────────

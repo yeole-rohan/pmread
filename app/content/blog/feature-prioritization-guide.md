@@ -3,7 +3,7 @@ title: "Feature Prioritization in 2026: A Practical PM Guide"
 slug: feature-prioritization-guide
 description: RICE, MoSCoW, ICE — prioritization frameworks are only as good as the inputs you feed them. Here's how to actually decide what to build next.
 category: Planning
-keyword: how to prioritize features
+keywords: [how to prioritize features, feature prioritization framework, product backlog management, rice prioritization, backlog grooming]
 publishedAt: 2026-04-24
 updatedAt: 2026-04-24
 readingTime: 7

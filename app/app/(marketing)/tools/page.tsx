@@ -107,6 +107,8 @@ const jsonLd = {
       name: "Free Product Management Tools",
       description: "Free AI tools for product managers — no signup required.",
       url: `${SITE_URL}/tools`,
+      keywords:
+        "free pm tools, free prd generator, free user story generator, free persona generator, free rice calculator, pm tools no signup, free ai tools for product managers",
       numberOfItems: TOOLS.length, // auto-computed from TOOLS array
       itemListElement: TOOLS.map((t, i) => ({
         "@type": "ListItem",
@@ -158,8 +160,7 @@ export default function ToolsPage() {
               Free tools for product managers
             </h1>
             <p className="text-gray-500 max-w-xl mx-auto">
-              Eight tools to help you write PRDs, analyze feedback, generate user stories,
-              build personas, prioritize features, calculate meeting costs, turn metrics into narratives, and prep for PM interviews. No signup required.
+              Free AI tools for product managers — no signup, no credit card. Generate PRDs, analyze customer feedback, write user stories, build personas, score features with RICE, calculate meeting costs, turn metrics into narratives, and prep for PM interviews.
             </p>
           </div>
 

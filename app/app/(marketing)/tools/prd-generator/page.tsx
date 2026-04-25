@@ -52,6 +52,8 @@ const jsonLd = {
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
       url: `${SITE_URL}/tools/prd-generator`,
+      keywords:
+        "free prd generator, ai prd generator free, free ai prd generator no signup, generate prd online free, product requirements document generator, ai prd writer",
     },
     {
       "@type": "HowTo",

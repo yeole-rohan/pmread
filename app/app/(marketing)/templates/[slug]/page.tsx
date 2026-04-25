@@ -61,6 +61,7 @@ export default async function TemplatePage({
         operatingSystem: "Web",
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
         url: `${BASE}/templates/${template.slug}`,
+        ...(template.keywords?.length ? { keywords: template.keywords.join(", ") } : {}),
       },
       {
         "@type": "HowTo",
