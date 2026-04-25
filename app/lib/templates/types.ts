@@ -9,4 +9,5 @@ export interface Template {
   content: string;
   howToUse: { step: string; detail: string }[];
   faqs: { q: string; a: string }[];
+  keywords?: string[];
 }

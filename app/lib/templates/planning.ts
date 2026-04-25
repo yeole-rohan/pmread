@@ -143,6 +143,7 @@ export const planningTemplates: Template[] = [
         a: "KPIs are ongoing health metrics you always track (e.g. NPS, churn, uptime). OKRs are time-bound goals for a specific quarter — they describe where you want to move, not just where you are. A KPI like 'revenue' might inform an OKR key result like 'grow MRR from $100k to $130k in Q2'.",
       },
     ],
+    keywords: ["okr template", "free okr template", "okr for product managers", "quarterly okr format", "okr examples product"],
   },
 
   {
@@ -285,6 +286,7 @@ export const planningTemplates: Template[] = [
         a: "Log them in the 'Not Doing' section with a reason. This converts a 'no' into a 'not now, because...' — which is much easier for stakeholders to accept. Review the Not Doing list at each quarterly planning cycle in case priorities have shifted.",
       },
     ],
+    keywords: ["product roadmap template", "free roadmap template", "product roadmap format", "roadmap planning template", "now next later roadmap"],
   },
 
   {
@@ -744,6 +746,7 @@ Items below threshold: ___`,
         a: "RICE doesn't work well for: (1) qualitative bets that are hard to quantify (brand, morale, technical foundation), (2) items with strong regulatory or compliance drivers, (3) very early-stage products where you have < 100 users and most estimates are noise. Use it when you have enough data to make the numbers meaningful.",
       },
     ],
+    keywords: ["rice scoring template", "rice prioritization framework", "rice score sheet", "rice framework product management", "rice scoring calculator"],
   },
 
   // ─── 23. MoSCoW Method Template ─────────────────────────────────────────────,
@@ -896,6 +899,7 @@ When scope is cut during the sprint, document the decision here:
         a: "Detailed enough that engineering can estimate it and QA can test it. 'Improve performance' is too vague — 'reduce API response time for search endpoint from 800ms to under 300ms' is a Must Have. Vague entries belong in the backlog, not in a MoSCoW matrix.",
       },
     ],
+    keywords: ["moscow method template", "moscow prioritization", "must have should have could have", "moscow framework product management", "moscow analysis template"],
   },
 
   // ─── 24. Spec-to-Django ──────────────────────────────────────────────────────

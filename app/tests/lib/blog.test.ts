@@ -17,7 +17,7 @@ title: Alpha Post
 slug: alpha-post
 description: Description of alpha
 category: PRD Writing
-keyword: alpha
+keywords: [alpha, alpha keyword two]
 publishedAt: 2026-04-01
 updatedAt: 2026-04-01
 readingTime: 5
@@ -31,7 +31,7 @@ title: Beta Post
 slug: beta-post
 description: Description of beta
 category: PRD Writing
-keyword: beta
+keywords: [beta, beta keyword two]
 publishedAt: 2026-04-10
 updatedAt: 2026-04-10
 readingTime: 3
@@ -45,7 +45,7 @@ title: Gamma Post
 slug: gamma-post
 description: Description of gamma
 category: Product Strategy
-keyword: gamma
+keywords: [gamma, gamma keyword two]
 publishedAt: 2026-03-15
 updatedAt: 2026-03-15
 readingTime: 7
@@ -103,6 +103,7 @@ describe("getAllPosts", () => {
     expect(post.readingTime).toBe(5);
     expect(post.author).toBe("rohan-yeole");
     expect(post.featured).toBe(false);
+    expect(post.keywords).toEqual(["alpha", "alpha keyword two"]);
   });
 
   it("includes markdown body content", () => {

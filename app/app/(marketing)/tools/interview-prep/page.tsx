@@ -64,6 +64,8 @@ const jsonLd = {
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
       url: `${BASE}/tools/interview-prep`,
+      keywords:
+        "pm interview prep tool, product manager interview questions generator, pm interview practice ai, product manager interview prep, pm interview questions from jd",
     },
     {
       "@type": "FAQPage",

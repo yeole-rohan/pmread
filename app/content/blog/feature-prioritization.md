@@ -3,7 +3,7 @@ title: "RICE Scoring vs MoSCoW vs Weighted: Which Framework Actually Works?"
 slug: feature-prioritization
 description: Every prioritization framework has a hidden bias. An honest comparison of RICE, MoSCoW, and weighted scoring — with a decision guide for when to use which.
 category: Planning
-keyword: feature prioritization framework
+keywords: [feature prioritization framework, rice scoring, moscow prioritization, how to prioritize features, feature prioritization tool]
 publishedAt: 2026-04-24
 updatedAt: 2026-04-24
 readingTime: 7

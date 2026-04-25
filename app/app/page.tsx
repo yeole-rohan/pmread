@@ -22,15 +22,7 @@ import { SITE_URL } from "@/lib/site";
 export const metadata: Metadata = {
   title: { absolute: "PMRead — Customer Evidence to Engineering Spec" },
   description:
-    "Upload customer interviews and feedback. PMRead extracts insights, ranks by frequency, and generates a PRD with every claim traced to real customer evidence.",
-  keywords: [
-    "prd generator",
-    "evidence-backed prd",
-    "customer feedback analysis tool",
-    "product requirements document",
-    "feedback synthesis",
-    "customer evidence to spec",
-  ],
+    "Turn customer interviews and feedback into evidence-backed PRDs with AI. PMRead is the AI PRD generator built for product managers — from raw feedback to shipping-ready spec in minutes.",
   alternates: { canonical: SITE_URL },
   openGraph: {
     title: "PMRead — Customer Evidence to Engineering Spec",
@@ -52,6 +44,8 @@ const jsonLd = {
       url: SITE_URL,
       description:
         "Customer evidence to engineering spec, with citations. PMRead extracts insights from interviews and feedback, then generates PRDs where every requirement traces back to real customer data.",
+      keywords:
+        "ai prd generator, customer feedback analysis tool, prd generator, product requirements document, turn customer feedback into prd, ai product requirements",
       offers: [
         { "@type": "Offer", price: "0", priceCurrency: "INR", name: "Free plan" },
         { "@type": "Offer", price: "1699", priceCurrency: "INR", name: "Pro plan" },
@@ -126,7 +120,7 @@ const HOW_IT_WORKS = [
   {
     step: "02",
     title: "Get instant insights",
-    desc: "AI reads everything and extracts what matters: pain points, feature requests, key decisions, and action items — grouped and searchable.",
+    desc: "AI runs customer feedback analysis across everything you upload — extracting pain points, feature requests, key decisions, and action items, grouped and searchable.",
     icon: Sparkles,
   },
   {
@@ -270,9 +264,10 @@ export default function HomePage() {
             </h1>
 
             <p className="text-lg sm:text-xl text-gray-500 max-w-2xl mx-auto mb-8 leading-relaxed">
-              Upload interviews, transcripts, and feedback. PMRead extracts insights,
-              tracks frequency across all your sources, and generates a spec where
-              every requirement links back to what customers actually said.
+              Upload interviews, transcripts, and feedback. PMRead is the AI PRD generator
+              that extracts insights, tracks frequency across all your sources, and generates
+              a product requirements document where every requirement links back to what
+              customers actually said.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
