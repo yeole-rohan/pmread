@@ -165,6 +165,7 @@ export const technicalExecutionTemplates: Template[] = [
         a: "For very small changes (< 1 sprint, low risk), a well-written Jira or Linear ticket with acceptance criteria is often enough. Reserve the full PRD format for features that span multiple teams, involve significant user journey changes, or carry high ambiguity.",
       },
     ],
+    keywords: ["prd template", "product requirements document template", "prd format", "prd template free", "prd template google docs"],
   },
 
   {
@@ -339,6 +340,7 @@ export const technicalExecutionTemplates: Template[] = [
         a: "Points measure relative complexity, not time. A 1-point story is trivially simple. An 8-point story is large and risky — it often needs to be split. Most healthy teams complete 2–5 point stories in a day or two. If your team consistently takes multiple sprints to complete stories, they're too large.",
       },
     ],
+    keywords: ["user story template", "agile user story format", "user story examples", "acceptance criteria template"],
   },
   // ─── 6. Product Launch Checklist ──────────────────────────────────────────,
 
@@ -506,6 +508,7 @@ export const technicalExecutionTemplates: Template[] = [
         a: "The PM writes the first draft; engineering validates it for completeness and technical feasibility; QA uses it as the test spec. All three should review before a ticket enters development. If engineering consistently discovers gaps during development, the criteria aren't being reviewed early enough.",
       },
     ],
+    keywords: ["acceptance criteria template", "acceptance criteria examples", "gherkin template", "user story acceptance criteria", "definition of done template"],
   },
   // ─── 11. Product Brief Template ───────────────────────────────────────────
 ];

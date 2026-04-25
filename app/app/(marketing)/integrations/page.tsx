@@ -8,7 +8,7 @@ import { SITE_URL as BASE } from "@/lib/site";
 export const metadata: Metadata = {
   title: { absolute: "Integrations — Connect Slack, GitHub & More | PMRead" },
   description:
-    "PMRead integrates with Slack and GitHub to pull customer feedback and codebase context directly into your PRD workflow. Pro plan.",
+    "Connect PMRead with Slack and GitHub — pull customer feedback from Slack channels and engineering context from GitHub directly into your AI-generated PRDs.",
   alternates: { canonical: `${BASE}/integrations` },
   openGraph: {
     title: "PMRead Integrations — Slack, GitHub & More",
@@ -21,6 +21,8 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  keywords:
+    "slack to prd integration, github product requirements, connect slack customer feedback prd, slack feedback analysis tool, prd with slack integration",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home", item: BASE },
     { "@type": "ListItem", position: 2, name: "Integrations", item: `${BASE}/integrations` },
@@ -54,10 +56,11 @@ export default function IntegrationsPage() {
               Integrations
             </span>
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Connect your existing tools
+              Slack & GitHub integrations
             </h1>
             <p className="text-gray-500 max-w-xl mx-auto text-lg">
-              PMRead pulls in feedback from where your team already works — and pushes specs to where your engineers already build.
+              Connect your Slack channels and GitHub repositories to PMRead — pull customer
+              feedback directly into your AI-generated PRDs without copy-pasting.
             </p>
           </div>
 

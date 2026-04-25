@@ -3,7 +3,7 @@ title: OKR Guide for Product Managers (with Free Template)
 slug: okr-guide-product-managers
 description: OKRs fail when the Objective is too vague and the Key Results measure activity instead of outcomes. Here's how PMs should write, grade, and actually use OKRs.
 category: Planning
-keyword: okr for product managers
+keywords: [okr for product managers, okr template, objectives and key results, okr examples product, quarterly okr format]
 publishedAt: 2026-04-24
 updatedAt: 2026-04-24
 readingTime: 6

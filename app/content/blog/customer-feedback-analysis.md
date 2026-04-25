@@ -3,7 +3,7 @@ title: The Complete Guide to Customer Feedback Analysis for PMs
 slug: customer-feedback-analysis
 description: Customer feedback is useless until it's organized. Here's how to analyze feedback at scale — from interview transcripts to NPS surveys to support tickets.
 category: Customer Research
-keyword: customer feedback analysis
+keywords: [customer feedback analysis, feedback analysis tool, customer feedback analytics, analyze user feedback ai, feedback sentiment analysis]
 publishedAt: 2026-04-24
 updatedAt: 2026-04-24
 readingTime: 8

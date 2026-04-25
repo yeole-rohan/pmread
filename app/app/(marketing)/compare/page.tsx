@@ -8,7 +8,7 @@ import { SITE_URL as BASE } from "@/lib/site";
 export const metadata: Metadata = {
   title: { absolute: "PMRead vs Alternatives — Tool Comparisons" },
   description:
-    "See how PMRead compares to Dovetail, Productboard, Notion AI, and other PM tools. Honest feature-by-feature breakdowns to help you pick the right tool.",
+    "PMRead vs Dovetail, Productboard, Notion, and other PM tools — honest side-by-side comparisons to help you pick the right PRD and research tool.",
   alternates: { canonical: `${BASE}/compare` },
   openGraph: {
     title: "PMRead vs Alternatives — Tool Comparisons",
@@ -21,6 +21,8 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  keywords:
+    "dovetail alternative, productboard alternative, best prd tool comparison, customer research tool comparison, productboard free alternative, notion prd template alternative",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home", item: BASE },
     { "@type": "ListItem", position: 2, name: "Comparisons", item: `${BASE}/compare` },
@@ -46,8 +48,7 @@ export default function ComparePage() {
               PMRead vs alternatives
             </h1>
             <p className="text-gray-500 max-w-xl mx-auto text-lg">
-              Honest, detailed breakdowns of how PMRead compares to the other tools
-              PMs commonly consider. No fluff.
+              Looking for a Dovetail alternative or a free Productboard alternative? Honest, detailed breakdowns of how PMRead compares to the tools PMs commonly consider. No fluff.
             </p>
           </div>
 

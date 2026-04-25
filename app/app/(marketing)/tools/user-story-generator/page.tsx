@@ -52,6 +52,8 @@ const jsonLd = {
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
       url: `${SITE_URL}/tools/user-story-generator`,
+      keywords:
+        "free user story generator, user story generator ai, agile user story creator free, acceptance criteria generator free, as a i want so that generator",
     },
     {
       "@type": "HowTo",
