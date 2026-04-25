@@ -1,10 +1,10 @@
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, TWITTER_HANDLE } from "@/lib/site";
 import type { Metadata } from "next";
 import UserStoryGeneratorTool from "./UserStoryGeneratorTool";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Free AI User Story Generator | PMRead",
+  title: { absolute: "Free AI User Story Generator | PMRead" },
   description:
     "Generate user stories and acceptance criteria from a feature description. Free AI user story generator for product managers — no signup required.",
   alternates: { canonical: `${SITE_URL}/tools/user-story-generator` },
@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
     title: "Free AI User Story Generator | PMRead",
     description: "Describe a feature and get user stories in 'As a / I want / So that' format with Given/When/Then acceptance criteria.",
   },

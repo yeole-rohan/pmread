@@ -6,7 +6,7 @@ import { INTEGRATIONS } from "@/lib/integrations";
 import { SITE_URL as BASE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Integrations — Connect Slack, GitHub & More | PMRead",
+  title: { absolute: "Integrations — Connect Slack, GitHub & More | PMRead" },
   description:
     "PMRead integrates with Slack and GitHub to pull customer feedback and codebase context directly into your PRD workflow. Pro plan.",
   alternates: { canonical: `${BASE}/integrations` },

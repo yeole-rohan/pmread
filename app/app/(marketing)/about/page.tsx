@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Mail } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About — PMRead",
+  title: { absolute: "About PMRead — Built by PMs, for PMs" },
   description:
     "PMRead is an AI-powered PRD generator built by product managers, for product managers. We're on a mission to turn customer feedback into shipping velocity.",
   alternates: { canonical: SITE_URL + '/about' },

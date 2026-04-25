@@ -1,10 +1,10 @@
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, TWITTER_HANDLE } from "@/lib/site";
 import type { Metadata } from "next";
 import FeaturePrioritizationTool from "./FeaturePrioritizationTool";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Free RICE Feature Prioritization Calculator | PMRead",
+  title: { absolute: "Free RICE Feature Prioritization Calculator | PMRead" },
   description:
     "Prioritize your product backlog with RICE scoring. Enter features with Reach, Impact, Confidence, and Effort — get a ranked list instantly. Free, no signup.",
   alternates: { canonical: `${SITE_URL}/tools/feature-prioritization` },
@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
     title: "Free RICE Feature Prioritization Calculator | PMRead",
     description: "Score and rank product features using the RICE framework. Free prioritization tool for product managers.",
   },
