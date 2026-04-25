@@ -2,19 +2,23 @@
 
 import { useState } from "react";
 import { Copy, Download, Check } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 interface TemplateCopyBlockProps {
   content: string;
   filename: string;
+  slug: string;
+  templateName: string;
 }
 
-export default function TemplateCopyBlock({ content, filename }: TemplateCopyBlockProps) {
+export default function TemplateCopyBlock({ content, filename, slug, templateName }: TemplateCopyBlockProps) {
   const [copied, setCopied] = useState(false);
 
   function copyToClipboard() {
     navigator.clipboard.writeText(content);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+    trackEvent("template_copy", { slug, template_name: templateName });
   }
 
   function downloadMd() {
@@ -25,6 +29,7 @@ export default function TemplateCopyBlock({ content, filename }: TemplateCopyBlo
     a.download = filename;
     a.click();
     URL.revokeObjectURL(url);
+    trackEvent("template_download", { slug, template_name: templateName });
   }
 
   return (

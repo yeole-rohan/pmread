@@ -1,0 +1,100 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F8F7FF"/>
+      <stop offset="100%" stop-color="#FDF2F8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- TOP ROW: 3 feedback source icons (survey, interview, support) -->
+
+  <!-- Source 1: Survey / form icon -->
+  <rect x="145" y="80" width="180" height="130" rx="14" fill="white" stroke="#E5E7EB" stroke-width="1.5"/>
+  <rect x="165" y="102" width="140" height="10" rx="5" fill="#7F77DD" opacity="0.5"/>
+  <rect x="165" y="121" width="100" height="8" rx="4" fill="#D1D5DB" opacity="0.6"/>
+  <!-- checkbox rows -->
+  <rect x="165" y="141" width="10" height="10" rx="2" fill="#7F77DD" opacity="0.3"/>
+  <rect x="182" y="143" width="80" height="6" rx="3" fill="#9CA3AF" opacity="0.4"/>
+  <rect x="165" y="159" width="10" height="10" rx="2" fill="#7F77DD" opacity="0.7"/>
+  <rect x="182" y="161" width="60" height="6" rx="3" fill="#9CA3AF" opacity="0.4"/>
+  <!-- checkmark on 2nd -->
+  <path d="M167 164 L170 167 L175 161" stroke="white" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <rect x="165" y="177" width="10" height="10" rx="2" fill="#7F77DD" opacity="0.3"/>
+  <rect x="182" y="179" width="70" height="6" rx="3" fill="#9CA3AF" opacity="0.4"/>
+
+  <!-- Source 2: Speech bubble / interview -->
+  <rect x="510" y="80" width="180" height="130" rx="14" fill="white" stroke="#E5E7EB" stroke-width="1.5"/>
+  <!-- Big bubble -->
+  <rect x="530" y="100" width="140" height="64" rx="12" fill="#F5F3FF"/>
+  <path d="M560 164 L554 178 L572 164" fill="#F5F3FF"/>
+  <!-- text lines in bubble -->
+  <rect x="542" y="114" width="116" height="7" rx="3" fill="#7F77DD" opacity="0.4"/>
+  <rect x="542" y="128" width="90" height="6" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="542" y="141" width="100" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <!-- small speaker dot (person) -->
+  <circle cx="548" cy="186" r="8" fill="#7F77DD" opacity="0.35"/>
+
+  <!-- Source 3: Support ticket / tag icon -->
+  <rect x="875" y="80" width="180" height="130" rx="14" fill="white" stroke="#E5E7EB" stroke-width="1.5"/>
+  <!-- Tag shape -->
+  <path d="M905 110 L955 110 L975 130 L955 150 L905 150 Z" fill="#FFF7ED"/>
+  <circle cx="916" cy="130" r="5" fill="#F59E0B" opacity="0.7"/>
+  <rect x="920" y="124" width="40" height="7" rx="3" fill="#F59E0B" opacity="0.5"/>
+  <rect x="920" y="136" width="30" height="5" rx="2" fill="#9CA3AF" opacity="0.35"/>
+  <!-- 2 more small tickets stacked -->
+  <rect x="905" y="158" width="50" height="18" rx="6" fill="#FEF3C7" opacity="0.8"/>
+  <rect x="960" y="162" width="40" height="10" rx="5" fill="#9CA3AF" opacity="0.2"/>
+  <rect x="905" y="182" width="45" height="14" rx="6" fill="#FDE68A" opacity="0.6"/>
+
+  <!-- FUNNEL in center, connecting sources to insights -->
+  <!-- Left converging line from source 1 -->
+  <path d="M325 145 C 420 145 430 250 480 270" stroke="#7F77DD" stroke-width="1.5" stroke-dasharray="5 4" fill="none" opacity="0.4"/>
+  <!-- Center source line -->
+  <path d="M600 210 L600 270" stroke="#7F77DD" stroke-width="1.5" stroke-dasharray="5 4" fill="none" opacity="0.4"/>
+  <!-- Right converging line from source 3 -->
+  <path d="M875 145 C 780 145 770 250 720 270" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="5 4" fill="none" opacity="0.4"/>
+
+  <!-- Funnel body -->
+  <path d="M450 270 L750 270 L680 370 L520 370 Z" fill="#7F77DD" fill-opacity="0.08" stroke="#7F77DD" stroke-opacity="0.25" stroke-width="1.5"/>
+  <!-- Funnel neck -->
+  <rect x="555" y="370" width="90" height="40" fill="#7F77DD" fill-opacity="0.12" stroke="#7F77DD" stroke-opacity="0.25" stroke-width="1.5"/>
+
+  <!-- BOTTOM ROW: Ranked insight cards coming out of funnel -->
+  <path d="M590 410 L520 450" stroke="#7F77DD" stroke-width="1.5" stroke-dasharray="4 3" fill="none" opacity="0.35"/>
+  <path d="M600 410 L600 450" stroke="#7F77DD" stroke-width="1.5" stroke-dasharray="4 3" fill="none" opacity="0.35"/>
+  <path d="M610 410 L680 450" stroke="#7F77DD" stroke-width="1.5" stroke-dasharray="4 3" fill="none" opacity="0.35"/>
+
+  <!-- Insight card 1 (highest — pain point) -->
+  <rect x="340" y="450" width="200" height="70" rx="12" fill="white" stroke="#7F77DD" stroke-width="1.5" opacity="1"/>
+  <rect x="340" y="450" width="200" height="14" rx="12" fill="#7F77DD" opacity="0.15"/>
+  <!-- priority dot + bar -->
+  <circle cx="360" cy="476" r="5" fill="#7F77DD" opacity="0.8"/>
+  <rect x="373" y="472" width="120" height="7" rx="3" fill="#7F77DD" opacity="0.45"/>
+  <rect x="373" y="485" width="80" height="5" rx="2" fill="#9CA3AF" opacity="0.3"/>
+  <!-- frequency badge -->
+  <rect x="455" y="503" width="60" height="10" rx="5" fill="#F5F3FF"/>
+  <rect x="462" y="506" width="46" height="4" rx="2" fill="#7F77DD" opacity="0.4"/>
+
+  <!-- Insight card 2 (middle) -->
+  <rect x="500" y="450" width="200" height="70" rx="12" fill="white" stroke="#0D9488" stroke-width="1.5" opacity="0.7"/>
+  <rect x="500" y="450" width="200" height="14" rx="12" fill="#0D9488" opacity="0.12"/>
+  <circle cx="520" cy="476" r="5" fill="#0D9488" opacity="0.8"/>
+  <rect x="533" y="472" width="110" height="7" rx="3" fill="#0D9488" opacity="0.4"/>
+  <rect x="533" y="485" width="70" height="5" rx="2" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="615" y="503" width="60" height="10" rx="5" fill="#ECFDF5"/>
+  <rect x="622" y="506" width="46" height="4" rx="2" fill="#0D9488" opacity="0.35"/>
+
+  <!-- Insight card 3 (lowest) -->
+  <rect x="660" y="450" width="200" height="70" rx="12" fill="white" stroke="#F59E0B" stroke-width="1.5" opacity="0.6"/>
+  <rect x="660" y="450" width="200" height="14" rx="12" fill="#F59E0B" opacity="0.1"/>
+  <circle cx="680" cy="476" r="5" fill="#F59E0B" opacity="0.8"/>
+  <rect x="693" y="472" width="90" height="7" rx="3" fill="#F59E0B" opacity="0.4"/>
+  <rect x="693" y="485" width="65" height="5" rx="2" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="775" y="503" width="60" height="10" rx="5" fill="#FFF7ED"/>
+  <rect x="782" y="506" width="46" height="4" rx="2" fill="#F59E0B" opacity="0.35"/>
+
+  <!-- Background decoration -->
+  <circle cx="80" cy="80" r="50" fill="#7F77DD" opacity="0.04"/>
+  <circle cx="1120" cy="530" r="60" fill="#F59E0B" opacity="0.04"/>
+</svg>
