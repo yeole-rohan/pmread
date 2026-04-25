@@ -5,7 +5,7 @@ import { GLOSSARY } from "@/lib/glossary";
 import { SITE_URL as BASE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Product Management Glossary — PMRead",
+  title: { absolute: "Product Management Glossary — PMRead" },
   description:
     "Definitions of essential product management terms — PRD, OKR, RICE scoring, North Star Metric, Jobs to Be Done, MoSCoW, and more. Written for PMs by PMs.",
   alternates: { canonical: `${BASE}/glossary` },

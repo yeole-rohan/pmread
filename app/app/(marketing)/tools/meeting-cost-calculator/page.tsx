@@ -5,7 +5,7 @@ import MeetingCostCalculatorTool from "./MeetingCostCalculatorTool";
 import { SITE_URL as BASE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Meeting Cost Calculator | PMRead",
+  title: { absolute: "Meeting Cost Calculator | PMRead" },
   description:
     "Free meeting cost calculator for product managers. Enter attendees, salary, and duration to see the real cost of your meeting — and how many PRDs you could have written instead.",
   alternates: { canonical: `${BASE}/tools/meeting-cost-calculator` },

@@ -1,9 +1,9 @@
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, TWITTER_HANDLE } from "@/lib/site";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Free Product Management Tools — No Signup Required | PMRead",
+  title: { absolute: "Free PM Tools — No Signup Required | PMRead" },
   description:
     "Free AI tools for product managers: PRD generator, feedback analyzer, user story generator, persona creator, RICE calculator, meeting cost calculator, metric story generator, and PM interview prep.",
   alternates: { canonical: `${SITE_URL}/tools` },
@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
     title: "Free PM Tools | PMRead",
     description: "Free AI tools for product managers — PRD generator, feedback analyzer, user story generator, persona creator, and RICE calculator.",
   },

@@ -4,7 +4,7 @@ import Link from "next/link";
 import PricingPlans from "@/components/PricingPlans";
 
 export const metadata: Metadata = {
-  title: "Pricing — PMRead",
+  title: { absolute: "Pricing — PMRead" },
   description:
     "Start free with 2 PRDs/month. Upgrade to Pro for ₹1,699/month and unlock 15 PRDs, Slack ingestion, GitHub context, and PDF export.",
   alternates: { canonical: SITE_URL + '/pricing' },

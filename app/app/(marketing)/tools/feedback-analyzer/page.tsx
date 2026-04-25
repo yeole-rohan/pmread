@@ -1,10 +1,10 @@
-import { SITE_URL } from "@/lib/site";
+import { SITE_URL, TWITTER_HANDLE } from "@/lib/site";
 import type { Metadata } from "next";
 import FeedbackAnalyzerTool from "./FeedbackAnalyzerTool";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Free Customer Feedback Analyzer | PMRead",
+  title: { absolute: "Free Customer Feedback Analyzer | PMRead" },
   description:
     "Paste raw customer feedback and instantly extract key themes, pain points, and feature requests. Free AI feedback analysis tool — no signup required.",
   alternates: { canonical: `${SITE_URL}/tools/feedback-analyzer` },
@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: TWITTER_HANDLE,
+    creator: TWITTER_HANDLE,
     title: "Free Customer Feedback Analyzer | PMRead",
     description: "Paste raw feedback and get structured themes, pain points, feature requests, and recommended actions in seconds.",
   },
