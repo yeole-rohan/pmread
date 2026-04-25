@@ -3,7 +3,7 @@ title: How to Measure Product-Market Fit
 slug: how-to-measure-product-market-fit
 description: Product-market fit is real but hard to measure. Here's the framework PMs actually use — retention curves, Sean Ellis score, and the signals that don't lie.
 category: Product Strategy
-keyword: product market fit
+keywords: [product market fit, how to measure product market fit, pmf survey, sean ellis test, product market fit metrics]
 publishedAt: 2026-04-24
 updatedAt: 2026-04-24
 readingTime: 7

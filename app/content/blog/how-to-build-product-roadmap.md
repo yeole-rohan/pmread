@@ -3,7 +3,7 @@ title: How to Build a Product Roadmap From Scratch
 slug: how-to-build-product-roadmap
 description: A product roadmap is not a Gantt chart. Here's how to build one that communicates strategy, survives stakeholder review, and doesn't become obsolete in a sprint.
 category: Planning
-keyword: product roadmap template
+keywords: [product roadmap template, how to build a product roadmap, product roadmap planning, roadmap prioritization, product roadmap tool]
 publishedAt: 2026-04-24
 updatedAt: 2026-04-24
 readingTime: 7

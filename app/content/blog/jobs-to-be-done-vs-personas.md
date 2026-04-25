@@ -3,7 +3,7 @@ title: "Jobs to Be Done vs Personas: Which Framework Should You Use?"
 slug: jobs-to-be-done-vs-personas
 description: Personas tell you who your user is. JTBD tells you why they hired your product. Here's when each framework applies — and when to use both.
 category: Customer Research
-keyword: jobs to be done framework
+keywords: [jobs to be done framework, buyer persona template, jtbd vs personas, customer research framework, jobs to be done product management]
 publishedAt: 2026-04-24
 updatedAt: 2026-04-24
 readingTime: 6

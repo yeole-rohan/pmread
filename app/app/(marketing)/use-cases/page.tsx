@@ -8,7 +8,7 @@ import { SITE_URL as BASE } from "@/lib/site";
 export const metadata: Metadata = {
   title: { absolute: "PMRead Use Cases — Who It's Built For" },
   description:
-    "PMRead helps product managers across Indian startups, fintech, B2B SaaS, and consumer apps turn customer feedback into evidence-backed PRDs. See how.",
+    "How product teams use PMRead — from SaaS startups to fintech PMs in India. Turn customer feedback into PRDs faster with AI-powered product requirements generation.",
   alternates: { canonical: `${BASE}/use-cases` },
   openGraph: {
     title: "PMRead Use Cases — Who It's Built For",
@@ -21,6 +21,8 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "BreadcrumbList",
+  keywords:
+    "prd tool for saas teams, product management tool for startups, pm tool fintech india, b2b saas prd tool, india startup pm workflow",
   itemListElement: [
     { "@type": "ListItem", position: 1, name: "Home", item: BASE },
     { "@type": "ListItem", position: 2, name: "Use Cases", item: `${BASE}/use-cases` },
@@ -50,10 +52,11 @@ export default function UseCasesPage() {
               Use Cases
             </span>
             <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Built for how you actually work
+              Built for how product teams actually work
             </h1>
             <p className="text-gray-500 max-w-xl mx-auto text-lg">
-              PMRead is used across different PM contexts. See which one matches your situation.
+              From India startups to fintech PMs and B2B SaaS teams — see how PMRead helps
+              you turn customer feedback into PRDs faster, whatever your context.
             </p>
           </div>
 
