@@ -52,6 +52,8 @@ const jsonLd = {
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
       url: `${SITE_URL}/tools/persona-generator`,
+      keywords:
+        "free persona generator, buyer persona creator free, user persona generator ai, product persona template, customer persona generator free",
     },
     {
       "@type": "HowTo",
@@ -116,9 +118,10 @@ export default function PersonaGeneratorPage() {
               User Persona Generator
             </h1>
             <p className="text-gray-500 max-w-xl mx-auto">
-              Paste bullet points, interview notes, or observations about your user — get a
-              complete persona card with demographics, goals, frustrations, a memorable quote,
-              and the product qualities that matter most to them. No signup required.
+              Paste bullet points, interview notes, or observations about your users — get a
+              complete buyer persona with demographics, goals, frustrations, a memorable quote,
+              and the product qualities that matter most to them. Free user persona generator,
+              no signup required.
             </p>
           </div>
 

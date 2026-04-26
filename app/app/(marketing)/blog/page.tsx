@@ -8,7 +8,7 @@ import { SITE_URL as BASE } from "@/lib/site";
 export const metadata: Metadata = {
   title: { absolute: "Product Management Blog — PMRead" },
   description:
-    "Practical product management guides: PRD writing, customer research, feature prioritization, OKRs, and AI workflows. Written by PMs, for PMs.",
+    "Product management blog — practical guides on writing PRDs, customer feedback analysis, feature prioritization, OKRs, and AI tools for product managers.",
   alternates: { canonical: `${BASE}/blog` },
   openGraph: {
     title: "Product Management Blog — PMRead",
@@ -25,6 +25,8 @@ const jsonLd = {
   description: "Practical product management guides for PMs.",
   url: `${BASE}/blog`,
   publisher: { "@type": "Organization", name: "PMRead", url: BASE },
+  keywords:
+    "product management blog, how to write a prd, customer feedback analysis, feature prioritization guide, ai product management, pm best practices",
 };
 
 export default function BlogIndexPage() {
@@ -53,7 +55,7 @@ export default function BlogIndexPage() {
               Product management guides
             </h1>
             <p className="text-gray-500 max-w-xl mx-auto">
-              Practical guides for every stage of the product process — written by PMs, not content farms.
+              Practical guides for product managers — how to write a PRD, run customer feedback analysis, prioritize features, and use AI in your product workflow. Written by PMs, not content farms.
             </p>
           </div>
 

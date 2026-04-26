@@ -52,6 +52,8 @@ const jsonLd = {
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
       url: `${SITE_URL}/tools/feature-prioritization`,
+      keywords:
+        "rice scoring calculator, rice prioritization tool free, feature prioritization calculator, rice score calculator online, backlog refinement tool, feature prioritization tool",
     },
     {
       "@type": "HowTo",

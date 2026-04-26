@@ -53,6 +53,8 @@ const jsonLd = {
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
       url: `${BASE}/tools/metric-story-generator`,
+      keywords:
+        "product metrics narrative, metric story generator, product analytics summary tool, metrics to insights generator, product kpi storytelling",
     },
     {
       "@type": "FAQPage",

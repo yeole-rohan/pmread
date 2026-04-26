@@ -3,7 +3,7 @@ title: How to Write User Stories That Engineers Love
 slug: how-to-write-user-stories
 description: The As/I can/So that format is just the start. Here's how to write user stories with clear acceptance criteria, edge cases covered, and zero ambiguity for engineering.
 category: PRD Writing
-keyword: how to write user stories
+keywords: [how to write user stories, user story template, agile user story format, acceptance criteria template, user story generator]
 publishedAt: 2026-04-24
 updatedAt: 2026-04-24
 readingTime: 6

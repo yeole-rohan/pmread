@@ -6,7 +6,7 @@ import { Mail } from "lucide-react";
 export const metadata: Metadata = {
   title: { absolute: "About PMRead — Built by PMs, for PMs" },
   description:
-    "PMRead is an AI-powered PRD generator built by product managers, for product managers. We're on a mission to turn customer feedback into shipping velocity.",
+    "PMRead is an AI-powered PRD generator and customer feedback analysis tool built by product managers, for product managers. Made in India.",
   alternates: { canonical: SITE_URL + '/about' },
   openGraph: {
     title: "About PMRead",
@@ -23,6 +23,8 @@ const jsonLd = {
   url: SITE_URL + '/about',
   description:
     "PMRead is an AI-powered product requirements document generator built in India.",
+  keywords:
+    "pmread, ai prd generator india, product management tool, ai product requirements tool india, product manager tools india",
   mainEntity: {
     "@type": "Organization",
     name: "PMRead",
@@ -82,7 +84,7 @@ export default function AboutPage() {
               Built by PMs, for PMs
             </h1>
             <p className="text-xl text-gray-500 leading-relaxed">
-              PMRead exists because writing PRDs is the wrong bottleneck. The
+              PMRead is an AI PRD generator that exists because writing product requirements documents is the wrong bottleneck. The
               hard part is understanding what customers actually need — the
               document should be the easy part.
             </p>

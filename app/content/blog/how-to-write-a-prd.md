@@ -3,7 +3,7 @@ title: How to Write a PRD That Developers Will Actually Read
 slug: how-to-write-a-prd
 description: Most PRDs get ignored because they describe solutions, not problems. Here's the structure, the sections that matter, and the mistakes that turn PRDs into shelf-ware.
 category: PRD Writing
-keyword: how to write a prd
+keywords: [how to write a prd, prd template, product requirements document, prd format, ai prd generator]
 publishedAt: 2026-04-24
 updatedAt: 2026-04-24
 readingTime: 7

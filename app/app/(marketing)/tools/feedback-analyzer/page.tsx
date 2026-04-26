@@ -52,6 +52,8 @@ const jsonLd = {
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
       url: `${SITE_URL}/tools/feedback-analyzer`,
+      keywords:
+        "free customer feedback analyzer, customer feedback analysis tool free, analyze customer feedback online, feedback analysis ai, feedback analytics tool free, product feedback analyzer",
     },
     {
       "@type": "HowTo",
@@ -136,6 +138,7 @@ export default function FeedbackAnalyzerPage() {
             </ol>
 
             <h2 className="text-xl font-bold text-gray-900 pt-2">What you get</h2>
+            <p className="text-sm text-gray-500 mb-3">This customer feedback analysis tool extracts five types of insight from your raw data:</p>
             <ul className="space-y-1.5 text-sm text-gray-600 list-disc pl-5">
               <li><strong>Key themes</strong> — recurring topics across all feedback</li>
               <li><strong>Pain points</strong> — what is frustrating users most</li>

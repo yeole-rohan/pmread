@@ -8,7 +8,7 @@ import { SITE_URL as BASE, TWITTER_HANDLE } from "@/lib/site";
 export const metadata: Metadata = {
   title: { absolute: "Free PM Templates — Copy-Paste Ready | PMRead" },
   description:
-    "Free PM templates: PRD, OKR, product roadmap, buyer persona, user stories, and more. Written by PMs, copy-paste ready, no signup required.",
+    "Free product management templates — copy-paste PRD templates, OKR templates, roadmap templates, and 50+ more. No signup required.",
   alternates: { canonical: `${BASE}/templates` },
   openGraph: {
     title: "Free PM Templates | PMRead",
@@ -53,6 +53,8 @@ const jsonLd = {
       name: "Free Product Management Templates",
       description: "Free PM templates for product managers — PRD, OKR, roadmap, persona, user stories.",
       url: `${BASE}/templates`,
+      keywords:
+        "free pm templates, free prd template, product management templates, free product requirements template, free okr template, pm template library, free product roadmap template",
       numberOfItems: TEMPLATES.length,
       itemListElement: TEMPLATES.map((t, i) => ({
         "@type": "ListItem",
@@ -104,9 +106,7 @@ export default function TemplatesPage() {
               Product management templates
             </h1>
             <p className="text-gray-500 max-w-xl mx-auto">
-              Copy-paste ready templates for every stage of the product process.
-              Written for how PMs actually work — no filler, no fluff.
-              No signup required.
+              Copy-paste ready product management templates for every stage of the product process — PRD templates, OKR templates, product roadmap templates, user story templates, competitive analysis templates, and 50+ more. No signup required.
             </p>
           </div>
 
