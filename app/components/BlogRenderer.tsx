@@ -146,6 +146,29 @@ export default function BlogRenderer({ body }: { body: string }) {
       continue;
     }
 
+    // Fenced code block
+    if (line.startsWith("```")) {
+      const lang = line.slice(3).trim();
+      const codeLines: string[] = [];
+      i++;
+      while (i < lines.length && !lines[i].startsWith("```")) {
+        codeLines.push(lines[i]);
+        i++;
+      }
+      i++; // consume closing ```
+      elements.push(
+        <pre
+          key={`code-${i}`}
+          className="my-4 rounded-xl bg-gray-900 p-4 overflow-x-auto text-xs leading-relaxed"
+        >
+          <code className={`text-gray-100 font-mono${lang ? ` language-${lang}` : ""}`}>
+            {codeLines.join("\n")}
+          </code>
+        </pre>
+      );
+      continue;
+    }
+
     // Bullet list
     if (line.startsWith("- ") || line.startsWith("* ")) {
       const items: string[] = [];
