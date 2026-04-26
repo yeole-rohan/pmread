@@ -1,0 +1,153 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5F3FF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#7F77DD" flood-opacity="0.11"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Main sprint board -->
+  <rect x="80" y="60" width="740" height="510" rx="20" fill="white" filter="url(#shadow)"/>
+  <rect x="80" y="60" width="740" height="54" rx="20" fill="#7F77DD"/>
+  <rect x="80" y="95" width="740" height="19" fill="#7F77DD"/>
+  <rect x="110" y="78" width="80" height="10" rx="5" fill="white" opacity="0.6"/>
+  <rect x="198" y="80" width="50" height="6" rx="3" fill="white" opacity="0.3"/>
+
+  <!-- 5 day columns -->
+  <!-- Day 1 header -->
+  <rect x="100" y="135" width="128" height="28" rx="8" fill="#F5F3FF"/>
+  <rect x="116" y="143" width="60" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+
+  <!-- Day 2 -->
+  <rect x="244" y="135" width="128" height="28" rx="8" fill="#F5F3FF"/>
+  <rect x="260" y="143" width="60" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+
+  <!-- Day 3 -->
+  <rect x="388" y="135" width="128" height="28" rx="8" fill="#F5F3FF"/>
+  <rect x="404" y="143" width="60" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+
+  <!-- Day 4 -->
+  <rect x="532" y="135" width="128" height="28" rx="8" fill="#F5F3FF"/>
+  <rect x="548" y="143" width="60" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+
+  <!-- Day 5 -->
+  <rect x="676" y="135" width="120" height="28" rx="8" fill="#7F77DD" opacity="0.12" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.3"/>
+  <rect x="692" y="143" width="60" height="8" rx="4" fill="#7F77DD" opacity="0.6"/>
+
+  <!-- Column dividers -->
+  <line x1="240" y1="130" x2="240" y2="550" stroke="#F3F4F6" stroke-width="1.5"/>
+  <line x1="384" y1="130" x2="384" y2="550" stroke="#F3F4F6" stroke-width="1.5"/>
+  <line x1="528" y1="130" x2="528" y2="550" stroke="#F3F4F6" stroke-width="1.5"/>
+  <line x1="672" y1="130" x2="672" y2="550" stroke="#F3F4F6" stroke-width="1.5"/>
+
+  <!-- Day 1 tasks: define sprint question, recruit -->
+  <rect x="100" y="180" width="128" height="54" rx="8" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+  <rect x="112" y="192" width="80" height="7" rx="3" fill="#7F77DD" opacity="0.4"/>
+  <rect x="112" y="205" width="100" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="112" y="217" width="80" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+
+  <rect x="100" y="244" width="128" height="44" rx="8" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+  <rect x="112" y="256" width="70" height="7" rx="3" fill="#7F77DD" opacity="0.35"/>
+  <rect x="112" y="269" width="90" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+
+  <!-- Day 2: 4 interview blocks -->
+  <rect x="244" y="180" width="128" height="44" rx="8" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.2"/>
+  <rect x="256" y="192" width="50" height="7" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <rect x="256" y="205" width="90" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+
+  <rect x="244" y="234" width="128" height="44" rx="8" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.2"/>
+  <rect x="256" y="246" width="50" height="7" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <rect x="256" y="259" width="80" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+
+  <rect x="244" y="288" width="128" height="44" rx="8" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.2"/>
+  <rect x="256" y="300" width="50" height="7" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <rect x="256" y="313" width="90" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+
+  <rect x="244" y="342" width="128" height="44" rx="8" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.2"/>
+  <rect x="256" y="354" width="50" height="7" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <rect x="256" y="367" width="70" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+
+  <!-- Day 3: 4 interviews + early synthesis -->
+  <rect x="388" y="180" width="128" height="44" rx="8" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.2"/>
+  <rect x="400" y="192" width="50" height="7" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <rect x="388" y="234" width="128" height="44" rx="8" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.2"/>
+  <rect x="400" y="246" width="50" height="7" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <rect x="388" y="288" width="128" height="44" rx="8" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.2"/>
+  <rect x="400" y="300" width="50" height="7" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <!-- Synthesis block -->
+  <rect x="388" y="342" width="128" height="60" rx="8" fill="#A78BFA" opacity="0.12" stroke="#A78BFA" stroke-width="1" stroke-opacity="0.3"/>
+  <rect x="400" y="354" width="80" height="7" rx="3" fill="#A78BFA" opacity="0.6"/>
+  <rect x="400" y="367" width="100" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="400" y="379" width="80" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+
+  <!-- Day 4: 2 targeted interviews + deepen -->
+  <rect x="532" y="180" width="128" height="44" rx="8" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.2"/>
+  <rect x="544" y="192" width="50" height="7" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <rect x="532" y="234" width="128" height="44" rx="8" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.2"/>
+  <rect x="544" y="246" width="50" height="7" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <rect x="532" y="288" width="128" height="80" rx="8" fill="#6EE7B7" opacity="0.1" stroke="#6EE7B7" stroke-width="1" stroke-opacity="0.3"/>
+  <rect x="544" y="300" width="80" height="7" rx="3" fill="#10B981" opacity="0.5"/>
+  <rect x="544" y="313" width="100" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="544" y="325" width="80" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+  <rect x="544" y="337" width="100" height="6" rx="3" fill="#9CA3AF" opacity="0.18"/>
+  <rect x="544" y="349" width="70" height="6" rx="3" fill="#9CA3AF" opacity="0.15"/>
+
+  <!-- Day 5: full synthesis, recommendations -->
+  <rect x="676" y="180" width="120" height="200" rx="8" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1.5" stroke-opacity="0.4"/>
+  <rect x="688" y="196" width="80" height="8" rx="4" fill="#7F77DD" opacity="0.55"/>
+  <rect x="688" y="212" width="96" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="688" y="224" width="80" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="688" y="236" width="96" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+  <rect x="688" y="248" width="70" height="6" rx="3" fill="#9CA3AF" opacity="0.18"/>
+
+  <!-- Decision badge -->
+  <rect x="688" y="280" width="96" height="24" rx="12" fill="#7F77DD" opacity="0.8"/>
+  <rect x="700" y="287" width="72" height="10" rx="5" fill="white" opacity="0.7"/>
+
+  <!-- Insight summary sticky notes (right side) -->
+  <rect x="860" y="60" width="260" height="510" rx="20" fill="white" filter="url(#shadow)"/>
+  <rect x="860" y="60" width="260" height="52" rx="20" fill="#7F77DD" opacity="0.85"/>
+  <rect x="860" y="94" width="260" height="18" fill="#7F77DD" opacity="0.85"/>
+  <rect x="882" y="76" width="80" height="10" rx="5" fill="white" opacity="0.55"/>
+
+  <!-- Finding cards -->
+  <rect x="878" y="132" width="222" height="62" rx="10" fill="#F5F3FF"/>
+  <rect x="878" y="132" width="4" height="62" rx="2" fill="#7F77DD"/>
+  <rect x="892" y="143" width="140" height="7" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <rect x="892" y="156" width="180" height="6" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="892" y="168" width="150" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="892" y="180" width="120" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <rect x="878" y="208" width="222" height="62" rx="10" fill="#F5F3FF"/>
+  <rect x="878" y="208" width="4" height="62" rx="2" fill="#A78BFA"/>
+  <rect x="892" y="219" width="120" height="7" rx="3" fill="#A78BFA" opacity="0.6"/>
+  <rect x="892" y="232" width="180" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="892" y="244" width="140" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="892" y="256" width="100" height="6" rx="3" fill="#9CA3AF" opacity="0.2"/>
+
+  <rect x="878" y="284" width="222" height="62" rx="10" fill="#F5F3FF"/>
+  <rect x="878" y="284" width="4" height="62" rx="2" fill="#6EE7B7"/>
+  <rect x="892" y="295" width="100" height="7" rx="3" fill="#10B981" opacity="0.5"/>
+  <rect x="892" y="308" width="180" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="892" y="320" width="130" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+  <rect x="892" y="332" width="150" height="6" rx="3" fill="#9CA3AF" opacity="0.18"/>
+
+  <!-- Decision section -->
+  <rect x="878" y="366" width="222" height="70" rx="10" fill="#7F77DD" opacity="0.08" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.3"/>
+  <rect x="892" y="378" width="80" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="892" y="394" width="180" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="892" y="406" width="150" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="892" y="418" width="120" height="6" rx="3" fill="#9CA3AF" opacity="0.2"/>
+
+  <!-- Frequency counts -->
+  <rect x="878" y="452" width="70" height="18" rx="9" fill="#7F77DD" opacity="0.12"/>
+  <rect x="884" y="457" width="58" height="8" rx="4" fill="#7F77DD" opacity="0.4"/>
+  <rect x="956" y="452" width="70" height="18" rx="9" fill="#A78BFA" opacity="0.12"/>
+  <rect x="962" y="457" width="58" height="8" rx="4" fill="#A78BFA" opacity="0.4"/>
+
+  <circle cx="80" cy="560" r="40" fill="#7F77DD" opacity="0.04"/>
+</svg>

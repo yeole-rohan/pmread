@@ -1,0 +1,112 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5F3FF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="6" stdDeviation="14" flood-color="#7F77DD" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Grid lines (2x2 quadrant map) -->
+  <rect x="200" y="80" width="800" height="480" rx="20" fill="white" filter="url(#shadow)"/>
+
+  <!-- X axis label area -->
+  <rect x="380" y="560" width="100" height="8" rx="4" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="580" y="560" width="80" height="8" rx="4" fill="#9CA3AF" opacity="0.35"/>
+
+  <!-- Y axis label area -->
+  <rect x="148" y="230" width="8" height="60" rx="4" fill="#9CA3AF" opacity="0.3"/>
+
+  <!-- Quadrant dividers -->
+  <line x1="600" y1="80" x2="600" y2="560" stroke="#E5E7EB" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <line x1="200" y1="320" x2="1000" y2="320" stroke="#E5E7EB" stroke-width="1.5" stroke-dasharray="6 4"/>
+
+  <!-- Quadrant labels (shapes only) -->
+  <!-- Top-left: high power low interest -->
+  <rect x="220" y="100" width="110" height="8" rx="4" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="220" y="114" width="80" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <!-- Top-right: high power high interest (most important) -->
+  <rect x="620" y="100" width="130" height="8" rx="4" fill="#7F77DD" opacity="0.45"/>
+  <rect x="620" y="114" width="90" height="6" rx="3" fill="#7F77DD" opacity="0.3"/>
+
+  <!-- Bottom-left: low power low interest -->
+  <rect x="220" y="340" width="90" height="8" rx="4" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="220" y="354" width="70" height="6" rx="3" fill="#9CA3AF" opacity="0.18"/>
+
+  <!-- Bottom-right: low power high interest -->
+  <rect x="620" y="340" width="100" height="8" rx="4" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="620" y="354" width="80" height="6" rx="3" fill="#9CA3AF" opacity="0.2"/>
+
+  <!-- STAKEHOLDER NODES -->
+
+  <!-- Top-right cluster (manage closely) -->
+  <!-- CEO / exec -->
+  <circle cx="780" cy="155" r="38" fill="#7F77DD" opacity="0.14"/>
+  <circle cx="780" cy="144" r="16" fill="#7F77DD" opacity="0.35"/>
+  <rect x="756" y="163" width="48" height="22" rx="11" fill="#7F77DD" opacity="0.22"/>
+  <rect x="762" y="194" width="36" height="6" rx="3" fill="#7F77DD" opacity="0.35"/>
+
+  <!-- VP Sales -->
+  <circle cx="900" cy="200" r="34" fill="#7F77DD" opacity="0.1"/>
+  <circle cx="900" cy="190" r="14" fill="#7F77DD" opacity="0.28"/>
+  <rect x="879" y="207" width="42" height="20" rx="10" fill="#7F77DD" opacity="0.18"/>
+  <rect x="882" y="233" width="36" height="6" rx="3" fill="#7F77DD" opacity="0.3"/>
+
+  <!-- Engineering lead -->
+  <circle cx="680" cy="220" r="32" fill="#7F77DD" opacity="0.1"/>
+  <circle cx="680" cy="210" r="13" fill="#7F77DD" opacity="0.28"/>
+  <rect x="661" y="226" width="38" height="18" rx="9" fill="#7F77DD" opacity="0.18"/>
+  <rect x="663" y="250" width="34" height="6" rx="3" fill="#7F77DD" opacity="0.3"/>
+
+  <!-- Top-left (keep informed) -->
+  <circle cx="340" cy="170" r="30" fill="#A78BFA" opacity="0.1"/>
+  <circle cx="340" cy="161" r="12" fill="#A78BFA" opacity="0.25"/>
+  <rect x="322" y="176" width="36" height="18" rx="9" fill="#A78BFA" opacity="0.15"/>
+  <rect x="324" y="200" width="32" height="6" rx="3" fill="#A78BFA" opacity="0.25"/>
+
+  <circle cx="440" cy="220" r="26" fill="#A78BFA" opacity="0.09"/>
+  <circle cx="440" cy="212" r="11" fill="#A78BFA" opacity="0.22"/>
+  <rect x="424" y="226" width="32" height="16" rx="8" fill="#A78BFA" opacity="0.13"/>
+
+  <!-- Bottom-right (keep informed) -->
+  <circle cx="720" cy="440" r="28" fill="#6EE7B7" opacity="0.15"/>
+  <circle cx="720" cy="431" r="11" fill="#6EE7B7" opacity="0.35"/>
+  <rect x="703" y="445" width="34" height="18" rx="9" fill="#6EE7B7" opacity="0.2"/>
+  <rect x="705" y="469" width="30" height="6" rx="3" fill="#6EE7B7" opacity="0.3"/>
+
+  <circle cx="850" cy="410" r="24" fill="#6EE7B7" opacity="0.12"/>
+  <circle cx="850" cy="402" r="10" fill="#6EE7B7" opacity="0.3"/>
+  <rect x="834" y="415" width="32" height="16" rx="8" fill="#6EE7B7" opacity="0.15"/>
+
+  <!-- Bottom-left (monitor) -->
+  <circle cx="330" cy="430" r="22" fill="#D1D5DB" opacity="0.4"/>
+  <circle cx="330" cy="422" r="9" fill="#D1D5DB" opacity="0.6"/>
+  <rect x="316" y="435" width="28" height="14" rx="7" fill="#D1D5DB" opacity="0.4"/>
+
+  <circle cx="440" cy="460" r="20" fill="#D1D5DB" opacity="0.35"/>
+  <circle cx="440" cy="452" r="8" fill="#D1D5DB" opacity="0.5"/>
+  <rect x="427" y="464" width="26" height="14" rx="7" fill="#D1D5DB" opacity="0.35"/>
+
+  <!-- Connection lines -->
+  <line x1="680" y1="220" x2="780" y2="155" stroke="#7F77DD" stroke-width="1.5" opacity="0.2" stroke-dasharray="4 3"/>
+  <line x1="780" y1="155" x2="900" y2="200" stroke="#7F77DD" stroke-width="1.5" opacity="0.2" stroke-dasharray="4 3"/>
+
+  <!-- PM at center -->
+  <circle cx="600" cy="320" r="32" fill="#7F77DD" opacity="0.9"/>
+  <circle cx="600" cy="308" r="13" fill="white" opacity="0.6"/>
+  <rect x="580" y="324" width="40" height="20" rx="10" fill="white" opacity="0.4"/>
+
+  <!-- Axis arrows -->
+  <line x1="210" y1="540" x2="990" y2="540" stroke="#9CA3AF" stroke-width="1.5" opacity="0.3"/>
+  <polygon points="990,535 1000,540 990,545" fill="#9CA3AF" opacity="0.3"/>
+  <line x1="210" y1="540" x2="210" y2="90" stroke="#9CA3AF" stroke-width="1.5" opacity="0.3"/>
+  <polygon points="205,90 210,80 215,90" fill="#9CA3AF" opacity="0.3"/>
+
+  <!-- Decorative -->
+  <circle cx="80" cy="560" r="45" fill="#7F77DD" opacity="0.04"/>
+  <circle cx="1130" cy="90" r="40" fill="#A78BFA" opacity="0.05"/>
+</svg>
