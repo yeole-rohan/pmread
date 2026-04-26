@@ -1,0 +1,85 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5F3FF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#7F77DD" flood-opacity="0.11"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Timeline: Today vs Future -->
+  <!-- Today column -->
+  <rect x="60" y="60" width="490" height="510" rx="20" fill="white" filter="url(#shadow)"/>
+  <rect x="60" y="60" width="490" height="52" rx="20" fill="#9CA3AF" opacity="0.5"/>
+  <rect x="60" y="94" width="490" height="18" fill="#9CA3AF" opacity="0.5"/>
+  <rect x="88" y="76" width="60" height="10" rx="5" fill="white" opacity="0.7"/>
+
+  <rect x="80" y="140" width="450" height="56" rx="10" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+  <rect x="96" y="151" width="120" height="8" rx="4" fill="#9CA3AF" opacity="0.45"/>
+  <rect x="96" y="165" width="380" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="96" y="177" width="320" height="6" rx="3" fill="#9CA3AF" opacity="0.24"/>
+
+  <rect x="80" y="208" width="450" height="56" rx="10" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+  <rect x="96" y="219" width="100" height="8" rx="4" fill="#9CA3AF" opacity="0.45"/>
+  <rect x="96" y="233" width="380" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="96" y="245" width="300" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <rect x="80" y="276" width="450" height="56" rx="10" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+  <rect x="96" y="287" width="140" height="8" rx="4" fill="#9CA3AF" opacity="0.4"/>
+  <rect x="96" y="301" width="360" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="96" y="313" width="300" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <rect x="80" y="344" width="450" height="56" rx="10" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+  <rect x="96" y="355" width="110" height="8" rx="4" fill="#9CA3AF" opacity="0.38"/>
+  <rect x="96" y="369" width="380" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="96" y="381" width="320" height="6" rx="3" fill="#9CA3AF" opacity="0.2"/>
+
+  <!-- Future column -->
+  <rect x="650" y="60" width="490" height="510" rx="20" fill="white" filter="url(#shadow)"/>
+  <rect x="650" y="60" width="490" height="52" rx="20" fill="#7F77DD"/>
+  <rect x="650" y="94" width="490" height="18" fill="#7F77DD"/>
+  <rect x="678" y="76" width="80" height="10" rx="5" fill="white" opacity="0.65"/>
+
+  <rect x="670" y="140" width="450" height="56" rx="10" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1"/>
+  <rect x="686" y="151" width="120" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="686" y="165" width="380" height="6" rx="3" fill="#9CA3AF" opacity="0.32"/>
+  <rect x="686" y="177" width="320" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <!-- AI badge -->
+  <rect x="1064" y="145" width="46" height="16" rx="8" fill="#7F77DD" opacity="0.15"/>
+
+  <rect x="670" y="208" width="450" height="56" rx="10" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1"/>
+  <rect x="686" y="219" width="100" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="686" y="233" width="380" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="686" y="245" width="300" height="6" rx="3" fill="#9CA3AF" opacity="0.24"/>
+  <rect x="1064" y="213" width="46" height="16" rx="8" fill="#7F77DD" opacity="0.15"/>
+
+  <rect x="670" y="276" width="450" height="56" rx="10" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1"/>
+  <rect x="686" y="287" width="140" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="686" y="301" width="360" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="686" y="313" width="300" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+  <rect x="1064" y="281" width="46" height="16" rx="8" fill="#A78BFA" opacity="0.15"/>
+
+  <rect x="670" y="344" width="450" height="56" rx="10" fill="#F0FDF4" stroke="#A7F3D0" stroke-width="1"/>
+  <rect x="686" y="355" width="110" height="8" rx="4" fill="#10B981" opacity="0.5"/>
+  <rect x="686" y="369" width="380" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="686" y="381" width="320" height="6" rx="3" fill="#9CA3AF" opacity="0.2"/>
+
+  <!-- Unchanged skills bottom -->
+  <rect x="670" y="430" width="450" height="110" rx="14" fill="#7F77DD" opacity="0.06" stroke="#DDD6FE" stroke-width="1"/>
+  <rect x="686" y="444" width="160" height="8" rx="4" fill="#7F77DD" opacity="0.45"/>
+  <rect x="686" y="460" width="400" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="686" y="473" width="380" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+  <rect x="686" y="494" width="100" height="18" rx="9" fill="#7F77DD" opacity="0.1"/>
+  <rect x="796" y="494" width="100" height="18" rx="9" fill="#7F77DD" opacity="0.1"/>
+  <rect x="906" y="494" width="100" height="18" rx="9" fill="#7F77DD" opacity="0.1"/>
+
+  <!-- Arrow between columns -->
+  <polygon points="590,315 620,305 620,325" fill="#7F77DD" opacity="0.4"/>
+  <line x1="550" y1="315" x2="620" y2="315" stroke="#7F77DD" stroke-width="2" opacity="0.35" stroke-dasharray="6 4"/>
+
+  <circle cx="60" cy="580" r="45" fill="#7F77DD" opacity="0.04"/>
+  <circle cx="1150" cy="90" r="40" fill="#A78BFA" opacity="0.05"/>
+</svg>
