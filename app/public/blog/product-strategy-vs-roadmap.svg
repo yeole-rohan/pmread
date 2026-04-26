@@ -1,0 +1,126 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5F3FF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#7F77DD" flood-opacity="0.11"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Strategy card (left) -->
+  <rect x="80" y="80" width="470" height="470" rx="20" fill="white" filter="url(#shadow)"/>
+  <rect x="80" y="80" width="470" height="52" rx="20" fill="#7F77DD"/>
+  <rect x="80" y="114" width="470" height="18" fill="#7F77DD"/>
+  <rect x="110" y="96" width="100" height="10" rx="5" fill="white" opacity="0.65"/>
+
+  <!-- Strategy: 4 pillars -->
+  <!-- Target customer -->
+  <rect x="100" y="155" width="430" height="66" rx="12" fill="#F5F3FF"/>
+  <rect x="100" y="155" width="6" height="66" rx="3" fill="#7F77DD" opacity="0.7"/>
+  <rect x="118" y="166" width="110" height="9" rx="4" fill="#7F77DD" opacity="0.55"/>
+  <rect x="118" y="182" width="380" height="7" rx="3" fill="#9CA3AF" opacity="0.38"/>
+  <rect x="118" y="195" width="300" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="118" y="208" width="340" height="7" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <!-- Differentiation -->
+  <rect x="100" y="233" width="430" height="66" rx="12" fill="#F5F3FF"/>
+  <rect x="100" y="233" width="6" height="66" rx="3" fill="#7F77DD" opacity="0.6"/>
+  <rect x="118" y="244" width="120" height="9" rx="4" fill="#7F77DD" opacity="0.55"/>
+  <rect x="118" y="260" width="360" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="118" y="273" width="290" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="118" y="286" width="320" height="7" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <!-- Why we win -->
+  <rect x="100" y="311" width="430" height="56" rx="12" fill="#F5F3FF"/>
+  <rect x="100" y="311" width="6" height="56" rx="3" fill="#A78BFA" opacity="0.6"/>
+  <rect x="118" y="322" width="100" height="9" rx="4" fill="#A78BFA" opacity="0.55"/>
+  <rect x="118" y="338" width="360" height="7" rx="3" fill="#9CA3AF" opacity="0.33"/>
+  <rect x="118" y="351" width="280" height="7" rx="3" fill="#9CA3AF" opacity="0.25"/>
+
+  <!-- NOT doing -->
+  <rect x="100" y="379" width="430" height="56" rx="12" fill="#FFF1F2"/>
+  <rect x="100" y="379" width="6" height="56" rx="3" fill="#EF4444" opacity="0.5"/>
+  <rect x="118" y="390" width="80" height="9" rx="4" fill="#EF4444" opacity="0.45"/>
+  <rect x="118" y="406" width="360" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="118" y="419" width="300" height="7" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <!-- Horizon label -->
+  <rect x="100" y="458" width="160" height="20" rx="10" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1"/>
+  <rect x="112" y="464" width="136" height="8" rx="4" fill="#7F77DD" opacity="0.4"/>
+
+  <!-- Arrow between -->
+  <line x1="565" y1="315" x2="635" y2="315" stroke="#7F77DD" stroke-width="2.5" opacity="0.35" stroke-dasharray="6 4"/>
+  <polygon points="635,308 650,315 635,322" fill="#7F77DD" opacity="0.35"/>
+
+  <!-- Roadmap card (right) -->
+  <rect x="650" y="80" width="470" height="470" rx="20" fill="white" filter="url(#shadow)"/>
+  <rect x="650" y="80" width="470" height="52" rx="20" fill="#7F77DD" opacity="0.75"/>
+  <rect x="650" y="114" width="470" height="18" fill="#7F77DD" opacity="0.75"/>
+  <rect x="680" y="96" width="100" height="10" rx="5" fill="white" opacity="0.6"/>
+
+  <!-- Now / Next / Later columns -->
+  <!-- Now -->
+  <rect x="668" y="148" width="130" height="24" rx="8" fill="#7F77DD" opacity="0.15"/>
+  <rect x="682" y="156" width="60" height="8" rx="4" fill="#7F77DD" opacity="0.6"/>
+
+  <rect x="668" y="182" width="130" height="54" rx="10" fill="#7F77DD" opacity="0.12" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.3"/>
+  <rect x="680" y="194" width="80" height="7" rx="3" fill="#7F77DD" opacity="0.5"/>
+  <rect x="680" y="207" width="100" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="680" y="219" width="80" height="6" rx="3" fill="#9CA3AF" opacity="0.24"/>
+
+  <rect x="668" y="248" width="130" height="44" rx="10" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.25"/>
+  <rect x="680" y="260" width="90" height="7" rx="3" fill="#7F77DD" opacity="0.45"/>
+  <rect x="680" y="273" width="100" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+
+  <rect x="668" y="304" width="130" height="44" rx="10" fill="#7F77DD" opacity="0.08"/>
+  <rect x="680" y="316" width="80" height="7" rx="3" fill="#7F77DD" opacity="0.4"/>
+  <rect x="680" y="329" width="100" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+
+  <!-- Next -->
+  <rect x="818" y="148" width="130" height="24" rx="8" fill="#A78BFA" opacity="0.15"/>
+  <rect x="830" y="156" width="55" height="8" rx="4" fill="#A78BFA" opacity="0.55"/>
+
+  <rect x="818" y="182" width="130" height="54" rx="10" fill="#A78BFA" opacity="0.08" stroke="#A78BFA" stroke-width="1" stroke-opacity="0.25"/>
+  <rect x="830" y="194" width="90" height="7" rx="3" fill="#A78BFA" opacity="0.4"/>
+  <rect x="830" y="207" width="100" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+
+  <rect x="818" y="248" width="130" height="44" rx="10" fill="#A78BFA" opacity="0.06"/>
+  <rect x="830" y="260" width="75" height="7" rx="3" fill="#A78BFA" opacity="0.35"/>
+  <rect x="830" y="273" width="100" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <!-- Later -->
+  <rect x="968" y="148" width="130" height="24" rx="8" fill="#E5E7EB"/>
+  <rect x="980" y="156" width="45" height="8" rx="4" fill="#9CA3AF" opacity="0.5"/>
+
+  <rect x="968" y="182" width="130" height="44" rx="10" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+  <rect x="980" y="194" width="90" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="980" y="207" width="100" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <rect x="968" y="238" width="130" height="44" rx="10" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+  <rect x="980" y="250" width="80" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="980" y="263" width="100" height="6" rx="3" fill="#9CA3AF" opacity="0.2"/>
+
+  <!-- Metric labels below each roadmap item (outcome connection) -->
+  <rect x="668" y="360" width="130" height="16" rx="8" fill="#7F77DD" opacity="0.1"/>
+  <rect x="676" y="364" width="114" height="8" rx="4" fill="#7F77DD" opacity="0.35"/>
+  <rect x="818" y="360" width="130" height="16" rx="8" fill="#A78BFA" opacity="0.1"/>
+  <rect x="826" y="364" width="114" height="8" rx="4" fill="#A78BFA" opacity="0.3"/>
+
+  <!-- Column dividers -->
+  <line x1="808" y1="140" x2="808" y2="510" stroke="#F3F4F6" stroke-width="1.5"/>
+  <line x1="958" y1="140" x2="958" y2="510" stroke="#F3F4F6" stroke-width="1.5"/>
+
+  <!-- Bottom legend -->
+  <rect x="668" y="398" width="430" height="60" rx="12" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+  <rect x="682" y="414" width="80" height="8" rx="4" fill="#7F77DD" opacity="0.4"/>
+  <rect x="782" y="414" width="80" height="8" rx="4" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="878" y="414" width="80" height="8" rx="4" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="682" y="428" width="60" height="6" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="782" y="428" width="60" height="6" rx="3" fill="#9CA3AF" opacity="0.2"/>
+  <rect x="878" y="428" width="60" height="6" rx="3" fill="#9CA3AF" opacity="0.18"/>
+
+  <circle cx="70" cy="560" r="45" fill="#7F77DD" opacity="0.04"/>
+</svg>

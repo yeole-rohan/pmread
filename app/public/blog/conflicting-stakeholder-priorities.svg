@@ -1,0 +1,71 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5F3FF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#7F77DD" flood-opacity="0.11"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Center PM node -->
+  <circle cx="600" cy="315" r="60" fill="white" filter="url(#shadow)"/>
+  <circle cx="600" cy="315" r="50" fill="#7F77DD" opacity="0.12" stroke="#7F77DD" stroke-width="2" stroke-opacity="0.3"/>
+  <rect x="568" y="308" width="64" height="10" rx="5" fill="#7F77DD" opacity="0.5"/>
+  <rect x="576" y="323" width="48" height="7" rx="3" fill="#9CA3AF" opacity="0.4"/>
+
+  <!-- Stakeholder: Sales (top-left) -->
+  <circle cx="220" cy="150" r="50" fill="white" filter="url(#shadow)"/>
+  <circle cx="220" cy="150" r="42" fill="#EF4444" opacity="0.08" stroke="#EF4444" stroke-width="1.5" stroke-opacity="0.3"/>
+  <rect x="190" y="143" width="60" height="9" rx="4" fill="#EF4444" opacity="0.45"/>
+  <rect x="196" y="158" width="48" height="7" rx="3" fill="#9CA3AF" opacity="0.38"/>
+  <!-- tension line -->
+  <line x1="266" y1="175" x2="553" y2="283" stroke="#EF4444" stroke-width="2" opacity="0.25" stroke-dasharray="8 5"/>
+
+  <!-- Stakeholder: Engineering (top-right) -->
+  <circle cx="980" cy="150" r="50" fill="white" filter="url(#shadow)"/>
+  <circle cx="980" cy="150" r="42" fill="#3B82F6" opacity="0.08" stroke="#3B82F6" stroke-width="1.5" stroke-opacity="0.3"/>
+  <rect x="948" y="143" width="64" height="9" rx="4" fill="#3B82F6" opacity="0.45"/>
+  <rect x="956" y="158" width="48" height="7" rx="3" fill="#9CA3AF" opacity="0.38"/>
+  <line x1="934" y1="175" x2="647" y2="283" stroke="#3B82F6" stroke-width="2" opacity="0.25" stroke-dasharray="8 5"/>
+
+  <!-- Stakeholder: Design (left) -->
+  <circle cx="120" cy="315" r="50" fill="white" filter="url(#shadow)"/>
+  <circle cx="120" cy="315" r="42" fill="#A78BFA" opacity="0.1" stroke="#A78BFA" stroke-width="1.5" stroke-opacity="0.3"/>
+  <rect x="90" y="308" width="60" height="9" rx="4" fill="#A78BFA" opacity="0.5"/>
+  <rect x="96" y="323" width="48" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <line x1="170" y1="315" x2="550" y2="315" stroke="#A78BFA" stroke-width="2" opacity="0.3" stroke-dasharray="8 5"/>
+
+  <!-- Stakeholder: Marketing (right) -->
+  <circle cx="1080" cy="315" r="50" fill="white" filter="url(#shadow)"/>
+  <circle cx="1080" cy="315" r="42" fill="#F59E0B" opacity="0.1" stroke="#F59E0B" stroke-width="1.5" stroke-opacity="0.3"/>
+  <rect x="1048" y="308" width="64" height="9" rx="4" fill="#F59E0B" opacity="0.5"/>
+  <rect x="1056" y="323" width="48" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <line x1="1030" y1="315" x2="650" y2="315" stroke="#F59E0B" stroke-width="2" opacity="0.3" stroke-dasharray="8 5"/>
+
+  <!-- Stakeholder: Executive (bottom-left) -->
+  <circle cx="220" cy="480" r="50" fill="white" filter="url(#shadow)"/>
+  <circle cx="220" cy="480" r="42" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1.5" stroke-opacity="0.3"/>
+  <rect x="190" y="473" width="60" height="9" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="196" y="488" width="48" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <line x1="266" y1="455" x2="553" y2="347" stroke="#7F77DD" stroke-width="2" opacity="0.3" stroke-dasharray="8 5"/>
+
+  <!-- Stakeholder: Customer (bottom-right) -->
+  <circle cx="980" cy="480" r="50" fill="white" filter="url(#shadow)"/>
+  <circle cx="980" cy="480" r="42" fill="#10B981" opacity="0.08" stroke="#10B981" stroke-width="1.5" stroke-opacity="0.3"/>
+  <rect x="950" y="473" width="60" height="9" rx="4" fill="#10B981" opacity="0.5"/>
+  <rect x="956" y="488" width="48" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <line x1="934" y1="455" x2="647" y2="347" stroke="#10B981" stroke-width="2" opacity="0.25" stroke-dasharray="8 5"/>
+
+  <!-- Priority legend bottom center -->
+  <rect x="440" y="510" width="320" height="70" rx="14" fill="white" filter="url(#shadow)"/>
+  <rect x="460" y="524" width="100" height="8" rx="4" fill="#7F77DD" opacity="0.4"/>
+  <rect x="460" y="540" width="280" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="460" y="552" width="240" height="6" rx="3" fill="#9CA3AF" opacity="0.24"/>
+  <rect x="460" y="564" width="200" height="6" rx="3" fill="#9CA3AF" opacity="0.18"/>
+
+  <circle cx="60" cy="560" r="45" fill="#7F77DD" opacity="0.04"/>
+  <circle cx="1150" cy="90" r="40" fill="#A78BFA" opacity="0.05"/>
+</svg>
