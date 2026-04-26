@@ -77,6 +77,7 @@ export default async function BlogPostPage({
       : undefined,
     publisher: { "@type": "Organization", name: "PMRead", url: BASE },
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE}/blog/${post.slug}` },
+    keywords: post.keywords?.join(", "),
   };
 
   return (

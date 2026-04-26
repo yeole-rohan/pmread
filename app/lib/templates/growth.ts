@@ -340,6 +340,7 @@ export const growthTemplates: Template[] = [
         a: "Once sales training is done and marketing assets are in production. After that, changes cascade across materials, demos, and messaging — which is expensive and demoralizing for the team. Lock positioning 3 weeks before launch.",
       },
     ],
+    keywords: ["go to market template", "gtm template product launch", "go to market strategy template", "product launch go to market", "gtm plan template free"],
   },
 
   // ─── 9. Release Notes Template ────────────────────────────────────────────,

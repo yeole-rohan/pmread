@@ -6,7 +6,7 @@ import PricingPlans from "@/components/PricingPlans";
 export const metadata: Metadata = {
   title: { absolute: "Pricing — PMRead" },
   description:
-    "Start free with 2 PRDs/month. Upgrade to Pro for ₹1,699/month and unlock 15 PRDs, Slack ingestion, GitHub context, and PDF export.",
+    "PMRead pricing — free AI PRD generator plan with paid tiers for growing product teams. No credit card required to start turning customer feedback into PRDs.",
   alternates: { canonical: SITE_URL + '/pricing' },
   openGraph: {
     title: "Pricing — PMRead",
@@ -56,6 +56,8 @@ const faqItems = [
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
+  keywords:
+    "prd generator pricing, ai prd tool india, product management software india, pm tool free plan, productboard alternative pricing",
   mainEntity: faqItems.map(({ q, a }) => ({
     "@type": "Question",
     name: q,
@@ -79,7 +81,8 @@ export default function PricingPage() {
               Simple, transparent pricing
             </h1>
             <p className="text-xl text-gray-500">
-              Start free. Upgrade when you need more.
+              Free AI PRD generator to start — upgrade when your team needs more PRDs,
+              more sources, and faster customer feedback analysis.
             </p>
           </div>
         </section>
@@ -88,6 +91,19 @@ export default function PricingPage() {
         <section className="pb-16 sm:pb-20">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <PricingPlans />
+          </div>
+        </section>
+
+        {/* ── Sample output trust signal ───────────────────────────────── */}
+        <section className="pb-12 sm:pb-16">
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
+            <p className="text-sm text-gray-500">
+              Not sure what you&apos;ll get?{" "}
+              <Link href="/sample-prd" className="text-[#7F77DD] hover:underline font-medium">
+                See a real sample PRD →
+              </Link>{" "}
+              Generated from 22 customer interviews, with every requirement traced back to evidence.
+            </p>
           </div>
         </section>
 

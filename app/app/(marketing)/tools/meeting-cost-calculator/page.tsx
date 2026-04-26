@@ -53,6 +53,8 @@ const jsonLd = {
       operatingSystem: "Web",
       offers: { "@type": "Offer", price: "0", priceCurrency: "INR" },
       url: `${BASE}/tools/meeting-cost-calculator`,
+      keywords:
+        "meeting cost calculator, cost of meeting calculator, how much does a meeting cost, meeting roi calculator, wasted meeting time calculator",
     },
     {
       "@type": "FAQPage",
@@ -98,8 +100,9 @@ export default function MeetingCostCalculatorPage() {
               Meeting Cost Calculator
             </h1>
             <p className="text-gray-500 max-w-xl mx-auto">
-              Enter your meeting details and see the real cost in seconds.
-              No AI, no fluff — just the math your calendar doesn&apos;t show you.
+              Use this free meeting cost calculator to see the real dollar cost of any meeting —
+              enter attendee count, average salary, and duration. No AI, no fluff — just the
+              math that shows how much wasted meeting time actually costs your team.
             </p>
           </div>
 

@@ -7,7 +7,7 @@ export interface BlogPost {
   title: string;
   description: string;
   category: string;
-  keyword: string;
+  keywords: string[];
   publishedAt: string;
   updatedAt: string;
   readingTime: number;

@@ -3,7 +3,7 @@ title: "North Star Metric: How to Pick the Right One"
 slug: north-star-metric
 description: Your north star metric is wrong if only one team can influence it. Here's how to pick one that aligns product, engineering, and growth around the same outcome.
 category: Product Strategy
-keyword: north star metric
+keywords: [north star metric, north star metric definition, nsm product management, product metrics, north star metric examples]
 publishedAt: 2026-04-24
 updatedAt: 2026-04-24
 readingTime: 6
