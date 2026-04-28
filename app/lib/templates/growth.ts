@@ -153,6 +153,7 @@ export const growthTemplates: Template[] = [
         a: "First, kill the feature flag if the issue is severe. Second, communicate internally before externally — the team needs to know before customers do. Third, write a blameless post-mortem within 48 hours. Customers tolerate mistakes; what they don't tolerate is silence.",
       },
     ],
+    keywords: ["product launch checklist", "product launch plan template", "feature launch checklist free", "go live checklist product", "product release checklist"],
   },
 
   // ─── 7. Competitive Analysis Matrix ───────────────────────────────────────,
@@ -492,6 +493,7 @@ export const growthTemplates: Template[] = [
         a: "At minimum, with every public-facing release. High-frequency shipping teams (weekly or more) often batch notes into a weekly digest. Monthly summaries work well for customers who don't want to track every deployment. Whatever cadence you choose, be consistent — customers notice when the changelog goes quiet.",
       },
     ],
+    keywords: ["release notes template", "changelog template", "product update template", "release notes format", "software release notes example"],
   },
 
   // ─── 10. Acceptance Criteria Template ─────────────────────────────────────,
@@ -663,6 +665,7 @@ export const growthTemplates: Template[] = [
         a: "A null result is a real result. It means either the change doesn't matter to users, or your MDE was too small to detect a real effect. Document it as 'no significant difference', decide whether to run the test with a larger sample or a bolder variant, and move on. Don't ship the treatment just because it didn't lose.",
       },
     ],
+    keywords: ["ab test plan template", "a/b testing template product", "experiment plan template", "ab testing product management", "split test template free"],
   },
 
   // ─── 21. Sprint Retrospective ───────────────────────────────────────────────,
@@ -828,6 +831,7 @@ Rate 1–5 on each dimension. Collect via anonymous poll (Mentimeter, Slido, or 
         a: "A retrospective is a regular team health ritual that covers the whole sprint. A post-mortem is a targeted investigation of a specific incident or failure (an outage, a missed launch, a customer escalation). Both use similar formats but have different scopes and triggers.",
       },
     ],
+    keywords: ["sprint retrospective template", "agile retrospective template", "sprint retro template free", "what went well retrospective", "retrospective action items template"],
   },
 
   // ─── 22. RICE Scoring Template ──────────────────────────────────────────────
@@ -1015,6 +1019,7 @@ Review these signals at day 30 for each new cohort:
         a: "Benchmarks vary by category: B2B SaaS tools average 20–35% D30. Consumer apps average 10–20%. The more important metric is the delta between cohorts — if D30 improves from 18% to 24% after an onboarding redesign, that's a strong signal regardless of absolute benchmark.",
       },
     ],
+    keywords: ["customer onboarding checklist", "saas onboarding template", "user onboarding checklist product", "client onboarding checklist free", "onboarding plan template"],
   },
 
   // ─── 50. Feature Announcement Template ───────────────────────────────────
@@ -1239,5 +1244,6 @@ Define how you'll know if the announcement worked:
         a: "Feature activation rate is the only metric that matters — did users who received the announcement actually use the feature? Email open rate and click-through are leading indicators, but a 40% open rate with 2% activation means the announcement worked but the feature didn't. Track both.",
       },
     ],
+    keywords: ["feature announcement template", "product update announcement template", "feature release communication template", "in-app announcement template", "product changelog template"],
   },
 ];

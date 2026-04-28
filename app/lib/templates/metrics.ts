@@ -206,6 +206,7 @@ At your current stage, one metric matters more than all others. Optimising the w
         a: "NPS = % Promoters (score 9–10) minus % Detractors (score 0–6). Passives (7–8) are excluded. For SaaS products: NPS above 30 is good; above 50 is excellent; above 70 is world-class. More important than the absolute score is the trend (is it improving?) and the qualitative feedback from detractors — that tells you what to fix.",
       },
     ],
+    keywords: ["aarrr metrics template", "pirate metrics template", "acquisition retention revenue metrics", "growth metrics framework", "aarrr framework product management"],
   },
 
   // ── Template 43 ──────────────────────────────────────────────────────────
@@ -346,6 +347,7 @@ At your current stage, one metric matters more than all others. Optimising the w
         a: "Your direct manager, the engineering lead for your product area, and any stakeholders who have standing asks or dependencies on your roadmap. Don't send it to everyone — you'll water down the signal with noise. If someone hasn't engaged with a report in 4 weeks, take them off the list and offer a monthly summary instead.",
       },
     ],
+    keywords: ["weekly pm report template", "product manager weekly report", "pm status update template", "weekly product update template", "pm weekly digest template"],
   },
 
   // ── Template 44 ──────────────────────────────────────────────────────────
@@ -538,6 +540,7 @@ For each major churn driver, identify the root cause (not the symptom).
         a: "At early stage (< 50 churned users/month): interview every churned paid user you can reach. At growth stage: interview a stratified sample — at least 5 from each major churn reason category. The minimum viable cadence is 5 interviews per month. Fewer than that and patterns don't emerge. More than 20 per month and the marginal new insight diminishes rapidly — focus on acting on what you've learned, not collecting more data.",
       },
     ],
+    keywords: ["churn analysis template", "customer churn analysis product", "saas churn investigation template", "churn rate analysis framework", "user churn analysis guide"],
   },
 
   // ── Template 45 ──────────────────────────────────────────────────────────
@@ -740,6 +743,7 @@ For each major churn driver, identify the root cause (not the symptom).
         a: "Yes, with safeguards. Experiments on non-overlapping user populations or non-interacting parts of the product can run concurrently without issue. The risk is interaction effects — if Experiment A changes onboarding and Experiment B changes the first feature users encounter, the combined effect of both is not separable. Maintain a running list of active experiments and check for overlapping eligibility criteria before launching a new one.",
       },
     ],
+    keywords: ["experiment design template", "product experiment template", "hypothesis testing template pm", "product test design framework", "ab test hypothesis template"],
   },
 
   // ── Template 46 ──────────────────────────────────────────────────────────
@@ -910,5 +914,6 @@ For each major churn driver, identify the root cause (not the symptom).
         a: "The weekly PM report covers what shipped, what's blocked, and what's next — it is operational. The product health dashboard covers how the product is performing against its goals — it is diagnostic. The report answers 'what did we do?' The dashboard answers 'is what we're doing working?' Both are needed; neither replaces the other.",
       },
     ],
+    keywords: ["product health dashboard template", "product metrics dashboard", "pm dashboard template", "product kpi dashboard template", "product health scorecard"],
   },
 ];

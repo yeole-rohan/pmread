@@ -341,6 +341,7 @@ Emotional intensity: ▁▂▃▄▅ [mark the level]
         a: "Walk through it with 3–5 customers and ask 'does this reflect your experience?' at each stage. You'll quickly discover where the map is wrong or incomplete. Also compare the pain points and moments of truth against your analytics — if a moment of truth isn't measurable, add instrumentation.",
       },
     ],
+    keywords: ["customer journey map template", "customer journey mapping tool", "user journey map free", "journey map template product", "cx journey map template"],
   },
 
   // ─── 16. Empathy Map ──────────────────────────────────────────────────────,
@@ -501,6 +502,7 @@ Emotional intensity: ▁▂▃▄▅ [mark the level]
         a: "Yes, but mark it clearly as assumption-based and validate it quickly. G2 reviews, Reddit threads, and support tickets are useful sources. The risk of skipping primary research is that your empathy map reflects the loudest voices (people who write public reviews) rather than your actual target user.",
       },
     ],
+    keywords: ["empathy map template", "empathy mapping tool free", "user empathy map template", "design thinking empathy map", "empathy map product management"],
   },
 
   // ─── 17. User Interview Script ────────────────────────────────────────────,
@@ -676,6 +678,7 @@ Use this during the call. Fill in immediately after.
         a: "Acknowledge it and redirect: 'That's really interesting — I want to make sure I understand the problem before we talk about solutions. Can you tell me more about what's frustrating when you do X today?' Don't ignore solution suggestions — log them — but don't let them derail the problem exploration.",
       },
     ],
+    keywords: ["user interview script template", "user interview questions template", "product research interview guide", "ux research interview script", "customer interview questions template"],
   },
 
   // ─── 18. Kano Model ───────────────────────────────────────────────────────
