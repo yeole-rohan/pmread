@@ -2,7 +2,8 @@ export interface User {
   id: string;
   email: string;
   display_name: string | null;
-  plan: "free" | "pro";
+  plan: "free" | "pro" | "teams" | "studio";
+  subscription_status: "active" | "expired";
   billing_provider: "stripe" | "razorpay" | null;
   billing_period: "monthly" | "annual" | null;
   plan_started_at: string | null;
@@ -24,6 +25,7 @@ export interface Project {
   updated_at: string;
   analysis_count: number;
   last_analysis_at: string | null;
+  ingest_email_token?: string | null;
 }
 
 export type InsightType = "pain_point" | "feature_request" | "decision" | "action_item";
@@ -106,6 +108,19 @@ export interface Analysis {
   created_at: string;
   extension_count?: number;
   new_insights_count?: number;
+}
+
+export interface Decision {
+  id: string;
+  project_id: string;
+  user_id: string;
+  title: string;
+  what_we_decided: string;
+  why: string | null;
+  status: "active" | "reversed" | "superseded";
+  evidence_insight_ids: string[];
+  created_at: string;
+  updated_at: string;
 }
 
 export class APIError extends Error {

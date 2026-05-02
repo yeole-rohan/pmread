@@ -21,6 +21,7 @@ from app.models.user import User
 from app.models.session import Session
 from app.models.founding_member import FoundingMember
 from app.schemas.user import UserOut
+from app.utils.plan import subscription_status
 
 router = APIRouter()
 
@@ -49,6 +50,7 @@ def _user_response(user: User) -> UserOut:
         email=user.email,
         display_name=user.display_name,
         plan=user.plan,
+        subscription_status=subscription_status(user),
         billing_provider=user.billing_provider,
         billing_period=user.billing_period,
         plan_started_at=user.plan_started_at,

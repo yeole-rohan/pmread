@@ -412,6 +412,16 @@ async def extend_prd(
     analysis.extended_at = now
     db.commit()
 
+    from app.models.prd_version import PrdVersion
+    db.add(PrdVersion(
+        prd_id=analysis.id,
+        brief=analysis.brief,
+        brief_markdown=analysis.brief_markdown,
+        trigger="extension",
+        triggered_by=current_user.id,
+    ))
+    db.commit()
+
     return {
         "success": True,
         "extension_count": analysis.extension_count,

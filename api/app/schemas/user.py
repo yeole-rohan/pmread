@@ -1,5 +1,6 @@
 """Pydantic response schemas for user/auth endpoints."""
 from datetime import datetime
+from typing import Literal
 from pydantic import BaseModel
 
 
@@ -7,7 +8,8 @@ class UserOut(BaseModel):
     id: str
     email: str
     display_name: str | None
-    plan: str
+    plan: Literal["free", "pro", "teams", "studio"]
+    subscription_status: Literal["active", "expired"]
     billing_provider: str | None
     billing_period: str | None = None
     plan_started_at: datetime | None

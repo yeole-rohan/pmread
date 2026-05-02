@@ -19,7 +19,7 @@ class User(Base):
     email_verified: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     verify_token: Mapped[str | None] = mapped_column(String, nullable=True)
     verify_token_exp: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-    # plan: 'free' | 'pro'  (team/studio deferred)
+    # plan: 'free' | 'pro' | 'teams' | 'studio'
     plan: Mapped[str] = mapped_column(String, nullable=False, default="free")
     billing_provider: Mapped[str | None] = mapped_column(String, nullable=True)  # 'stripe' | 'razorpay'
     plan_started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)

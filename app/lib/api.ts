@@ -25,6 +25,11 @@ async function _handleResponse<T>(res: Response): Promise<T> {
     throw new APIError("Not authenticated", "UNAUTHORIZED", 401);
   }
 
+  if (res.status === 402) {
+    if (typeof window !== "undefined") window.location.href = "/plan-expired";
+    throw new APIError("Plan expired", "PLAN_EXPIRED", 402);
+  }
+
   if (!res.ok) {
     let detail: { error?: string; code?: string } = {};
     try {

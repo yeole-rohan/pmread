@@ -35,6 +35,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }, [user, loading, router]);
 
   useEffect(() => {
+    if (user && user.subscription_status === "expired") {
+      router.push("/plan-expired");
+    }
+  }, [user, router]);
+
+  useEffect(() => {
     if (user) {
       apiFetch<Project[]>("/projects/").then(setProjects).catch(() => {});
     }

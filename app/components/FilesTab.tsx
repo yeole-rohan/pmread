@@ -1,13 +1,15 @@
 "use client";
 
-import useSWR from "swr";
-import { FileText, FileImage, File, Loader2, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { useState } from "react";
+import useSWR, { mutate as globalMutate } from "swr";
+import { FileText, FileImage, File, Loader2, CheckCircle2, XCircle, Clock, Copy, RefreshCw } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { Doc } from "@/lib/types";
 import { docsCacheKey } from "@/lib/useProjectData";
 
 interface FilesTabProps {
   projectId: string;
+  ingestEmailToken?: string | null;
 }
 
 function fileIcon(fileType: string) {
@@ -59,7 +61,70 @@ function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
 
-export default function FilesTab({ projectId }: FilesTabProps) {
+function IngestEmailSection({ projectId, initialToken }: { projectId: string; initialToken?: string | null }) {
+  const [token, setToken] = useState<string | null>(initialToken ?? null);
+  const [copied, setCopied] = useState(false);
+  const [regenerating, setRegenerating] = useState(false);
+
+  const email = token ? `${token}@ingest.pmread.com` : null;
+
+  async function handleCopy() {
+    if (!email) return;
+    await navigator.clipboard.writeText(email);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
+  async function handleRegenerate() {
+    setRegenerating(true);
+    try {
+      const res = await apiFetch<{ ingest_email: string }>(`/projects/${projectId}/ingest-token/regenerate`, { method: "POST" });
+      const newToken = res.ingest_email.split("@")[0];
+      setToken(newToken);
+      // Invalidate projects list cache so sidebar reflects new token
+      globalMutate("/projects/");
+    } catch {
+      // silent
+    } finally {
+      setRegenerating(false);
+    }
+  }
+
+  return (
+    <div className="mt-8 pt-6 border-t border-gray-100">
+      <p className="text-sm font-semibold text-gray-700 mb-1">Email files to this project</p>
+      <p className="text-xs text-gray-400 mb-3">
+        Forward emails, transcripts, or attachments to this address to add them as files.
+      </p>
+      {email ? (
+        <div className="flex items-center gap-2">
+          <code className="flex-1 text-xs bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-700 truncate">
+            {email}
+          </code>
+          <button
+            onClick={handleCopy}
+            title="Copy"
+            className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer flex-shrink-0"
+          >
+            {copied ? <CheckCircle2 size={15} className="text-emerald-500" /> : <Copy size={15} />}
+          </button>
+          <button
+            onClick={handleRegenerate}
+            disabled={regenerating}
+            title="Regenerate"
+            className="p-2 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer flex-shrink-0 disabled:opacity-50"
+          >
+            <RefreshCw size={15} className={regenerating ? "animate-spin" : ""} />
+          </button>
+        </div>
+      ) : (
+        <p className="text-xs text-gray-400">No ingest address available.</p>
+      )}
+    </div>
+  );
+}
+
+export default function FilesTab({ projectId, ingestEmailToken }: FilesTabProps) {
   const { data: docs, isLoading } = useSWR<Doc[]>(
     docsCacheKey(projectId),
     (key: string) => apiFetch<Doc[]>(key),
@@ -82,6 +147,7 @@ export default function FilesTab({ projectId }: FilesTabProps) {
         </div>
         <p className="text-sm font-medium text-gray-700 mb-1">No files uploaded yet</p>
         <p className="text-sm text-gray-400">Upload customer interviews, call transcripts, or feedback files.</p>
+        <IngestEmailSection projectId={projectId} initialToken={ingestEmailToken} />
       </div>
     );
   }
@@ -120,6 +186,8 @@ export default function FilesTab({ projectId }: FilesTabProps) {
           </div>
         ))}
       </div>
+
+      <IngestEmailSection projectId={projectId} initialToken={ingestEmailToken} />
     </div>
   );
 }

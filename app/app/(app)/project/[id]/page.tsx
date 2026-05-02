@@ -3,13 +3,17 @@
 import { useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Upload, FileText, RefreshCw, X, Loader2 } from "lucide-react";
+import useSWR from "swr";
 import { useUser } from "@/lib/useUser";
 import { useProjectData, useEmptyProjectCleanup, invalidateProjectCache } from "@/lib/useProjectData";
 import { PLAN_PRD_LIMITS } from "@/lib/constants";
+import { apiFetch } from "@/lib/api";
+import { Project } from "@/lib/types";
 import InsightsBoard from "@/components/InsightsBoard";
 import PrdList from "@/components/PrdList";
 import AskTab from "@/components/AskTab";
 import FilesTab from "@/components/FilesTab";
+import DecisionsTab from "@/components/DecisionsTab";
 import SampleProjectView from "@/components/SampleProjectView";
 import UploadModal from "@/components/UploadModal";
 import GeneratePRDModal from "@/components/GeneratePRDModal";
@@ -17,7 +21,7 @@ import UpgradeModal from "@/components/UpgradeModal";
 import { trackEvent } from "@/lib/analytics";
 import GithubRepoPicker from "@/components/GithubRepoPicker";
 
-type Tab = "insights" | "prds" | "ask" | "files";
+type Tab = "insights" | "prds" | "ask" | "files" | "decisions";
 
 export default function ProjectPage() {
   const params = useParams();
@@ -47,6 +51,13 @@ export default function ProjectPage() {
     handleDeleteInsight,
     handleStarInsight,
   } = useProjectData(projectId);
+
+  const { data: projects } = useSWR<Project[]>(
+    "/projects/",
+    (key: string) => apiFetch<Project[]>(key),
+    { revalidateOnFocus: false, dedupingInterval: 60_000 },
+  );
+  const currentProject = projects?.find((p) => p.id === projectId);
 
   useEmptyProjectCleanup(projectId, loading, insightTotal, prds.length);
 
@@ -215,6 +226,16 @@ export default function ProjectPage() {
               >
                 Files
               </button>
+              <button
+                onClick={() => setTab("decisions")}
+                className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                  tab === "decisions"
+                    ? "bg-white text-gray-900 shadow-sm"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                Decisions
+              </button>
             </div>
 
             <div className="flex items-center gap-2">
@@ -277,7 +298,10 @@ export default function ProjectPage() {
             />
           )}
           {tab === "files" && (
-            <FilesTab projectId={projectId} />
+            <FilesTab projectId={projectId} ingestEmailToken={currentProject?.ingest_email_token} />
+          )}
+          {tab === "decisions" && (
+            <DecisionsTab projectId={projectId} user={user} />
           )}
         </>
       )}
