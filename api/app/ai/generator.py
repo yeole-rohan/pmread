@@ -152,6 +152,17 @@ async def run_analysis(
             )
         db.commit()
 
+        # Snapshot version on completion
+        from app.models.prd_version import PrdVersion
+        db.add(PrdVersion(
+            prd_id=analysis.id,
+            brief=analysis.brief,
+            brief_markdown=analysis.brief_markdown,
+            trigger="creation",
+            triggered_by=analysis.user_id,
+        ))
+        db.commit()
+
         await emit_sse(analysis_id, {"type": "complete", "analysis_id": analysis_id})
 
     except Exception as e:

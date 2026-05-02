@@ -1,3 +1,4 @@
+import secrets
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException
@@ -33,10 +34,11 @@ async def create_project(
         user_id=current_user.id,
         name=body.name or "New Project",
     )
+    project.ingest_email_token = secrets.token_hex(16)
     db.add(project)
     db.commit()
     db.refresh(project)
-    return ProjectOut(id=str(project.id), name=project.name, created_at=project.created_at, updated_at=project.updated_at)
+    return ProjectOut(id=str(project.id), name=project.name, created_at=project.created_at, updated_at=project.updated_at, ingest_email_token=project.ingest_email_token)
 
 
 @router.get("/", response_model=list[ProjectOut])
@@ -67,6 +69,7 @@ async def list_projects(
             updated_at=p.updated_at,
             analysis_count=analysis_count,
             last_analysis_at=last_analysis[0] if last_analysis else None,
+            ingest_email_token=p.ingest_email_token,
         ))
     return result
 

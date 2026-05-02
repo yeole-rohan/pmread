@@ -10,3 +10,4 @@ class ProjectOut(BaseModel):
     updated_at: datetime
     analysis_count: int = 0
     last_analysis_at: datetime | None = None
+    ingest_email_token: str | None = None
