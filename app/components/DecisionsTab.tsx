@@ -361,6 +361,9 @@ export default function DecisionsTab({ projectId, user }: DecisionsTabProps) {
               )}
               <p className="text-xs text-gray-400 mt-3">
                 {formatDate(decision.created_at)}
+                {decision.logged_by && (
+                  <span className="ml-2 text-gray-300">· {decision.logged_by}</span>
+                )}
               </p>
             </button>
           ))}
