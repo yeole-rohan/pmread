@@ -1,0 +1,87 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5F3FF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#7F77DD" flood-opacity="0.11"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Scorecard table -->
+  <rect x="60" y="60" width="1080" height="510" rx="20" fill="white" filter="url(#shadow)"/>
+  <rect x="60" y="60" width="1080" height="52" rx="20" fill="#7F77DD"/>
+  <rect x="60" y="94" width="1080" height="18" fill="#7F77DD"/>
+  <rect x="90" y="76" width="160" height="10" rx="5" fill="white" opacity="0.6"/>
+
+  <!-- Column headers -->
+  <rect x="60" y="130" width="400" height="32" rx="0" fill="#F9FAFB"/>
+  <rect x="78" y="140" width="80" height="8" rx="4" fill="#9CA3AF" opacity="0.5"/>
+
+  <rect x="460" y="130" width="320" height="32" rx="0" fill="#7F77DD" opacity="0.08"/>
+  <rect x="480" y="140" width="80" height="8" rx="4" fill="#7F77DD" opacity="0.55"/>
+
+  <rect x="780" y="130" width="360" height="32" rx="0" fill="#A78BFA" opacity="0.07"/>
+  <rect x="800" y="140" width="80" height="8" rx="4" fill="#A78BFA" opacity="0.5"/>
+
+  <!-- Dividers -->
+  <line x1="460" y1="112" x2="460" y2="570" stroke="#F3F4F6" stroke-width="1.5"/>
+  <line x1="780" y1="112" x2="780" y2="570" stroke="#F3F4F6" stroke-width="1.5"/>
+
+  <!-- Row 1: Completeness -->
+  <rect x="60" y="162" width="1080" height="60" rx="0" fill="white"/>
+  <rect x="78" y="180" width="120" height="8" rx="4" fill="#9CA3AF" opacity="0.45"/>
+  <circle cx="606" cy="192" r="12" fill="#10B981" opacity="0.7"/>
+  <path d="M599 192 l3 3.5 l8-8" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="966" cy="192" r="12" fill="#F59E0B" opacity="0.6"/>
+  <rect x="960" y="188" width="12" height="8" rx="1" fill="white" opacity="0.75"/>
+
+  <!-- Row 2: Accuracy -->
+  <rect x="60" y="222" width="1080" height="60" rx="0" fill="#F9FAFB"/>
+  <rect x="78" y="240" width="100" height="8" rx="4" fill="#9CA3AF" opacity="0.45"/>
+  <circle cx="606" cy="252" r="12" fill="#F59E0B" opacity="0.6"/>
+  <rect x="600" y="248" width="12" height="8" rx="1" fill="white" opacity="0.75"/>
+  <circle cx="966" cy="252" r="12" fill="#10B981" opacity="0.7"/>
+  <path d="M959 252 l3 3.5 l8-8" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Row 3: Clarity -->
+  <rect x="60" y="282" width="1080" height="60" rx="0" fill="white"/>
+  <rect x="78" y="300" width="80" height="8" rx="4" fill="#9CA3AF" opacity="0.45"/>
+  <circle cx="606" cy="312" r="12" fill="#10B981" opacity="0.7"/>
+  <path d="M599 312 l3 3.5 l8-8" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="966" cy="312" r="12" fill="#F59E0B" opacity="0.6"/>
+  <rect x="960" y="308" width="12" height="8" rx="1" fill="white" opacity="0.75"/>
+
+  <!-- Row 4: Traceability -->
+  <rect x="60" y="342" width="1080" height="60" rx="0" fill="#F9FAFB"/>
+  <rect x="78" y="360" width="110" height="8" rx="4" fill="#9CA3AF" opacity="0.45"/>
+  <circle cx="606" cy="372" r="12" fill="#10B981" opacity="0.7"/>
+  <path d="M599 372 l3 3.5 l8-8" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="966" cy="372" r="12" fill="#9CA3AF" opacity="0.35"/>
+
+  <!-- Row 5: Judgment -->
+  <rect x="60" y="402" width="1080" height="60" rx="0" fill="white"/>
+  <rect x="78" y="420" width="90" height="8" rx="4" fill="#9CA3AF" opacity="0.45"/>
+  <circle cx="606" cy="432" r="12" fill="#EF4444" opacity="0.5"/>
+  <rect x="600" y="427" width="12" height="10" rx="1" fill="white" opacity="0.75"/>
+  <circle cx="966" cy="432" r="12" fill="#10B981" opacity="0.7"/>
+  <path d="M959 432 l3 3.5 l8-8" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Row 6: Speed -->
+  <rect x="60" y="462" width="1080" height="60" rx="0" fill="#F9FAFB"/>
+  <rect x="78" y="480" width="80" height="8" rx="4" fill="#9CA3AF" opacity="0.45"/>
+  <circle cx="606" cy="492" r="12" fill="#10B981" opacity="0.7"/>
+  <path d="M599 492 l3 3.5 l8-8" stroke="white" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="966" cy="492" r="12" fill="#EF4444" opacity="0.5"/>
+  <rect x="960" y="487" width="12" height="10" rx="1" fill="white" opacity="0.75"/>
+
+  <!-- Verdict bar -->
+  <rect x="60" y="522" width="1080" height="48" rx="0" fill="#7F77DD" opacity="0.06"/>
+  <rect x="78" y="538" width="140" height="8" rx="4" fill="#7F77DD" opacity="0.4"/>
+  <rect x="476" y="534" width="280" height="16" rx="8" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.3"/>
+  <rect x="492" y="538" width="248" height="8" rx="4" fill="#7F77DD" opacity="0.4"/>
+
+  <circle cx="60" cy="560" r="45" fill="#7F77DD" opacity="0.04"/>
+</svg>
