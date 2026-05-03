@@ -181,6 +181,7 @@ export const pmIndiaTemplates: Template[] = [
         a: "The Digital Personal Data Protection Act 2023 is India's primary data privacy legislation. It requires: (a) clear and specific consent before processing personal data, (b) a privacy notice in plain language, (c) a grievance mechanism, and (d) data erasure on request. For most SaaS products, compliance means updating your Privacy Policy, adding a consent flow at signup, and naming a grievance officer. Consult legal counsel for products that handle sensitive data (health, finance, children).",
       },
     ],
+    keywords: ["india go to market template", "india gtm strategy template", "product launch india template", "india market entry template", "bharat gtm playbook"],
   },
 
   // ── Template 39 ──────────────────────────────────────────────────────────,
@@ -364,6 +365,7 @@ Ensure your ARPU figures are net of GST (18%). If you collect ₹1,000/month fro
         a: "Yes, if you are using it to make operating decisions. Exclude it if you are presenting to investors who understand that founding team time is a sunk cost at the pre-seed stage. The honest internal number includes all labour. The fundraising number typically excludes founders but includes hired sales and marketing headcount.",
       },
     ],
+    keywords: ["unit economics template", "saas unit economics model", "cac ltv template", "startup unit economics india", "b2b unit economics calculator"],
   },
 
   // ── Template 40 ──────────────────────────────────────────────────────────,
@@ -587,6 +589,7 @@ Three conditions that make this the right time to build this product:
         a: "Include a 3-year projection as a supplement, not in the main document. State the assumptions explicitly (growth rate, churn, hiring plan) because investors will stress-test the assumptions, not the numbers. Don't anchor to a specific revenue figure — anchor to the model. 'At 5% monthly growth and 3% churn with current ARPU, we reach ₹X ARR in 24 months' is more credible than 'We will reach ₹X ARR in 24 months'.",
       },
     ],
+    keywords: ["fundraising prd template", "investor product spec", "startup fundraising prd", "product prd for investors", "series a product spec template"],
   },
 
   // ── Template 41 ──────────────────────────────────────────────────────────
@@ -796,5 +799,6 @@ The pricing metric is *what you charge for* — the unit that scales with value 
         a: "SaaS subscriptions are taxed at 18% GST in India (classified as 'Online Information Database Access and Retrieval' / OIDAR services). Always display prices ex-GST with GST shown as a separate line item at checkout. For B2B customers with GST registration, the GST is recoverable as input credit — so inclusive pricing gives them less clarity. Register for GST before you start billing; penalties for late registration apply retrospectively.",
       },
     ],
+    keywords: ["b2b saas pricing template", "saas pricing model india", "pricing strategy template", "saas pricing tiers template india", "b2b pricing strategy guide"],
   },
 ];

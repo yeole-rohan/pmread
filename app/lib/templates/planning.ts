@@ -445,6 +445,7 @@ For each feature, ask two questions:
         a: "Yes, but segment by role. What's a Delighter for an end-user might be a Must-Have for an IT admin (e.g. SSO, audit logs). Survey both buyers and users separately and build your priority list with both in mind.",
       },
     ],
+    keywords: ["kano model template", "kano analysis product management", "kano model free", "feature classification template", "kano model examples"],
   },
 
   // ─── 19. Stakeholder Map ──────────────────────────────────────────────────,
@@ -612,6 +613,7 @@ Low Influence  │
         a: "If you have more than 5 stakeholders in the 'Manage Closely' quadrant, the initiative may be too large or the team's decision rights may be unclear. Consider whether the scope can be reduced, whether decision rights can be delegated, or whether a steering committee structure would help manage the complexity.",
       },
     ],
+    keywords: ["stakeholder map template", "stakeholder mapping template", "stakeholder analysis pm", "influence interest matrix template", "stakeholder management template"],
   },
 
   // ─── 20. A/B Test Plan ────────────────────────────────────────────────────,
@@ -1090,6 +1092,7 @@ Add a new entry every time a non-trivial decision is made — one that would cau
         a: "Don't delete the original entry. Move it to the 'Reversed Decisions' section and add a note explaining why it changed. Seeing a reversal is itself valuable context — it tells the team that the issue was properly considered twice, and under what conditions the team changed direction.",
       },
     ],
+    keywords: ["decision log template", "product decision log", "adr template pm", "decision register product management", "decision tracking template"],
   },
 
   // ─── 51. Risk Register for PMs ───────────────────────────────────────────
@@ -1287,5 +1290,6 @@ Use a **Probability × Impact** score (1–5 each) to prioritize:
         a: "At minimum: the tech lead (for technical risk accuracy), the QA lead (for coverage gaps), and the stakeholder who owns launch go/no-go. For regulated industries or enterprise features, add legal/compliance. The register is only useful as a shared artifact — a PM's private spreadsheet doesn't create accountability.",
       },
     ],
+    keywords: ["risk register template", "product risk register", "risk management pm template", "risk assessment template product", "risk log template free"],
   },
 ];
