@@ -59,6 +59,13 @@ export interface Doc {
   created_at: string;
 }
 
+export interface UserStory {
+  story: string;
+  given: string;
+  when: string;
+  then: string;
+}
+
 export interface PRD {
   problem: string;
   problem_quotes: string[];
@@ -66,7 +73,7 @@ export interface PRD {
   why_worth_building: string;
   goals: string[];
   non_goals: string[];
-  user_stories: string[];
+  user_stories: Array<string | UserStory>;
   what_needs_to_change: {
     ui: string;
     data_model: string;

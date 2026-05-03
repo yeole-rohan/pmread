@@ -26,7 +26,12 @@ Rules:
     <non_goal>What this explicitly does NOT include</non_goal>
   </non_goals>
   <user_stories>
-    <story>As a [persona], I want to [action] so that [outcome]</story>
+    <story>
+      <text>As a [persona], I want to [action] so that [outcome]</text>
+      <given>The precondition or context that must be true</given>
+      <when>The specific action the user takes</when>
+      <then>The observable outcome that confirms success</then>
+    </story>
   </user_stories>
   <what_needs_to_change>
     <ui>Specific screens, flows, components that change.</ui>

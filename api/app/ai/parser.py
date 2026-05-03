@@ -10,6 +10,21 @@ def parse_prd_response(raw: str) -> dict:
     def get_all(tag: str) -> list[str]:
         return [m.strip() for m in re.findall(rf"<{tag}>(.*?)</{tag}>", raw, re.DOTALL)]
 
+    def get_from(tag: str, source: str) -> str:
+        m = re.search(rf"<{tag}>(.*?)</{tag}>", source, re.DOTALL)
+        return m.group(1).strip() if m else ""
+
+    def parse_story(story_xml: str):
+        text = get_from("text", story_xml)
+        if not text:
+            return story_xml.strip()
+        return {
+            "story": text,
+            "given": get_from("given", story_xml),
+            "when": get_from("when", story_xml),
+            "then": get_from("then", story_xml),
+        }
+
     tasks = []
     for task_xml in get_all("task"):
         def _get(t: str, x: str = task_xml) -> str:
@@ -28,7 +43,7 @@ def parse_prd_response(raw: str) -> dict:
         "why_worth_building": get("why_worth_building"),
         "goals": get_all("goal"),
         "non_goals": get_all("non_goal"),
-        "user_stories": get_all("story"),
+        "user_stories": [parse_story(s) for s in get_all("story")],
         "what_needs_to_change": {
             "ui": get("ui"),
             "data_model": get("data_model"),
@@ -45,7 +60,19 @@ def prd_to_markdown(brief: dict) -> str:
     quotes_md = "\n".join([f'> "{q}"' for q in brief.get("problem_quotes", [])])
     goals_md = "\n".join([f"- {g}" for g in brief.get("goals", [])])
     non_goals_md = "\n".join([f"- {g}" for g in brief.get("non_goals", [])])
-    stories_md = "\n".join([f"- {s}" for s in brief.get("user_stories", [])])
+    def _story_md(s) -> str:
+        if isinstance(s, str):
+            return f"- {s}"
+        lines = [f"- {s['story']}"]
+        if s.get("given"):
+            lines.append(f"  - **Given:** {s['given']}")
+        if s.get("when"):
+            lines.append(f"  - **When:** {s['when']}")
+        if s.get("then"):
+            lines.append(f"  - **Then:** {s['then']}")
+        return "\n".join(lines)
+
+    stories_md = "\n".join([_story_md(s) for s in brief.get("user_stories", [])])
     wtc = brief.get("what_needs_to_change", {})
     tasks_md = "\n".join([
         f"- **{t['title']}** `{t['estimate']}`\n  {t['description']}"
