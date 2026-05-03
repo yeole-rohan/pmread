@@ -23,6 +23,8 @@ function SettingsContent() {
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [disconnectingGithub, setDisconnectingGithub] = useState(false);
+  const [integrations, setIntegrations] = useState<Record<string, { connected: boolean; site?: string }>>({});
+  const [connectingPlatform, setConnectingPlatform] = useState<string | null>(null);
   // Password change
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -37,10 +39,28 @@ function SettingsContent() {
   const billingParam = (searchParams.get("billing") || "monthly") as "monthly" | "annual";
   const githubConnected = searchParams.get("github") === "connected";
   const githubError = searchParams.get("github") === "error";
+  const jiraConnected = searchParams.get("jira_connected") === "true";
+  const linearConnected = searchParams.get("linear_connected") === "true";
 
   useEffect(() => {
     if (user) setDisplayName(user.display_name || "");
   }, [user]);
+
+  useEffect(() => {
+    apiFetch<Record<string, { connected: boolean; site?: string }>>("/integrations/")
+      .then(setIntegrations)
+      .catch(() => {});
+  }, []);
+
+  async function disconnectIntegration(platform: string) {
+    setConnectingPlatform(platform);
+    try {
+      await apiFetch(`/integrations/${platform}`, { method: "DELETE" });
+      setIntegrations((prev) => { const next = { ...prev }; delete next[platform]; return next; });
+    } finally {
+      setConnectingPlatform(null);
+    }
+  }
 
   async function changePassword() {
     if (newPassword !== confirmPassword) { setPasswordError("Passwords don't match"); return; }
@@ -397,16 +417,90 @@ function SettingsContent() {
       <section className="bg-white border border-gray-100 rounded-xl p-6 mb-4">
         <h2 className="text-sm font-semibold text-gray-700 mb-4">Integrations</h2>
 
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-gray-900">GitHub</p>
-            <p className="text-xs text-gray-500 mt-0.5">
-              Embed your codebase so PRDs reference real implementation context
-            </p>
+        {(jiraConnected || linearConnected) && (
+          <div className="flex items-center gap-2 text-xs text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-lg px-3 py-2 mb-4">
+            <CheckCircle size={13} />
+            {jiraConnected ? "Jira" : "Linear"} connected successfully.
           </div>
-          <span className="px-3 py-1.5 border border-dashed border-gray-200 rounded-lg text-xs text-gray-400 cursor-default select-none">
-            Coming soon
-          </span>
+        )}
+
+        <div className="space-y-4">
+          {/* Jira */}
+          {(() => {
+            const jira = integrations["jira"];
+            return (
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Jira</p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Push PRD engineering tasks as Epics + Stories to your Jira project
+                  </p>
+                  {jira?.site && <p className="text-xs text-[#7F77DD] mt-0.5">{jira.site}</p>}
+                </div>
+                {jira?.connected ? (
+                  <button
+                    onClick={() => disconnectIntegration("jira")}
+                    disabled={connectingPlatform === "jira"}
+                    className="px-3 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:border-red-200 hover:text-red-600 cursor-pointer disabled:opacity-50 transition-colors"
+                  >
+                    {connectingPlatform === "jira" ? "Disconnecting…" : "Disconnect"}
+                  </button>
+                ) : (
+                  <a
+                    href="/api/integrations/jira/connect"
+                    className="px-3 py-1.5 bg-[#7F77DD] hover:bg-[#6b64c4] text-white rounded-lg text-xs font-medium transition-colors"
+                  >
+                    Connect
+                  </a>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* Linear */}
+          {(() => {
+            const linear = integrations["linear"];
+            return (
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-gray-900">Linear</p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Push PRD engineering tasks as issues to your Linear workspace
+                  </p>
+                  {linear?.site && <p className="text-xs text-[#7F77DD] mt-0.5">{linear.site}</p>}
+                </div>
+                {linear?.connected ? (
+                  <button
+                    onClick={() => disconnectIntegration("linear")}
+                    disabled={connectingPlatform === "linear"}
+                    className="px-3 py-1.5 border border-gray-200 rounded-lg text-xs text-gray-600 hover:border-red-200 hover:text-red-600 cursor-pointer disabled:opacity-50 transition-colors"
+                  >
+                    {connectingPlatform === "linear" ? "Disconnecting…" : "Disconnect"}
+                  </button>
+                ) : (
+                  <a
+                    href="/api/integrations/linear/connect"
+                    className="px-3 py-1.5 bg-[#7F77DD] hover:bg-[#6b64c4] text-white rounded-lg text-xs font-medium transition-colors"
+                  >
+                    Connect
+                  </a>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* GitHub */}
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-900">GitHub</p>
+              <p className="text-xs text-gray-500 mt-0.5">
+                Embed your codebase so PRDs reference real implementation context
+              </p>
+            </div>
+            <span className="px-3 py-1.5 border border-dashed border-gray-200 rounded-lg text-xs text-gray-400 cursor-default select-none">
+              Coming soon
+            </span>
+          </div>
         </div>
       </section>
 

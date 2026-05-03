@@ -8,3 +8,4 @@ from .waitlist import WaitlistEmail as WaitlistEmail
 from .founding_member import FoundingMember as FoundingMember
 from .decision import Decision as Decision, DecisionEvidenceLink as DecisionEvidenceLink
 from .prd_version import PrdVersion as PrdVersion
+from .integration_token import IntegrationToken as IntegrationToken
