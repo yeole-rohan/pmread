@@ -1,0 +1,106 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5F3FF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#7F77DD" flood-opacity="0.11"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Funnel: signup → activated → retained -->
+  <!-- Wide top (signups) -->
+  <rect x="340" y="80" width="520" height="80" rx="14" fill="#7F77DD" opacity="0.15"/>
+  <rect x="340" y="80" width="520" height="8" rx="4" fill="#7F77DD" opacity="0.35"/>
+  <rect x="400" y="104" width="100" height="10" rx="5" fill="#7F77DD" opacity="0.4"/>
+  <rect x="400" y="120" width="200" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+
+  <!-- Phase labels (left side) -->
+  <rect x="80" y="90" width="240" height="60" rx="12" fill="white" filter="url(#shadow)"/>
+  <rect x="96" y="104" width="80" height="9" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="96" y="119" width="160" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="96" y="132" width="140" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+
+  <!-- Funnel middle (activated) — narrower -->
+  <rect x="430" y="180" width="340" height="80" rx="14" fill="#7F77DD" opacity="0.22"/>
+  <rect x="430" y="180" width="340" height="8" rx="4" fill="#7F77DD" opacity="0.45"/>
+  <rect x="490" y="204" width="90" height="10" rx="5" fill="#7F77DD" opacity="0.5"/>
+  <rect x="490" y="220" width="180" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+
+  <rect x="80" y="190" width="240" height="60" rx="12" fill="white" filter="url(#shadow)"/>
+  <rect x="96" y="204" width="80" height="9" rx="4" fill="#7F77DD" opacity="0.55"/>
+  <rect x="96" y="219" width="160" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="96" y="232" width="120" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+
+  <!-- Funnel bottom (retained) — narrowest -->
+  <rect x="510" y="280" width="180" height="80" rx="14" fill="#7F77DD" opacity="0.35"/>
+  <rect x="510" y="280" width="180" height="8" rx="4" fill="#7F77DD" opacity="0.55"/>
+  <rect x="540" y="304" width="80" height="10" rx="5" fill="#7F77DD" opacity="0.6"/>
+  <rect x="540" y="320" width="100" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+
+  <rect x="80" y="290" width="240" height="60" rx="12" fill="white" filter="url(#shadow)"/>
+  <rect x="96" y="304" width="60" height="9" rx="4" fill="#10B981" opacity="0.55"/>
+  <rect x="96" y="319" width="160" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="96" y="332" width="130" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+
+  <!-- Right side: structured touchpoints timeline -->
+  <rect x="760" y="70" width="380" height="490" rx="20" fill="white" filter="url(#shadow)"/>
+  <rect x="760" y="70" width="380" height="52" rx="20" fill="#7F77DD" opacity="0.85"/>
+  <rect x="760" y="104" width="380" height="18" fill="#7F77DD" opacity="0.85"/>
+  <rect x="786" y="86" width="100" height="10" rx="5" fill="white" opacity="0.55"/>
+
+  <!-- Timeline spine -->
+  <line x1="800" y1="148" x2="800" y2="530" stroke="#E5E7EB" stroke-width="2"/>
+
+  <!-- Kickoff -->
+  <circle cx="800" cy="168" r="10" fill="#7F77DD" opacity="0.8"/>
+  <rect x="820" y="156" width="290" height="44" rx="8" fill="#F5F3FF"/>
+  <rect x="834" y="165" width="80" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="834" y="179" width="220" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="834" y="191" width="180" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <!-- Week 1 check-in -->
+  <circle cx="800" cy="248" r="10" fill="#7F77DD" opacity="0.65"/>
+  <rect x="820" y="236" width="290" height="44" rx="8" fill="#F5F3FF"/>
+  <rect x="834" y="245" width="100" height="8" rx="4" fill="#7F77DD" opacity="0.45"/>
+  <rect x="834" y="259" width="200" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="834" y="271" width="160" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <!-- Mid-beta survey -->
+  <circle cx="800" cy="328" r="10" fill="#A78BFA" opacity="0.7"/>
+  <rect x="820" y="316" width="290" height="44" rx="8" fill="#F0EDFF"/>
+  <rect x="834" y="325" width="110" height="8" rx="4" fill="#A78BFA" opacity="0.5"/>
+  <rect x="834" y="339" width="220" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="834" y="351" width="180" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <!-- Closing interviews -->
+  <circle cx="800" cy="408" r="10" fill="#7F77DD" opacity="0.7"/>
+  <rect x="820" y="396" width="290" height="44" rx="8" fill="#F5F3FF"/>
+  <rect x="834" y="405" width="120" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="834" y="419" width="200" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="834" y="431" width="160" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <!-- Decision: ship / iterate / kill -->
+  <circle cx="800" cy="490" r="12" fill="#7F77DD"/>
+  <rect x="820" y="476" width="290" height="50" rx="8" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.3"/>
+  <rect x="834" y="487" width="100" height="9" rx="4" fill="#7F77DD" opacity="0.55"/>
+  <rect x="834" y="503" width="200" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="834" y="515" width="160" height="7" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <!-- Decision outcome pills -->
+  <rect x="346" y="400" width="100" height="28" rx="14" fill="#10B981" opacity="0.15" stroke="#10B981" stroke-width="1" stroke-opacity="0.4"/>
+  <rect x="362" y="410" width="68" height="8" rx="4" fill="#10B981" opacity="0.5"/>
+  <rect x="456" y="400" width="90" height="28" rx="14" fill="#F59E0B" opacity="0.15" stroke="#F59E0B" stroke-width="1" stroke-opacity="0.4"/>
+  <rect x="470" y="410" width="62" height="8" rx="4" fill="#F59E0B" opacity="0.5"/>
+  <rect x="556" y="400" width="70" height="28" rx="14" fill="#EF4444" opacity="0.12" stroke="#EF4444" stroke-width="1" stroke-opacity="0.35"/>
+  <rect x="568" y="410" width="46" height="8" rx="4" fill="#EF4444" opacity="0.45"/>
+
+  <!-- Arrow from funnel to decision -->
+  <line x1="600" y1="390" x2="600" y2="440" stroke="#7F77DD" stroke-width="2" opacity="0.25" stroke-dasharray="5 4"/>
+  <polygon points="594,440 600,452 606,440" fill="#7F77DD" opacity="0.25"/>
+
+  <circle cx="60" cy="560" r="45" fill="#7F77DD" opacity="0.04"/>
+  <circle cx="1160" cy="90" r="40" fill="#A78BFA" opacity="0.05"/>
+</svg>

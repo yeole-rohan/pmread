@@ -1,0 +1,74 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5F3FF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="18" flood-color="#7F77DD" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Brief doc card -->
+  <rect x="200" y="70" width="800" height="490" rx="20" fill="white" filter="url(#shadow)"/>
+  <rect x="200" y="70" width="800" height="54" rx="20" fill="#7F77DD"/>
+  <rect x="200" y="106" width="800" height="18" fill="#7F77DD"/>
+  <rect x="230" y="88" width="100" height="10" rx="5" fill="white" opacity="0.65"/>
+  <rect x="338" y="90" width="60" height="6" rx="3" fill="white" opacity="0.3"/>
+
+  <!-- Section 1: Problem statement -->
+  <rect x="230" y="148" width="130" height="9" rx="4" fill="#7F77DD" opacity="0.6"/>
+  <rect x="230" y="165" width="720" height="7" rx="3" fill="#9CA3AF" opacity="0.4"/>
+  <rect x="230" y="178" width="580" height="7" rx="3" fill="#9CA3AF" opacity="0.33"/>
+  <rect x="230" y="191" width="650" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <line x1="230" y1="212" x2="940" y2="212" stroke="#F3F4F6" stroke-width="1.5"/>
+
+  <!-- Section 2: Who has this problem -->
+  <rect x="230" y="224" width="160" height="9" rx="4" fill="#7F77DD" opacity="0.55"/>
+  <rect x="230" y="241" width="500" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="230" y="254" width="400" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <!-- customer evidence tag -->
+  <rect x="230" y="270" width="120" height="20" rx="10" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1"/>
+  <rect x="242" y="276" width="96" height="8" rx="4" fill="#7F77DD" opacity="0.4"/>
+  <line x1="230" y1="304" x2="940" y2="304" stroke="#F3F4F6" stroke-width="1.5"/>
+
+  <!-- Section 3: Why now -->
+  <rect x="230" y="316" width="90" height="9" rx="4" fill="#7F77DD" opacity="0.55"/>
+  <rect x="230" y="333" width="540" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="230" y="346" width="400" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <line x1="230" y1="366" x2="940" y2="366" stroke="#F3F4F6" stroke-width="1.5"/>
+
+  <!-- Section 4: Proposed approach (hypothesis) -->
+  <rect x="230" y="378" width="160" height="9" rx="4" fill="#7F77DD" opacity="0.55"/>
+  <rect x="230" y="394" width="720" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="230" y="407" width="600" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="230" y="420" width="680" height="7" rx="3" fill="#9CA3AF" opacity="0.22"/>
+  <line x1="230" y1="440" x2="940" y2="440" stroke="#F3F4F6" stroke-width="1.5"/>
+
+  <!-- Section 5: Success metrics -->
+  <rect x="230" y="452" width="130" height="9" rx="4" fill="#7F77DD" opacity="0.55"/>
+  <rect x="230" y="468" width="400" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="638" y="464" width="90" height="18" rx="9" fill="#10B981" opacity="0.15"/>
+  <rect x="648" y="468" width="70" height="10" rx="5" fill="#10B981" opacity="0.4"/>
+
+  <!-- Section 6: Open questions badge -->
+  <rect x="230" y="498" width="130" height="9" rx="4" fill="#F59E0B" opacity="0.5"/>
+  <rect x="230" y="514" width="500" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="738" y="510" width="80" height="18" rx="9" fill="#FEF3C7"/>
+  <rect x="746" y="514" width="64" height="10" rx="5" fill="#F59E0B" opacity="0.45"/>
+
+  <!-- Floating annotation: "1-2 pages" -->
+  <rect x="992" y="250" width="140" height="60" rx="12" fill="white" filter="url(#shadow)"/>
+  <rect x="1008" y="264" width="80" height="9" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="1008" y="279" width="100" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="1008" y="292" width="80" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+
+  <rect x="992" y="326" width="140" height="50" rx="12" fill="white" filter="url(#shadow)"/>
+  <rect x="1008" y="340" width="60" height="9" rx="4" fill="#10B981" opacity="0.5"/>
+  <rect x="1008" y="355" width="100" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="1008" y="367" width="80" height="7" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <circle cx="80" cy="540" r="50" fill="#7F77DD" opacity="0.04"/>
+  <circle cx="1130" cy="90" r="40" fill="#A78BFA" opacity="0.05"/>
+</svg>

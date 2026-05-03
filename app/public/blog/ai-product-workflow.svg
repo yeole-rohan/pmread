@@ -1,0 +1,119 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5F3FF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#7F77DD" flood-opacity="0.11"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Horizontal workflow pipeline -->
+  <!-- Step 1: Collect -->
+  <rect x="60" y="120" width="170" height="200" rx="16" fill="white" filter="url(#shadow)"/>
+  <rect x="60" y="120" width="170" height="36" rx="16" fill="#9CA3AF" opacity="0.5"/>
+  <rect x="60" y="144" width="170" height="12" fill="#9CA3AF" opacity="0.5"/>
+  <rect x="76" y="130" width="80" height="8" rx="5" fill="white" opacity="0.7"/>
+  <rect x="76" y="170" width="138" height="7" rx="3" fill="#9CA3AF" opacity="0.38"/>
+  <rect x="76" y="183" width="120" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="76" y="196" width="130" height="7" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="76" y="220" width="100" height="18" rx="9" fill="#9CA3AF" opacity="0.12"/>
+  <rect x="76" y="248" width="80" height="18" rx="9" fill="#9CA3AF" opacity="0.1"/>
+
+  <!-- Arrow -->
+  <polygon points="238,220 258,210 258,230" fill="#7F77DD" opacity="0.35"/>
+  <line x1="230" y1="220" x2="258" y2="220" stroke="#7F77DD" stroke-width="2" opacity="0.3"/>
+
+  <!-- Step 2: Synthesise (AI) -->
+  <rect x="266" y="120" width="170" height="200" rx="16" fill="white" filter="url(#shadow)"/>
+  <rect x="266" y="120" width="170" height="36" rx="16" fill="#7F77DD" opacity="0.85"/>
+  <rect x="266" y="144" width="170" height="12" fill="#7F77DD" opacity="0.85"/>
+  <rect x="282" y="130" width="80" height="8" rx="5" fill="white" opacity="0.65"/>
+  <rect x="282" y="170" width="138" height="7" rx="3" fill="#9CA3AF" opacity="0.38"/>
+  <rect x="282" y="183" width="120" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="282" y="196" width="130" height="7" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <!-- AI badge -->
+  <rect x="282" y="216" width="100" height="20" rx="10" fill="#7F77DD" opacity="0.12" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.3"/>
+  <rect x="292" y="221" width="80" height="8" rx="4" fill="#7F77DD" opacity="0.45"/>
+  <rect x="282" y="246" width="130" height="7" rx="3" fill="#9CA3AF" opacity="0.22"/>
+  <rect x="282" y="259" width="100" height="7" rx="3" fill="#9CA3AF" opacity="0.18"/>
+
+  <!-- Arrow -->
+  <polygon points="444,220 464,210 464,230" fill="#7F77DD" opacity="0.35"/>
+  <line x1="436" y1="220" x2="464" y2="220" stroke="#7F77DD" stroke-width="2" opacity="0.3"/>
+
+  <!-- Step 3: Frame (Human) -->
+  <rect x="472" y="120" width="170" height="200" rx="16" fill="white" filter="url(#shadow)"/>
+  <rect x="472" y="120" width="170" height="36" rx="16" fill="#A78BFA" opacity="0.8"/>
+  <rect x="472" y="144" width="170" height="12" fill="#A78BFA" opacity="0.8"/>
+  <rect x="488" y="130" width="80" height="8" rx="5" fill="white" opacity="0.65"/>
+  <rect x="488" y="170" width="138" height="7" rx="3" fill="#9CA3AF" opacity="0.38"/>
+  <rect x="488" y="183" width="120" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="488" y="196" width="130" height="7" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="488" y="220" width="100" height="18" rx="9" fill="#A78BFA" opacity="0.12"/>
+  <rect x="488" y="248" width="80" height="18" rx="9" fill="#A78BFA" opacity="0.1"/>
+
+  <!-- Arrow -->
+  <polygon points="650,220 670,210 670,230" fill="#7F77DD" opacity="0.35"/>
+  <line x1="642" y1="220" x2="670" y2="220" stroke="#7F77DD" stroke-width="2" opacity="0.3"/>
+
+  <!-- Step 4: Draft PRD (AI) -->
+  <rect x="678" y="120" width="170" height="200" rx="16" fill="white" filter="url(#shadow)"/>
+  <rect x="678" y="120" width="170" height="36" rx="16" fill="#7F77DD"/>
+  <rect x="678" y="144" width="170" height="12" fill="#7F77DD"/>
+  <rect x="694" y="130" width="80" height="8" rx="5" fill="white" opacity="0.65"/>
+  <rect x="694" y="170" width="138" height="7" rx="3" fill="#9CA3AF" opacity="0.38"/>
+  <rect x="694" y="183" width="120" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="694" y="196" width="130" height="7" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="694" y="216" width="100" height="20" rx="10" fill="#7F77DD" opacity="0.12" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.3"/>
+  <rect x="704" y="221" width="80" height="8" rx="4" fill="#7F77DD" opacity="0.45"/>
+  <rect x="694" y="246" width="130" height="7" rx="3" fill="#9CA3AF" opacity="0.22"/>
+  <rect x="694" y="259" width="100" height="7" rx="3" fill="#9CA3AF" opacity="0.18"/>
+
+  <!-- Arrow -->
+  <polygon points="856,220 876,210 876,230" fill="#7F77DD" opacity="0.35"/>
+  <line x1="848" y1="220" x2="876" y2="220" stroke="#7F77DD" stroke-width="2" opacity="0.3"/>
+
+  <!-- Step 5: Review + Ship -->
+  <rect x="884" y="120" width="256" height="200" rx="16" fill="white" filter="url(#shadow)"/>
+  <rect x="884" y="120" width="256" height="36" rx="16" fill="#10B981" opacity="0.75"/>
+  <rect x="884" y="144" width="256" height="12" fill="#10B981" opacity="0.75"/>
+  <rect x="900" y="130" width="100" height="8" rx="5" fill="white" opacity="0.65"/>
+  <rect x="900" y="170" width="220" height="7" rx="3" fill="#9CA3AF" opacity="0.38"/>
+  <rect x="900" y="183" width="180" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="900" y="196" width="200" height="7" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <circle cx="916" cy="224" r="10" fill="#10B981" opacity="0.7"/>
+  <path d="M910 224 l3 3 l7-7" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="934" y="219" width="170" height="8" rx="4" fill="#9CA3AF" opacity="0.3"/>
+  <circle cx="916" cy="248" r="10" fill="#10B981" opacity="0.7"/>
+  <path d="M910 248 l3 3 l7-7" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="934" y="243" width="160" height="8" rx="4" fill="#9CA3AF" opacity="0.28"/>
+  <circle cx="916" cy="272" r="10" fill="#10B981" opacity="0.7"/>
+  <path d="M910 272 l3 3 l7-7" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="934" y="267" width="150" height="8" rx="4" fill="#9CA3AF" opacity="0.25"/>
+
+  <!-- Bottom legend: AI vs Human labels -->
+  <rect x="60" y="370" width="380" height="60" rx="14" fill="white" filter="url(#shadow)"/>
+  <rect x="76" y="386" width="100" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="76" y="400" width="340" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="76" y="412" width="280" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <rect x="460" y="370" width="380" height="60" rx="14" fill="white" filter="url(#shadow)"/>
+  <rect x="476" y="386" width="100" height="8" rx="4" fill="#A78BFA" opacity="0.5"/>
+  <rect x="476" y="400" width="340" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="476" y="412" width="280" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <!-- Time saving banner -->
+  <rect x="60" y="460" width="1080" height="80" rx="16" fill="white" filter="url(#shadow)"/>
+  <rect x="80" y="476" width="140" height="9" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="80" y="493" width="800" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="80" y="506" width="700" height="7" rx="3" fill="#9CA3AF" opacity="0.24"/>
+  <rect x="80" y="519" width="600" height="7" rx="3" fill="#9CA3AF" opacity="0.18"/>
+  <rect x="980" y="474" width="140" height="36" rx="18" fill="#10B981" opacity="0.15" stroke="#10B981" stroke-width="1" stroke-opacity="0.35"/>
+  <rect x="995" y="486" width="110" height="10" rx="5" fill="#10B981" opacity="0.55"/>
+
+  <circle cx="60" cy="580" r="45" fill="#7F77DD" opacity="0.04"/>
+  <circle cx="1150" cy="90" r="40" fill="#A78BFA" opacity="0.05"/>
+</svg>
