@@ -9,7 +9,7 @@ import BriefRenderer, { buildMarkdown, useCopy, useDownload } from "@/components
 import CoveragePanel from "@/components/CoveragePanel";
 import DocWriterPanel from "@/components/DocWriterPanel";
 import JiraExportPanel from "@/components/JiraExportPanel";
-import PrdVersionHistory from "@/components/PrdVersionHistory";
+import PrdVersionHistory, { PrdVersionHistorySidebar } from "@/components/PrdVersionHistory";
 import PrdTableOfContents from "@/components/PrdTableOfContents";
 import StatusRotator from "@/components/StatusRotator";
 import UpgradeModal from "@/components/UpgradeModal";
@@ -168,6 +168,7 @@ export default function AnalysisPage() {
         <aside className="hidden xl:flex flex-col w-52 flex-shrink-0 border-r border-gray-100 bg-white">
           <div className="sticky top-0 h-screen overflow-y-auto py-8 px-4">
             <PrdTableOfContents brief={brief} />
+            <PrdVersionHistorySidebar prdId={analysisId} />
           </div>
         </aside>
       )}
