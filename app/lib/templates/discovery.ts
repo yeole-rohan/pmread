@@ -1018,5 +1018,6 @@ Rate severity and frequency to prioritize against other problems.
         a: "Before. The canvas should summarize evidence, not precede it. If you have no entries in Section 9, you're writing fiction. At minimum, 2 user quotes and 1 quantitative signal (support ticket volume, survey %, churn flag) before calling a problem validated.",
       },
     ],
+    keywords: ["problem statement canvas", "problem statement template product", "product problem canvas free", "problem definition template pm", "problem statement framework"],
   },
 ];

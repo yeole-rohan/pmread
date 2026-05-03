@@ -77,7 +77,7 @@ export default function IntegrationsPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1">
                       <p className="text-sm font-bold text-gray-900 group-hover:text-[#7F77DD] transition-colors">
-                        {integration.name}
+                        {integration.name} Integration
                       </p>
                       <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#7F77DD]/10 text-[#7F77DD]">
                         {integration.plan}+

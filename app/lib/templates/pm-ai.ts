@@ -215,6 +215,7 @@ Before shipping, the model must meet these criteria on the evaluation dataset:
         a: "Evaluation accuracy is measured offline against a labelled dataset before you ship. Confidence threshold is the real-time signal the model produces for each individual inference. You need both: offline accuracy tells you the model works on average; confidence thresholds determine how you handle cases where the model is uncertain in production.",
       },
     ],
+    keywords: ["ai feature spec template", "ai product requirements", "ml feature spec template", "ai powered feature specification", "machine learning prd template"],
   },
 
   // ─── 34. LLM Evaluation Scorecard ──────────────────────────────────────────,
@@ -425,6 +426,7 @@ Score each criterion 1–5 using the definitions below.
         a: "Break ties on cost and latency first. If those are similar too, default to the model with better edge case handling (Section 3F) — edge cases are where user trust erodes. If still tied, pick the model with the larger provider ecosystem for tooling, support, and longevity.",
       },
     ],
+    keywords: ["llm evaluation template", "ai model evaluation scorecard", "llm testing framework", "llm output evaluation template", "ai quality scorecard"],
   },
 
   // ─── 35. AI Product Risk ────────────────────────────────────────────────────,
@@ -621,6 +623,7 @@ For each high-risk item, describe the mitigation in detail:
         a: "PM owns the document and is responsible for completing it before the feature ships. Legal/privacy and security sign off on their sections. Engineering lead reviews the technical risk mitigations. This is a PM accountability document — not a task that can be delegated to engineering or legal.",
       },
     ],
+    keywords: ["ai product risk assessment", "ai risk template product", "ml product risk register", "ai feature risk checklist", "responsible ai risk assessment"],
   },
   // ── Template 36 ──────────────────────────────────────────────────────────,
 
@@ -756,6 +759,7 @@ Work through each section before shipping any AI-powered feature. Items marked *
         a: "Any AI output that directly causes a financial transaction, affects employment, influences a medical decision, or creates a legal obligation counts as high-stakes. For product managers: if a user could sue you because the AI was wrong, it's high-stakes. If a user would just be annoyed because the AI was wrong, it's not. Err on the side of human confirmation when you're unsure.",
       },
     ],
+    keywords: ["responsible ai checklist", "ai ethics checklist product", "ai bias checklist", "ethical ai product management", "ai governance template"],
   },
 
   // ── Template 37 ──────────────────────────────────────────────────────────,
@@ -942,6 +946,7 @@ Define what "good" means before you start testing. Rate each dimension 1–5.
         a: "LLM-as-judge is when you use a second LLM call to evaluate the output of the first — e.g. asking Claude to rate whether a generated PRD section is accurate and complete on a 1–5 scale. It is useful for high-volume evaluation where manual review doesn't scale, but it introduces its own biases (models tend to prefer their own style). Use it alongside manual review for the first few evaluation rounds, not as a replacement.",
       },
     ],
+    keywords: ["prompt design template", "llm prompt engineering template", "ai prompt specification", "prompt template product management", "ai prompt design guide"],
   },
 
   // ── Template 38 ──────────────────────────────────────────────────────────
