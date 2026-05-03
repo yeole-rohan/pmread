@@ -1,0 +1,118 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5F3FF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#7F77DD" flood-opacity="0.1"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Main journey map grid -->
+  <rect x="60" y="60" width="1080" height="510" rx="20" fill="white" filter="url(#shadow)"/>
+  <rect x="60" y="60" width="1080" height="52" rx="20" fill="#7F77DD"/>
+  <rect x="60" y="94" width="1080" height="18" fill="#7F77DD"/>
+  <rect x="90" y="76" width="120" height="10" rx="5" fill="white" opacity="0.6"/>
+
+  <!-- Row label column -->
+  <rect x="60" y="130" width="150" height="36" rx="0" fill="#F9FAFB"/>
+  <rect x="78" y="141" width="70" height="8" rx="4" fill="#9CA3AF" opacity="0.5"/>
+  <rect x="60" y="166" width="150" height="80" rx="0" fill="#F5F3FF"/>
+  <rect x="78" y="178" width="60" height="8" rx="4" fill="#7F77DD" opacity="0.45"/>
+  <rect x="60" y="246" width="150" height="80" rx="0" fill="#FFFBEB"/>
+  <rect x="78" y="258" width="60" height="8" rx="4" fill="#F59E0B" opacity="0.5"/>
+  <rect x="60" y="326" width="150" height="80" rx="0" fill="#FFF1F2"/>
+  <rect x="78" y="338" width="60" height="8" rx="4" fill="#EF4444" opacity="0.4"/>
+  <rect x="60" y="406" width="150" height="80" rx="0" fill="#F0FDF4"/>
+  <rect x="78" y="418" width="80" height="8" rx="4" fill="#10B981" opacity="0.45"/>
+  <rect x="60" y="486" width="150" height="84" rx="0" fill="#F5F3FF"/>
+  <rect x="78" y="498" width="90" height="8" rx="4" fill="#7F77DD" opacity="0.35"/>
+
+  <!-- Stage headers (5 stages) -->
+  <rect x="210" y="130" width="182" height="36" rx="0" fill="#F9FAFB"/>
+  <rect x="228" y="141" width="80" height="8" rx="4" fill="#9CA3AF" opacity="0.4"/>
+  <rect x="392" y="130" width="182" height="36" rx="0" fill="#F9FAFB"/>
+  <rect x="410" y="141" width="90" height="8" rx="4" fill="#9CA3AF" opacity="0.4"/>
+  <rect x="574" y="130" width="182" height="36" rx="0" fill="#F9FAFB"/>
+  <rect x="592" y="141" width="80" height="8" rx="4" fill="#9CA3AF" opacity="0.4"/>
+  <rect x="756" y="130" width="182" height="36" rx="0" fill="#F9FAFB"/>
+  <rect x="774" y="141" width="80" height="8" rx="4" fill="#9CA3AF" opacity="0.4"/>
+  <rect x="938" y="130" width="202" height="36" rx="0" fill="#F9FAFB"/>
+  <rect x="956" y="141" width="80" height="8" rx="4" fill="#9CA3AF" opacity="0.4"/>
+
+  <!-- Grid dividers (vertical) -->
+  <line x1="210" y1="112" x2="210" y2="570" stroke="#E5E7EB" stroke-width="1"/>
+  <line x1="392" y1="112" x2="392" y2="570" stroke="#E5E7EB" stroke-width="1"/>
+  <line x1="574" y1="112" x2="574" y2="570" stroke="#E5E7EB" stroke-width="1"/>
+  <line x1="756" y1="112" x2="756" y2="570" stroke="#E5E7EB" stroke-width="1"/>
+  <line x1="938" y1="112" x2="938" y2="570" stroke="#E5E7EB" stroke-width="1"/>
+
+  <!-- Grid dividers (horizontal) -->
+  <line x1="60" y1="166" x2="1140" y2="166" stroke="#E5E7EB" stroke-width="1"/>
+  <line x1="60" y1="246" x2="1140" y2="246" stroke="#E5E7EB" stroke-width="1"/>
+  <line x1="60" y1="326" x2="1140" y2="326" stroke="#E5E7EB" stroke-width="1"/>
+  <line x1="60" y1="406" x2="1140" y2="406" stroke="#E5E7EB" stroke-width="1"/>
+  <line x1="60" y1="486" x2="1140" y2="486" stroke="#E5E7EB" stroke-width="1"/>
+
+  <!-- Row 1: Actions (content lines) -->
+  <rect x="222" y="178" width="148" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="222" y="191" width="120" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="222" y="204" width="140" height="7" rx="3" fill="#9CA3AF" opacity="0.22"/>
+  <rect x="404" y="178" width="140" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="404" y="191" width="110" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="586" y="178" width="148" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="586" y="191" width="130" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="768" y="178" width="140" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="768" y="191" width="120" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="950" y="178" width="150" height="7" rx="3" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="950" y="191" width="130" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+
+  <!-- Row 2: Thoughts -->
+  <rect x="222" y="258" width="138" height="7" rx="3" fill="#F59E0B" opacity="0.25"/>
+  <rect x="222" y="271" width="110" height="7" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="404" y="258" width="148" height="7" rx="3" fill="#F59E0B" opacity="0.25"/>
+  <rect x="404" y="271" width="120" height="7" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="586" y="258" width="130" height="7" rx="3" fill="#F59E0B" opacity="0.3"/>
+  <rect x="586" y="271" width="150" height="7" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="768" y="258" width="140" height="7" rx="3" fill="#F59E0B" opacity="0.25"/>
+  <rect x="768" y="271" width="110" height="7" rx="3" fill="#9CA3AF" opacity="0.22"/>
+  <rect x="950" y="258" width="150" height="7" rx="3" fill="#F59E0B" opacity="0.25"/>
+  <rect x="950" y="271" width="130" height="7" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <!-- Row 3: Emotions (emotional curve) -->
+  <!-- Emotion dots at different heights to show feeling across journey -->
+  <circle cx="301" cy="366" r="8" fill="#10B981" opacity="0.5"/>
+  <circle cx="483" cy="380" r="8" fill="#F59E0B" opacity="0.5"/>
+  <circle cx="665" cy="395" r="10" fill="#EF4444" opacity="0.55"/>
+  <circle cx="847" cy="370" r="8" fill="#F59E0B" opacity="0.4"/>
+  <circle cx="1039" cy="348" r="8" fill="#10B981" opacity="0.5"/>
+  <!-- connecting emotion curve -->
+  <polyline points="301,366 483,380 665,395 847,370 1039,348" fill="none" stroke="#7F77DD" stroke-width="2" opacity="0.3" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Row 4: Touchpoints -->
+  <!-- Little tool icons (rectangles representing apps) -->
+  <rect x="222" y="418" width="30" height="22" rx="4" fill="#7F77DD" opacity="0.2"/>
+  <rect x="260" y="418" width="30" height="22" rx="4" fill="#7F77DD" opacity="0.15"/>
+  <rect x="404" y="418" width="30" height="22" rx="4" fill="#A78BFA" opacity="0.2"/>
+  <rect x="444" y="418" width="30" height="22" rx="4" fill="#7F77DD" opacity="0.15"/>
+  <!-- Friction marker on stage 3 -->
+  <rect x="586" y="412" width="148" height="34" rx="8" fill="#FEE2E2"/>
+  <rect x="598" y="418" width="80" height="8" rx="4" fill="#EF4444" opacity="0.4"/>
+  <rect x="598" y="430" width="120" height="6" rx="3" fill="#EF4444" opacity="0.25"/>
+  <rect x="768" y="418" width="30" height="22" rx="4" fill="#6EE7B7" opacity="0.3"/>
+  <rect x="950" y="418" width="30" height="22" rx="4" fill="#7F77DD" opacity="0.2"/>
+
+  <!-- Row 5: Opportunities -->
+  <rect x="586" y="498" width="148" height="54" rx="10" fill="#7F77DD" opacity="0.1" stroke="#7F77DD" stroke-width="1" stroke-opacity="0.3"/>
+  <rect x="598" y="510" width="80" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="598" y="524" width="120" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="598" y="536" width="100" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <rect x="222" y="498" width="148" height="54" rx="10" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1"/>
+  <rect x="234" y="510" width="100" height="8" rx="4" fill="#9CA3AF" opacity="0.35"/>
+  <rect x="234" y="524" width="120" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <circle cx="50" cy="560" r="40" fill="#7F77DD" opacity="0.04"/>
+</svg>
