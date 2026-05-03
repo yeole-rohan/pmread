@@ -2,7 +2,37 @@
 
 import { useState } from "react";
 import { Copy, Check, ChevronDown } from "lucide-react";
-import { PRD } from "@/lib/types";
+import { PRD, UserStory } from "@/lib/types";
+
+function StoryCard({ item }: { item: string | UserStory }) {
+  const isObject = typeof item === "object";
+  const storyText = isObject ? item.story : item;
+
+  return (
+    <li className="text-sm text-gray-700 bg-gray-50 rounded-lg px-3 py-2.5 leading-relaxed">
+      <p>{storyText}</p>
+      {isObject && (item.given || item.when || item.then) && (
+        <div className="mt-2.5 border-t border-gray-200 pt-2.5 space-y-1">
+          {item.given && (
+            <p className="text-xs text-gray-600">
+              <span className="font-semibold text-gray-700">Given </span>{item.given}
+            </p>
+          )}
+          {item.when && (
+            <p className="text-xs text-gray-600">
+              <span className="font-semibold text-gray-700">When </span>{item.when}
+            </p>
+          )}
+          {item.then && (
+            <p className="text-xs text-gray-600">
+              <span className="font-semibold text-gray-700">Then </span>{item.then}
+            </p>
+          )}
+        </div>
+      )}
+    </li>
+  );
+}
 
 interface BriefRendererProps {
   brief: PRD;
@@ -192,12 +222,16 @@ export default function BriefRenderer({ brief }: BriefRendererProps) {
 
       {/* User Stories */}
       {brief.user_stories?.length > 0 && (
-        <Section id="prd-stories" title="User Stories" copyText={brief.user_stories.join("\n")}>
-          <ul className="space-y-1.5">
+        <Section
+          id="prd-stories"
+          title="User Stories"
+          copyText={brief.user_stories.map((s) =>
+            typeof s === "string" ? s : `${s.story}\nGiven: ${s.given}\nWhen: ${s.when}\nThen: ${s.then}`
+          ).join("\n\n")}
+        >
+          <ul className="space-y-2">
             {brief.user_stories.map((s, i) => (
-              <li key={i} className="text-sm text-gray-700 bg-gray-50 rounded-lg px-3 py-2 leading-relaxed">
-                {s}
-              </li>
+              <StoryCard key={i} item={s} />
             ))}
           </ul>
         </Section>
@@ -260,7 +294,11 @@ export function buildMarkdown(brief: PRD, extensions?: import("@/lib/types").PRD
   const quotes = brief.problem_quotes?.map((q) => `> "${q}"`).join("\n") ?? "";
   const goals = brief.goals?.map((g) => `- ${g}`).join("\n") ?? "";
   const nonGoals = brief.non_goals?.map((g) => `- ${g}`).join("\n") ?? "";
-  const stories = brief.user_stories?.map((s) => `- ${s}`).join("\n") ?? "";
+  const stories = brief.user_stories?.map((s) =>
+    typeof s === "string"
+      ? `- ${s}`
+      : `- ${s.story}\n  - **Given:** ${s.given}\n  - **When:** ${s.when}\n  - **Then:** ${s.then}`
+  ).join("\n") ?? "";
   const wtc = brief.what_needs_to_change ?? {};
   const tasks = brief.engineering_tasks?.map((t) => `- **${t.title}** \`${t.estimate}\`\n  ${t.description}`).join("\n") ?? "";
   const edges = brief.edge_cases?.map((c) => `- ${c}`).join("\n") ?? "";
