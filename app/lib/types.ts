@@ -114,6 +114,7 @@ export interface Decision {
   id: string;
   project_id: string;
   user_id: string;
+  logged_by: string | null;
   title: string;
   what_we_decided: string;
   why: string | null;

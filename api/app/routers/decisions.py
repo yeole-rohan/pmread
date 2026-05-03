@@ -23,11 +23,16 @@ def _evidence_ids(db: DBSession, decision_id) -> list[str]:
     return [str(link.insight_id) for link in links]
 
 
-def _decision_dict(decision: Decision, evidence_ids: list[str]) -> dict:
+def _decision_dict(decision: Decision, evidence_ids: list[str], author: User | None = None) -> dict:
+    if author:
+        logged_by = author.display_name or author.email.split("@")[0]
+    else:
+        logged_by = None
     return {
         "id": str(decision.id),
         "project_id": str(decision.project_id),
         "user_id": str(decision.user_id),
+        "logged_by": logged_by,
         "title": decision.title,
         "what_we_decided": decision.what_we_decided,
         "why": decision.why,
@@ -70,8 +75,12 @@ async def list_decisions(
         Decision.project_id == project_id
     ).order_by(Decision.created_at.desc()).all()
 
+    author_map: dict = {
+        str(u.id): u
+        for u in db.query(User).filter(User.id.in_([d.user_id for d in decisions])).all()
+    }
     return [
-        _decision_dict(d, _evidence_ids(db, d.id))
+        _decision_dict(d, _evidence_ids(db, d.id), author_map.get(str(d.user_id)))
         for d in decisions
     ]
 
@@ -117,7 +126,7 @@ async def create_decision(
     db.commit()
     db.refresh(decision)
 
-    return _decision_dict(decision, body.evidence_insight_ids)
+    return _decision_dict(decision, body.evidence_insight_ids, current_user)
 
 
 @router.patch("/{decision_id}")
@@ -161,7 +170,7 @@ async def update_decision(
     db.refresh(decision)
 
     evidence_ids = body.evidence_insight_ids if body.evidence_insight_ids is not None else _evidence_ids(db, decision.id)
-    return _decision_dict(decision, evidence_ids)
+    return _decision_dict(decision, evidence_ids, current_user)
 
 
 @router.delete("/{decision_id}")
