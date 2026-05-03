@@ -35,10 +35,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }, [user, loading, router]);
 
   useEffect(() => {
-    if (user && user.subscription_status === "expired") {
+    if (user && user.subscription_status === "expired" && pathname !== "/settings") {
       router.push("/plan-expired");
     }
-  }, [user, router]);
+  }, [user, router, pathname]);
 
   useEffect(() => {
     if (user) {
