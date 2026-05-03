@@ -21,7 +21,7 @@ export default function PlanExpiredPage() {
         </p>
         <div className="space-y-3">
           <Link
-            href="/pricing"
+            href="/settings?upgrade=true"
             className="block w-full py-3 bg-[#7F77DD] hover:bg-[#6b64c4] text-white font-semibold rounded-xl text-sm transition-colors"
           >
             Upgrade to continue →
