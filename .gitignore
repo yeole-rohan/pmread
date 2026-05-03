@@ -26,3 +26,7 @@ planning/
 samples/
 .claude
 keyword-list/
+
+# Next.js build artifacts
+app/next-env.d.ts
+app/tsconfig.tsbuildinfo
