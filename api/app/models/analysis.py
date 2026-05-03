@@ -27,6 +27,9 @@ class Analysis(Base):
     error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
     tokens_used: Mapped[int | None] = mapped_column(Integer, nullable=True)
     share_token: Mapped[str | None] = mapped_column(String(64), nullable=True, unique=True)
+    share_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    share_revoked_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    share_view_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default=text("0"))
     extension_count: Mapped[int] = mapped_column(Integer, nullable=False, default=0, server_default=text("0"))
     extended_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     created_at: Mapped[datetime] = mapped_column(

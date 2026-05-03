@@ -158,6 +158,12 @@ async def get_prd(
     if not analysis:
         raise HTTPException(status_code=404, detail={"error": "PRD not found", "code": "ANALYSIS_NOT_FOUND"})
 
+    from app.models.uploaded_doc import UploadedDoc
+    feedback_count = db.query(UploadedDoc).filter(
+        UploadedDoc.project_id == analysis.project_id,
+        UploadedDoc.original_name.like("Stakeholder feedback%"),
+    ).count()
+
     return AnalysisDetail(
         id=str(analysis.id),
         project_id=str(analysis.project_id),
@@ -167,17 +173,25 @@ async def get_prd(
         extensions=analysis.extensions or [],
         error_message=analysis.error_message,
         share_token=analysis.share_token,
+        share_expires_at=analysis.share_expires_at,
+        share_revoked_at=analysis.share_revoked_at,
+        share_view_count=analysis.share_view_count or 0,
+        share_feedback_count=feedback_count,
         created_at=analysis.created_at,
     )
+
+
+class CreateShareRequest(BaseModel):
+    expires_in: str = "never"   # "7d" | "30d" | "never"
 
 
 @router.post("/{analysis_id}/share", response_model=ShareResponse)
 async def create_share_link(
     analysis_id: str,
+    body: CreateShareRequest = CreateShareRequest(),
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
-    """Generate a public share token for a completed PRD."""
     analysis = db.query(Analysis).filter(
         Analysis.id == analysis_id, Analysis.user_id == current_user.id
     ).first()
@@ -188,9 +202,36 @@ async def create_share_link(
 
     if not analysis.share_token:
         analysis.share_token = secrets.token_urlsafe(32)
-        db.commit()
 
+    # reset revoke so re-sharing works after revoke
+    analysis.share_revoked_at = None
+
+    from datetime import timedelta
+    if body.expires_in == "7d":
+        analysis.share_expires_at = datetime.now(timezone.utc) + timedelta(days=7)
+    elif body.expires_in == "30d":
+        analysis.share_expires_at = datetime.now(timezone.utc) + timedelta(days=30)
+    else:
+        analysis.share_expires_at = None
+
+    db.commit()
     return ShareResponse(share_token=analysis.share_token)
+
+
+@router.delete("/{analysis_id}/share")
+async def revoke_share_link(
+    analysis_id: str,
+    current_user: User = Depends(get_current_user),
+    db: DBSession = Depends(get_db),
+):
+    analysis = db.query(Analysis).filter(
+        Analysis.id == analysis_id, Analysis.user_id == current_user.id
+    ).first()
+    if not analysis:
+        raise HTTPException(status_code=404, detail={"error": "PRD not found", "code": "ANALYSIS_NOT_FOUND"})
+    analysis.share_revoked_at = datetime.now(timezone.utc)
+    db.commit()
+    return {"success": True}
 
 
 @router.post("/{analysis_id}/validate")

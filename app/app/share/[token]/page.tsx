@@ -12,6 +12,124 @@ interface SharedPRD {
   additional_context: string | null;
   brief: PRD;
   created_at: string;
+  sections?: string[];
+}
+
+const DEFAULT_SECTIONS = [
+  "Problem", "Proposed Feature", "Why Worth Building", "Goals", "Non-Goals",
+  "User Stories", "What Needs to Change", "Engineering Tasks", "Edge Cases",
+  "Analytics Events", "Open Questions",
+];
+
+function FeedbackForm({ token, sections }: { token: string; sections: string[] }) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [section, setSection] = useState("");
+  const [text, setText] = useState("");
+  const [sending, setSending] = useState(false);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState("");
+
+  const apiBase = process.env.NEXT_PUBLIC_API_URL || "/api";
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!name.trim() || !text.trim()) return;
+    setSending(true);
+    setError("");
+    try {
+      const res = await fetch(`${apiBase}/share/${token}/feedback`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          submitter_name: name.trim(),
+          submitter_email: email.trim() || null,
+          section_ref: section || null,
+          feedback_text: text.trim(),
+        }),
+      });
+      if (!res.ok) throw new Error();
+      setDone(true);
+    } catch {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setSending(false);
+    }
+  }
+
+  if (done) {
+    return (
+      <div className="text-center py-8">
+        <div className="w-10 h-10 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg className="w-5 h-5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <p className="text-sm font-medium text-gray-900">Thanks for your feedback!</p>
+        <p className="text-xs text-gray-400 mt-1">Your input has been shared with the product team.</p>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">Name <span className="text-red-400">*</span></label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7F77DD] focus:border-transparent"
+          />
+        </div>
+        <div>
+          <label className="block text-xs font-medium text-gray-700 mb-1">Email <span className="text-gray-400 font-normal">(optional)</span></label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@company.com"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7F77DD] focus:border-transparent"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-xs font-medium text-gray-700 mb-1">Section <span className="text-gray-400 font-normal">(optional)</span></label>
+        <select
+          value={section}
+          onChange={(e) => setSection(e.target.value)}
+          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#7F77DD] focus:border-transparent bg-white"
+        >
+          <option value="">General feedback</option>
+          {sections.map((s) => <option key={s} value={s}>{s}</option>)}
+        </select>
+      </div>
+
+      <div>
+        <label className="block text-xs font-medium text-gray-700 mb-1">Feedback <span className="text-red-400">*</span></label>
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Share your thoughts on this PRD…"
+          rows={4}
+          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#7F77DD] focus:border-transparent resize-none"
+        />
+      </div>
+
+      {error && <p className="text-xs text-red-500">{error}</p>}
+
+      <button
+        type="submit"
+        disabled={sending || !name.trim() || !text.trim()}
+        className="w-full py-2.5 bg-[#7F77DD] hover:bg-[#6b64c4] text-white text-sm font-semibold rounded-xl transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+      >
+        {sending ? "Sending…" : "Send feedback"}
+      </button>
+    </form>
+  );
 }
 
 function formatDate(iso: string) {
@@ -102,6 +220,13 @@ export default function SharePage() {
 
         {/* PRD content — readonly, no export bar */}
         <BriefRenderer brief={data.brief} />
+
+        {/* Feedback form */}
+        <div className="mt-10 bg-white rounded-2xl border border-gray-100 p-8 shadow-sm">
+          <h2 className="text-base font-semibold text-gray-900 mb-1">Leave feedback</h2>
+          <p className="text-sm text-gray-400 mb-5">No account required. Your input goes directly to the product team.</p>
+          <FeedbackForm token={token} sections={data.sections ?? DEFAULT_SECTIONS} />
+        </div>
       </div>
 
       {/* Footer CTA */}

@@ -42,6 +42,18 @@ class Settings(BaseSettings):
     # GitHub OAuth
     GITHUB_CLIENT_ID: str = ""
     GITHUB_CLIENT_SECRET: str = ""
+
+    # Jira (Atlassian) OAuth 2.0
+    # Register at: https://developer.atlassian.com/console/myapps/
+    # Callback URL: {BACKEND_URL}/api/integrations/jira/callback
+    JIRA_CLIENT_ID: str = ""
+    JIRA_CLIENT_SECRET: str = ""
+
+    # Linear OAuth 2.0
+    # Register at: https://linear.app/settings/api/applications/new
+    # Callback URL: {BACKEND_URL}/api/integrations/linear/callback
+    LINEAR_CLIENT_ID: str = ""
+    LINEAR_CLIENT_SECRET: str = ""
     # Groq — fast free-tier LLM (Llama via Groq cloud); free-user chat + clarify calls
     GROQ_API_KEY: str = ""
     # VoyageAI — primary embedding provider for code (voyage-code-3, 1024-dim)

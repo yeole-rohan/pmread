@@ -112,6 +112,10 @@ export interface Analysis {
   brief_summary?: string | null;
   error_message?: string | null;
   share_token?: string | null;
+  share_expires_at?: string | null;
+  share_revoked_at?: string | null;
+  share_view_count?: number;
+  share_feedback_count?: number;
   created_at: string;
   extension_count?: number;
   new_insights_count?: number;

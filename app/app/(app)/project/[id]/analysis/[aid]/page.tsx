@@ -10,6 +10,8 @@ import CoveragePanel from "@/components/CoveragePanel";
 import DocWriterPanel from "@/components/DocWriterPanel";
 import JiraExportPanel from "@/components/JiraExportPanel";
 import PrdVersionHistory, { PrdVersionHistorySidebar } from "@/components/PrdVersionHistory";
+import ShareModal from "@/components/ShareModal";
+import PushModal from "@/components/PushModal";
 import PrdTableOfContents from "@/components/PrdTableOfContents";
 import StatusRotator from "@/components/StatusRotator";
 import UpgradeModal from "@/components/UpgradeModal";
@@ -77,8 +79,9 @@ export default function AnalysisPage() {
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [fetchError, setFetchError] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
-  const [shareCopied, setShareCopied] = useState(false);
-  const [shareLoading, setShareLoading] = useState(false);
+  const [showShare, setShowShare] = useState(false);
+  const [showPush, setShowPush] = useState(false);
+  const [integrations, setIntegrations] = useState<Record<string, { connected: boolean; site?: string }>>({});
 
   const stream = useAnalysisStream(
     analysis?.status === "processing" || analysis?.status === "pending" ? analysisId : null
@@ -90,6 +93,9 @@ export default function AnalysisPage() {
     apiFetch<Analysis>(`/analyses/${analysisId}`)
       .then(setAnalysis)
       .catch(() => setFetchError(true));
+    apiFetch<Record<string, { connected: boolean; site?: string }>>("/integrations/")
+      .then(setIntegrations)
+      .catch(() => {});
   }, [analysisId]);
 
   useEffect(() => {
@@ -106,23 +112,6 @@ export default function AnalysisPage() {
     }
   }, [fetchError, projectId, router]);
 
-  async function handleShare() {
-    setShareLoading(true);
-    try {
-      let token = analysis?.share_token;
-      if (!token) {
-        const res = await apiFetch<{ share_token: string }>(`/analyses/${analysisId}/share`, { method: "POST" });
-        token = res.share_token;
-        setAnalysis((prev) => prev ? { ...prev, share_token: token } : prev);
-      }
-      const url = `${window.location.origin}/share/${token}`;
-      await navigator.clipboard.writeText(url);
-      trackEvent("share_prd");
-      setShareCopied(true);
-      setTimeout(() => setShareCopied(false), 2500);
-    } catch {}
-    setShareLoading(false);
-  }
 
   const isProcessing = !fetchError && (
     analysis?.status === "pending" ||
@@ -186,18 +175,23 @@ export default function AnalysisPage() {
             Back to project
           </Link>
 
+          {isComplete && Object.values(integrations).some((i) => i.connected) && (
+            <button
+              onClick={() => setShowPush(true)}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+            >
+              Push
+            </button>
+          )}
           {isComplete && (
             <button
-              onClick={handleShare}
-              disabled={shareLoading}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer disabled:opacity-50"
+              onClick={() => setShowShare(true)}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
             >
-              {shareCopied
-                ? <><Check size={14} className="text-green-500" /> Link copied</>
-                : shareLoading
-                ? <div className="w-4 h-4 border border-gray-400 border-t-transparent rounded-full animate-spin" />
-                : <><Link2 size={14} /> Share</>
-              }
+              <Link2 size={14} /> Share
+              {(analysis?.share_view_count ?? 0) > 0 && (
+                <span className="text-xs text-gray-400">{analysis?.share_view_count}</span>
+              )}
             </button>
           )}
         </div>
@@ -380,6 +374,20 @@ export default function AnalysisPage() {
       </div> {/* end main column */}
 
       <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />
+      {showShare && analysis && (
+        <ShareModal
+          analysis={analysis}
+          onClose={() => setShowShare(false)}
+          onUpdated={(patch) => setAnalysis((prev) => prev ? { ...prev, ...patch } : prev)}
+        />
+      )}
+      {showPush && (
+        <PushModal
+          analysisId={analysisId}
+          integrations={integrations}
+          onClose={() => setShowPush(false)}
+        />
+      )}
     </div>
   );
 }
