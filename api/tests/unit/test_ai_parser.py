@@ -9,7 +9,12 @@ FULL_PRD_XML = """
 <goals><goal>One-click CSV download</goal><goal>Filter by date range</goal></goals>
 <non_goals><non_goal>PDF export (future)</non_goal></non_goals>
 <user_stories>
-  <story>As a finance manager, I want to export invoices as CSV</story>
+  <story>
+    <text>As a finance manager, I want to export invoices as CSV</text>
+    <given>The user has at least one paid invoice</given>
+    <when>They click Export on the Billing page</when>
+    <then>A CSV file downloads with all invoice rows</then>
+  </story>
 </user_stories>
 <what_needs_to_change>
   <ui>Add Export button to Billing page</ui>
@@ -38,6 +43,12 @@ def test_parse_prd_all_fields():
     assert result["goals"] == ["One-click CSV download", "Filter by date range"]
     assert result["non_goals"] == ["PDF export (future)"]
     assert len(result["user_stories"]) == 1
+    story = result["user_stories"][0]
+    assert isinstance(story, dict)
+    assert story["story"] == "As a finance manager, I want to export invoices as CSV"
+    assert story["given"] == "The user has at least one paid invoice"
+    assert story["when"] == "They click Export on the Billing page"
+    assert story["then"] == "A CSV file downloads with all invoice rows"
     assert result["what_needs_to_change"]["ui"] == "Add Export button to Billing page"
     assert result["what_needs_to_change"]["data_model"] == "No schema change needed"
     assert result["what_needs_to_change"]["workflows"] == "New GET /billing/export endpoint"
@@ -109,3 +120,91 @@ def test_prd_to_markdown_empty_brief():
     brief = parse_prd_response("")
     md = prd_to_markdown(brief)
     assert "# PRD" in md
+
+
+# --- Given/When/Then acceptance criteria ---
+
+NEW_STORY_XML = """
+<user_stories>
+  <story>
+    <text>As a PM, I want to generate a PRD so that I save time</text>
+    <given>The user has uploaded at least one insight</given>
+    <when>They click Generate PRD</when>
+    <then>A structured PRD appears within 30 seconds</then>
+  </story>
+</user_stories>
+"""
+
+OLD_STORY_XML = """
+<user_stories>
+  <story>As a PM, I want to generate a PRD so that I save time</story>
+</user_stories>
+"""
+
+MIXED_STORY_XML = """
+<user_stories>
+  <story>
+    <text>As a PM, I want to share a PRD</text>
+    <given>A PRD has been generated</given>
+    <when>They click Share</when>
+    <then>A shareable link is copied to clipboard</then>
+  </story>
+  <story>As an engineer, I want to read the PRD so that I understand scope</story>
+</user_stories>
+"""
+
+
+def test_new_story_format_parses_as_dict():
+    result = parse_prd_response(NEW_STORY_XML)
+    assert len(result["user_stories"]) == 1
+    s = result["user_stories"][0]
+    assert isinstance(s, dict)
+    assert s["story"] == "As a PM, I want to generate a PRD so that I save time"
+    assert s["given"] == "The user has uploaded at least one insight"
+    assert s["when"] == "They click Generate PRD"
+    assert s["then"] == "A structured PRD appears within 30 seconds"
+
+
+def test_old_story_format_parses_as_string():
+    result = parse_prd_response(OLD_STORY_XML)
+    assert len(result["user_stories"]) == 1
+    assert result["user_stories"][0] == "As a PM, I want to generate a PRD so that I save time"
+
+
+def test_mixed_story_format_backward_compat():
+    result = parse_prd_response(MIXED_STORY_XML)
+    assert len(result["user_stories"]) == 2
+    assert isinstance(result["user_stories"][0], dict)
+    assert isinstance(result["user_stories"][1], str)
+
+
+def test_story_missing_given_when_then_still_parses():
+    xml = "<user_stories><story><text>As a user, I want X</text></story></user_stories>"
+    result = parse_prd_response(xml)
+    s = result["user_stories"][0]
+    assert isinstance(s, dict)
+    assert s["story"] == "As a user, I want X"
+    assert s["given"] == ""
+    assert s["when"] == ""
+    assert s["then"] == ""
+
+
+def test_prd_to_markdown_new_story_includes_ac():
+    brief = parse_prd_response(NEW_STORY_XML)
+    md = prd_to_markdown(brief)
+    assert "As a PM, I want to generate a PRD" in md
+    assert "**Given:**" in md
+    assert "The user has uploaded at least one insight" in md
+    assert "**When:**" in md
+    assert "They click Generate PRD" in md
+    assert "**Then:**" in md
+    assert "A structured PRD appears within 30 seconds" in md
+
+
+def test_prd_to_markdown_old_story_no_ac_labels():
+    brief = parse_prd_response(OLD_STORY_XML)
+    md = prd_to_markdown(brief)
+    assert "As a PM, I want to generate a PRD" in md
+    assert "**Given:**" not in md
+    assert "**When:**" not in md
+    assert "**Then:**" not in md
