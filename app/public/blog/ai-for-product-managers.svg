@@ -1,0 +1,94 @@
+<svg viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F5F3FF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#7F77DD" flood-opacity="0.11"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Chat interface mockup -->
+  <rect x="80" y="60" width="560" height="510" rx="20" fill="white" filter="url(#shadow)"/>
+  <rect x="80" y="60" width="560" height="52" rx="20" fill="#10B981" opacity="0.75"/>
+  <rect x="80" y="94" width="560" height="18" fill="#10B981" opacity="0.75"/>
+  <rect x="108" y="76" width="100" height="10" rx="5" fill="white" opacity="0.65"/>
+
+  <!-- Chat bubbles: user -->
+  <rect x="240" y="138" width="380" height="52" rx="12" fill="#F5F3FF"/>
+  <rect x="256" y="150" width="280" height="7" rx="3" fill="#7F77DD" opacity="0.45"/>
+  <rect x="256" y="163" width="320" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="256" y="176" width="240" height="7" rx="3" fill="#9CA3AF" opacity="0.25"/>
+
+  <!-- Chat bubbles: AI response -->
+  <rect x="100" y="206" width="400" height="80" rx="12" fill="#F0FDF4"/>
+  <rect x="116" y="218" width="280" height="7" rx="3" fill="#10B981" opacity="0.5"/>
+  <rect x="116" y="231" width="360" height="7" rx="3" fill="#9CA3AF" opacity="0.32"/>
+  <rect x="116" y="244" width="340" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="116" y="257" width="300" height="7" rx="3" fill="#9CA3AF" opacity="0.22"/>
+  <rect x="116" y="270" width="260" height="7" rx="3" fill="#9CA3AF" opacity="0.18"/>
+
+  <!-- User msg 2 -->
+  <rect x="200" y="302" width="380" height="44" rx="12" fill="#F5F3FF"/>
+  <rect x="216" y="314" width="300" height="7" rx="3" fill="#7F77DD" opacity="0.4"/>
+  <rect x="216" y="327" width="260" height="7" rx="3" fill="#9CA3AF" opacity="0.28"/>
+
+  <!-- AI response 2 -->
+  <rect x="100" y="362" width="440" height="100" rx="12" fill="#F0FDF4"/>
+  <rect x="116" y="374" width="220" height="7" rx="3" fill="#10B981" opacity="0.5"/>
+  <rect x="116" y="387" width="380" height="7" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="116" y="400" width="360" height="7" rx="3" fill="#9CA3AF" opacity="0.25"/>
+  <rect x="116" y="413" width="340" height="7" rx="3" fill="#9CA3AF" opacity="0.2"/>
+  <rect x="116" y="426" width="300" height="7" rx="3" fill="#9CA3AF" opacity="0.18"/>
+  <rect x="116" y="439" width="260" height="7" rx="3" fill="#9CA3AF" opacity="0.15"/>
+
+  <!-- Input bar -->
+  <rect x="100" y="490" width="440" height="44" rx="22" fill="#F9FAFB" stroke="#E5E7EB" stroke-width="1.5"/>
+  <rect x="120" y="508" width="200" height="8" rx="4" fill="#9CA3AF" opacity="0.3"/>
+  <circle cx="520" cy="512" r="14" fill="#7F77DD" opacity="0.7"/>
+
+  <!-- Right panel: use cases -->
+  <rect x="680" y="60" width="460" height="510" rx="20" fill="white" filter="url(#shadow)"/>
+  <rect x="680" y="60" width="460" height="52" rx="20" fill="#7F77DD" opacity="0.85"/>
+  <rect x="680" y="94" width="460" height="18" fill="#7F77DD" opacity="0.85"/>
+  <rect x="706" y="76" width="120" height="10" rx="5" fill="white" opacity="0.6"/>
+
+  <!-- Use case items -->
+  <rect x="700" y="138" width="420" height="56" rx="12" fill="#F5F3FF"/>
+  <rect x="700" y="138" width="6" height="56" rx="3" fill="#7F77DD" opacity="0.7"/>
+  <rect x="718" y="150" width="120" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="718" y="164" width="360" height="6" rx="3" fill="#9CA3AF" opacity="0.3"/>
+  <rect x="718" y="176" width="300" height="6" rx="3" fill="#9CA3AF" opacity="0.24"/>
+
+  <rect x="700" y="206" width="420" height="56" rx="12" fill="#F5F3FF"/>
+  <rect x="700" y="206" width="6" height="56" rx="3" fill="#7F77DD" opacity="0.6"/>
+  <rect x="718" y="218" width="100" height="8" rx="4" fill="#7F77DD" opacity="0.5"/>
+  <rect x="718" y="232" width="360" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="718" y="244" width="280" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <rect x="700" y="274" width="420" height="56" rx="12" fill="#F5F3FF"/>
+  <rect x="700" y="274" width="6" height="56" rx="3" fill="#A78BFA" opacity="0.6"/>
+  <rect x="718" y="286" width="130" height="8" rx="4" fill="#A78BFA" opacity="0.5"/>
+  <rect x="718" y="300" width="340" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="718" y="312" width="280" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <!-- Limitation section -->
+  <rect x="700" y="350" width="420" height="76" rx="12" fill="#FFF1F2"/>
+  <rect x="700" y="350" width="6" height="76" rx="3" fill="#EF4444" opacity="0.5"/>
+  <rect x="718" y="362" width="100" height="8" rx="4" fill="#EF4444" opacity="0.45"/>
+  <rect x="718" y="376" width="360" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="718" y="388" width="320" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+  <rect x="718" y="400" width="300" height="6" rx="3" fill="#9CA3AF" opacity="0.18"/>
+  <rect x="718" y="412" width="260" height="6" rx="3" fill="#9CA3AF" opacity="0.15"/>
+
+  <rect x="700" y="446" width="420" height="56" rx="12" fill="#FFFBEB"/>
+  <rect x="700" y="446" width="6" height="56" rx="3" fill="#F59E0B" opacity="0.55"/>
+  <rect x="718" y="458" width="120" height="8" rx="4" fill="#F59E0B" opacity="0.5"/>
+  <rect x="718" y="472" width="360" height="6" rx="3" fill="#9CA3AF" opacity="0.28"/>
+  <rect x="718" y="484" width="300" height="6" rx="3" fill="#9CA3AF" opacity="0.22"/>
+
+  <circle cx="60" cy="560" r="45" fill="#7F77DD" opacity="0.04"/>
+  <circle cx="1150" cy="90" r="40" fill="#A78BFA" opacity="0.05"/>
+</svg>
