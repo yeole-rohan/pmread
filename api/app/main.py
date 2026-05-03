@@ -25,6 +25,7 @@ from app.routers import uploads, insights, share, feedback as feedback_router, c
 from app.routers import admin as admin_router
 from app.routers import decisions as decisions_router
 from app.routers import ingest_email as ingest_email_router
+from app.routers import prd_versions as prd_versions_router
 if settings.SENTRY_DSN:
     import sentry_sdk
     from sentry_sdk.integrations.fastapi import FastApiIntegration
@@ -259,6 +260,7 @@ app.include_router(slack_router.router, prefix="/api/projects", tags=["slack"])
 # app.include_router(github.router, prefix="/api/github", tags=["github"])  # coming soon
 app.include_router(events.router, prefix="/api/projects", tags=["events"])
 app.include_router(decisions_router.router, prefix="/api/decisions", tags=["decisions"])
+app.include_router(prd_versions_router.router, prefix="/api/analyses", tags=["prd-versions"])
 app.include_router(admin_router.router, prefix="/api/admin", tags=["admin"])
 
 
