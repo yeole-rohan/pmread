@@ -9,6 +9,7 @@ import BriefRenderer, { buildMarkdown, useCopy, useDownload } from "@/components
 import CoveragePanel from "@/components/CoveragePanel";
 import DocWriterPanel from "@/components/DocWriterPanel";
 import JiraExportPanel from "@/components/JiraExportPanel";
+import PrdVersionHistory from "@/components/PrdVersionHistory";
 import PrdTableOfContents from "@/components/PrdTableOfContents";
 import StatusRotator from "@/components/StatusRotator";
 import UpgradeModal from "@/components/UpgradeModal";
@@ -371,6 +372,7 @@ export default function AnalysisPage() {
               tasks={brief.engineering_tasks ?? []}
               prdTitle={analysis.title || analysis.question}
             />
+            <PrdVersionHistory prdId={analysisId} />
           </div>
         )}
       </div>
