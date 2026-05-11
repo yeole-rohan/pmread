@@ -29,8 +29,8 @@ function SignupForm() {
     setLoading(true);
     try {
       await signup(email, password, displayName || undefined);
-      if (planParam === "pro") {
-        router.push(`/settings?upgrade=true&billing=${billingParam}`);
+      if (planParam === "pro" || planParam === "teams") {
+        router.push(`/settings?upgrade=true&billing=${billingParam}&plan=${planParam}`);
       } else {
         router.push("/dashboard");
       }

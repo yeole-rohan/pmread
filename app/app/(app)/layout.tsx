@@ -5,9 +5,10 @@ import { useRouter, usePathname } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import FeedbackButton from "@/components/FeedbackButton";
 import SearchModal from "@/components/SearchModal";
+import UpgradeModal from "@/components/UpgradeModal";
 import { useUser } from "@/lib/useUser";
 import { apiFetch } from "@/lib/api";
-import { Project } from "@/lib/types";
+import { Project, Workspace } from "@/lib/types";
 import { getToken } from "@/lib/api";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -15,7 +16,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { user, loading } = useUser();
   const [projects, setProjects] = useState<Project[]>([]);
+  const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [showUpgrade, setShowUpgrade] = useState(false);
 
   useEffect(() => {
     function handleKeydown(e: KeyboardEvent) {
@@ -43,6 +46,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (user) {
       apiFetch<Project[]>("/projects/").then(setProjects).catch(() => {});
+      if (["teams", "studio"].includes(user.plan)) {
+        apiFetch<Workspace[]>("/workspaces/").then(setWorkspaces).catch(() => {});
+      }
     }
   }, [user, pathname]);
 
@@ -58,6 +64,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="flex h-screen overflow-hidden">
       <Sidebar
         projects={projects}
+        workspaces={workspaces}
         user={user}
         onProjectCreated={(p) => setProjects((prev) => [p, ...prev])}
         onProjectDeleted={(id) => setProjects((prev) => prev.filter((p) => p.id !== id))}
@@ -65,10 +72,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           setProjects((prev) => prev.map((p) => (p.id === id ? { ...p, name } : p)))
         }
         onSearchOpen={() => setSearchOpen(true)}
+        onUpgradeRequired={() => setShowUpgrade(true)}
       />
       <main className="flex-1 overflow-y-auto">{children}</main>
       <FeedbackButton />
       <SearchModal open={searchOpen} onClose={() => setSearchOpen(false)} />
+      <UpgradeModal open={showUpgrade} onClose={() => setShowUpgrade(false)} />
     </div>
   );
 }

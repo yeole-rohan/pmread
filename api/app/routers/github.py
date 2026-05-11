@@ -12,6 +12,7 @@ from app.config import settings
 from app.database import get_db
 from app.models.project import Project
 from app.models.user import User
+from app.project_access import get_accessible_project, require_editor_role
 
 router = APIRouter()
 
@@ -149,13 +150,12 @@ async def set_project_repo(
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
-    project = db.query(Project).filter(
-        Project.id == project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(project_id, str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
 
-    if body.repo_full_name is not None and current_user.plan != "pro":
+    if body.repo_full_name is not None and current_user.plan not in ("pro", "teams", "studio"):
         raise HTTPException(status_code=403, detail={"error": "GitHub repo linking requires a Pro plan.", "code": "PRO_REQUIRED"})
 
     repo_changed = project.github_repo != body.repo_full_name
@@ -188,9 +188,7 @@ async def get_index_status(
     db: DBSession = Depends(get_db),
 ):
     """Poll indexing status for a project's linked repo."""
-    project = db.query(Project).filter(
-        Project.id == project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(project_id, str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
 

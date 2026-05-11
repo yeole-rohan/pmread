@@ -26,8 +26,14 @@ async function _handleResponse<T>(res: Response): Promise<T> {
   }
 
   if (res.status === 402) {
-    if (typeof window !== "undefined") window.location.href = "/plan-expired";
-    throw new APIError("Plan expired", "PLAN_EXPIRED", 402);
+    let detail: { error?: string; code?: string; feature?: string } = {};
+    try { detail = (await res.clone().json()).detail ?? {}; } catch { /* ignore */ }
+    const code = detail.code || "PLAN_EXPIRED";
+    // Only redirect to /plan-expired for subscription expiry, not for feature gates
+    if (code === "PLAN_EXPIRED" && typeof window !== "undefined") {
+      window.location.href = "/plan-expired";
+    }
+    throw new APIError(detail.error || "Plan limit reached", code, 402);
   }
 
   if (!res.ok) {

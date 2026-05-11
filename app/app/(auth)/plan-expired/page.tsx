@@ -16,22 +16,29 @@ export default function PlanExpiredPage() {
           </svg>
         </div>
         <h1 className="text-xl font-bold text-gray-900 mb-2">Your plan has ended</h1>
-        <p className="text-sm text-gray-500 mb-8 leading-relaxed">
-          Access to PMRead requires an active plan. Upgrade to restore access — your projects and data are waiting.
+        <p className="text-sm text-gray-500 mb-3 leading-relaxed">
+          Access to PMRead requires an active plan. Your projects and data are safe — subscribe to pick up where you left off.
         </p>
+        <div className="flex items-center justify-center gap-4 text-xs text-gray-400 mb-8">
+          <span>Pro — ₹3,999/mo</span>
+          <span className="w-1 h-1 rounded-full bg-gray-300" />
+          <span>Teams — ₹4,499/seat/mo</span>
+          <span className="w-1 h-1 rounded-full bg-gray-300" />
+          <span>Studio — Custom</span>
+        </div>
         <div className="space-y-3">
           <Link
             href="/settings?upgrade=true"
             className="block w-full py-3 bg-[#7F77DD] hover:bg-[#6b64c4] text-white font-semibold rounded-xl text-sm transition-colors"
           >
-            Upgrade to continue →
+            Resubscribe →
           </Link>
-          <a
-            href="mailto:rohan.yeole@rohanyeole.com"
+          <Link
+            href="/pricing"
             className="block w-full py-3 border border-gray-200 hover:border-gray-300 text-gray-600 font-medium rounded-xl text-sm transition-colors"
           >
-            Contact administrator
-          </a>
+            Compare all plans
+          </Link>
         </div>
       </div>
     </main>

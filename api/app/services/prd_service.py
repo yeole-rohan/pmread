@@ -4,8 +4,14 @@ from datetime import datetime, timezone
 from sqlalchemy import text
 from sqlalchemy.orm import Session as DBSession
 
-# Free: 2 PRDs/month | Pro: 15 PRDs/month
-PLAN_PRD_LIMITS: dict[str, int] = {"free": 2, "pro": 15}
+from app.plan_config import PLAN_LIMITS
+
+# Kept for backwards-compat import by analyses.py (PLAN_PRD_LIMITS["free"], etc.)
+PLAN_PRD_LIMITS: dict[str, int] = {
+    plan: cfg["prds_per_month"]
+    for plan, cfg in PLAN_LIMITS.items()
+    if cfg["prds_per_month"] is not None
+}
 
 
 def try_use_prd_credit(user_id: str, db: DBSession) -> bool:
@@ -42,9 +48,10 @@ def check_and_increment_prd_limit(user_id: str, plan: str, db: DBSession) -> boo
     Handles the monthly reset in a separate idempotent UPDATE so the main
     increment is a single atomic read-modify-write — no TOCTOU race.
     """
-    limit = PLAN_PRD_LIMITS.get(plan)
+    from app.plan_config import get_limit
+    limit = get_limit(plan, "prds_per_month")
     if limit is None:
-        # Unknown plan — allow (fail open; should not happen in practice)
+        # Unlimited plan (teams / studio) or unknown plan — allow
         return True
 
     now = datetime.now(timezone.utc)

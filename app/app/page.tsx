@@ -47,8 +47,9 @@ const jsonLd = {
       keywords:
         "ai prd generator, customer feedback analysis tool, prd generator, product requirements document, turn customer feedback into prd, ai product requirements",
       offers: [
-        { "@type": "Offer", price: "0", priceCurrency: "INR", name: "Free plan" },
-        { "@type": "Offer", price: "1699", priceCurrency: "INR", name: "Pro plan" },
+        { "@type": "Offer", price: "0",    priceCurrency: "INR", name: "Free plan" },
+        { "@type": "Offer", price: "3999", priceCurrency: "INR", name: "Pro plan" },
+        { "@type": "Offer", price: "4499", priceCurrency: "INR", name: "Teams plan" },
       ],
     },
     {
@@ -156,7 +157,7 @@ const DIFFERENTIATORS = [
   {
     icon: IndianRupee,
     title: "Built for India. Priced in INR.",
-    body: "Every competing tool is priced for US teams at $30–$80/user/month. PMRead Pro is ₹1,699/month — billed in INR via Razorpay, with a free tier that actually lets you use the product.",
+    body: "Every competing tool is priced for US teams at $30–$80/user/month. PMRead Pro is ₹3,999/month — billed in INR via Razorpay, with a free tier that actually lets you use the product.",
   },
 ];
 
@@ -193,24 +194,25 @@ const FREE_TOOLS = [
   },
 ];
 
-const FREE_PLAN_FEATURES = [
-  "2 PRDs / month",
-  "Unlimited insights",
-  "File uploads (PDF, DOCX)",
-  "Insights board",
-  "Ask tab Q&A",
+const PRO_PLAN_FEATURES = [
+  "15 PRDs/month",
+  "Unlimited projects & insights",
+  "Slack, GitHub & call transcript ingestion",
+  "Jira & Linear push",
+  "PDF & Markdown export",
+  "Given/When/Then acceptance criteria",
+  "Full decision log & version history",
+  "Priority support",
 ];
 
-const PRO_PLAN_FEATURES = [
-  "15 PRDs / month",
-  "Unlimited insights",
-  "File uploads",
-  "Slack channel ingestion",
-  "Call transcript import",
-  "GitHub codebase context",
-  "PRD updates — extend with new insights (up to 3×/PRD)",
-  "PDF export",
-  "Priority support",
+const TEAMS_PLAN_FEATURES = [
+  "Unlimited PRDs (shared pool)",
+  "Team workspace + roles",
+  "Risk Register (PMBOK 7)",
+  "Scope Ledger + change alerts",
+  "Azure DevOps push",
+  "\"Approved by\" sign-off",
+  "Everything in Pro",
 ];
 
 const TESTIMONIALS = [
@@ -522,83 +524,91 @@ export default function HomePage() {
 
         {/* ── Pricing preview ──────────────────────────────────────────── */}
         <section className="py-12 sm:py-16 bg-gray-50">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 text-center">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
               Start free, upgrade when you&apos;re ready
             </h2>
-            <p className="text-gray-500 text-lg mb-8">
-              No credit card required to start.
-            </p>
+            <p className="text-gray-500 text-lg mb-8">No credit card required to start.</p>
 
-            <div className="grid md:grid-cols-2 gap-6 text-left mb-8">
-              {/* Free plan */}
-              <div className="rounded-2xl border border-gray-200 bg-white p-6">
-                <p className="text-sm font-medium text-gray-500 mb-1">Free</p>
-                <div className="flex items-end gap-1 mb-5">
-                  <span className="text-4xl font-bold text-gray-900">₹0</span>
-                  <span className="text-gray-400 text-sm mb-1">/month</span>
+            {/* 3 paid cards */}
+            <div className="grid sm:grid-cols-3 gap-5 text-left mb-4">
+              {/* Pro */}
+              <div className="rounded-2xl border-2 border-[#7F77DD] bg-white p-6 relative">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                  <span className="bg-[#7F77DD] text-white text-[10px] font-bold px-3 py-1 rounded-full whitespace-nowrap">Most popular</span>
                 </div>
-                <ul className="space-y-2.5 mb-6">
-                  {FREE_PLAN_FEATURES.map((f) => (
-                    <li
-                      key={f}
-                      className="flex items-center gap-2 text-sm text-gray-600"
-                    >
-                      <CheckCircle
-                        size={14}
-                        className="text-[#1D9E75] flex-shrink-0"
-                      />
-                      {f}
+                <p className="text-xs font-bold text-[#7F77DD] uppercase tracking-wider mb-2">Pro</p>
+                <div className="flex items-end gap-1 mb-4">
+                  <span className="text-3xl font-bold text-gray-900">₹3,999</span>
+                  <span className="text-gray-400 text-sm mb-1">/mo</span>
+                </div>
+                <ul className="space-y-2 mb-6">
+                  {PRO_PLAN_FEATURES.map((f) => (
+                    <li key={f} className="flex items-center gap-2 text-sm text-gray-600">
+                      <CheckCircle size={13} className="text-[#1D9E75] flex-shrink-0" />{f}
                     </li>
                   ))}
                 </ul>
-                <Link
-                  href="/signup"
-                  className="block w-full text-center py-2.5 border border-gray-200 hover:border-gray-300 text-gray-700 font-medium rounded-lg text-sm transition-colors"
-                >
-                  Get started free
+                <Link href="/signup?plan=pro"
+                  className="block w-full text-center py-2.5 bg-[#7F77DD] hover:bg-[#6b64c4] text-white font-semibold rounded-xl text-sm transition-colors">
+                  Get Pro →
                 </Link>
               </div>
 
-              {/* Pro plan */}
-              <div className="rounded-2xl border-2 border-[#7F77DD] bg-white p-6 relative">
-                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="bg-[#7F77DD] text-white text-xs font-semibold px-3 py-1 rounded-full">
-                    Most popular
-                  </span>
+              {/* Teams */}
+              <div className="rounded-2xl border border-gray-200 bg-white p-6">
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Teams</p>
+                <div className="flex items-end gap-1 mb-1">
+                  <span className="text-3xl font-bold text-gray-900">₹4,499</span>
+                  <span className="text-gray-400 text-sm mb-1">/seat/mo</span>
                 </div>
-                <p className="text-sm font-medium text-gray-500 mb-1">Pro</p>
-                <div className="flex items-end gap-1 mb-5">
-                  <span className="text-4xl font-bold text-gray-900">₹1,699</span>
-                  <span className="text-gray-400 text-sm mb-1">/month</span>
-                </div>
-                <ul className="space-y-2.5 mb-6">
-                  {PRO_PLAN_FEATURES.map((f) => (
-                    <li
-                      key={f}
-                      className="flex items-center gap-2 text-sm text-gray-600"
-                    >
-                      <CheckCircle
-                        size={14}
-                        className="text-[#1D9E75] flex-shrink-0"
-                      />
-                      {f}
+                <p className="text-xs text-gray-400 mb-4">min 3 seats · ₹3,499/seat/mo annual</p>
+                <ul className="space-y-2 mb-6">
+                  {TEAMS_PLAN_FEATURES.map((f) => (
+                    <li key={f} className="flex items-center gap-2 text-sm text-gray-600">
+                      <CheckCircle size={13} className="text-[#1D9E75] flex-shrink-0" />{f}
                     </li>
                   ))}
                 </ul>
-                <Link
-                  href="/signup?plan=pro"
-                  className="block w-full text-center py-2.5 bg-[#7F77DD] hover:bg-[#6b64c4] text-white font-semibold rounded-lg text-sm transition-colors"
-                >
-                  Upgrade to Pro →
+                <Link href="/signup?plan=teams"
+                  className="block w-full text-center py-2.5 bg-gray-900 hover:bg-gray-700 text-white font-semibold rounded-xl text-sm transition-colors">
+                  Get Teams →
                 </Link>
+              </div>
+
+              {/* Studio */}
+              <div className="rounded-2xl border border-gray-200 bg-gradient-to-b from-amber-50/40 to-white p-6">
+                <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-2">Studio</p>
+                <div className="mb-1">
+                  <span className="text-2xl font-bold text-gray-900">Custom</span>
+                </div>
+                <p className="text-xs text-gray-400 mb-4">Floor ₹75,000/mo · unlimited seats</p>
+                <ul className="space-y-2 mb-6">
+                  {["Everything in Teams", "Unlimited seats & PRDs", "Schedule Estimator", "Audit trail (SEBI/RBI)", "Dedicated Slack support", "Custom SLA"].map(f => (
+                    <li key={f} className="flex items-center gap-2 text-sm text-gray-600">
+                      <CheckCircle size={13} className="text-amber-500 flex-shrink-0" />{f}
+                    </li>
+                  ))}
+                </ul>
+                <a href="mailto:rohan.yeole@rohanyeole.com?subject=PMRead Studio"
+                  className="block w-full text-center py-2.5 border border-amber-200 hover:border-amber-400 text-amber-700 font-semibold rounded-xl text-sm transition-colors">
+                  Contact us →
+                </a>
               </div>
             </div>
 
-            <Link
-              href="/pricing"
-              className="text-sm text-[#7F77DD] hover:underline font-medium"
-            >
+            {/* Free strip */}
+            <div className="rounded-xl border border-gray-200 bg-white px-6 py-3.5 flex flex-col sm:flex-row sm:items-center gap-3 mb-6 text-left">
+              <div className="flex-1">
+                <span className="text-sm font-bold text-gray-700 mr-3">Free — ₹0</span>
+                <span className="text-xs text-gray-400">2 PRDs/month · 1 project · unlimited insights · no card required</span>
+              </div>
+              <Link href="/signup" className="flex-shrink-0 px-4 py-2 border border-gray-300 hover:border-gray-400 text-gray-700 font-semibold rounded-lg text-sm transition-colors text-center">
+                Get started free
+              </Link>
+            </div>
+
+            <Link href="/pricing" className="text-sm text-[#7F77DD] hover:underline font-medium">
               See full feature comparison →
             </Link>
           </div>

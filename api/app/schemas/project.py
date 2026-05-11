@@ -11,3 +11,6 @@ class ProjectOut(BaseModel):
     analysis_count: int = 0
     last_analysis_at: datetime | None = None
     ingest_email_token: str | None = None
+    workspace_id: str | None = None
+    workspace_name: str | None = None
+    workspace_role: str | None = None

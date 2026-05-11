@@ -24,6 +24,13 @@ from app.ai.prompts import (
 from app.ai.utils import extract_project_name
 from app.services.prd_service import check_and_increment_prd_limit, try_use_prd_credit, PLAN_PRD_LIMITS
 from app.schemas.analysis import AnalysisListItem, AnalysisDetail, CreatePRDResponse, ShareResponse
+from app.project_access import (
+    get_accessible_project,
+    get_accessible_analysis,
+    get_project_role,
+    require_editor_role,
+    require_owner_role,
+)
 
 router = APIRouter()
 
@@ -49,11 +56,10 @@ async def create_prd(
     if not body.question.strip():
         raise HTTPException(status_code=400, detail={"error": "Question is required", "code": "EMPTY_QUESTION"})
 
-    project = db.query(Project).filter(
-        Project.id == body.project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(body.project_id, str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "PROJECT_NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
 
     # Founding-member credits take priority — never expire, bypass monthly plan limit
     used_credit = try_use_prd_credit(str(current_user.id), db)
@@ -111,9 +117,7 @@ async def list_prds(
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
-    project = db.query(Project).filter(
-        Project.id == project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(project_id, str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "PROJECT_NOT_FOUND"})
 
@@ -152,24 +156,35 @@ async def get_prd(
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
-    analysis = db.query(Analysis).filter(
-        Analysis.id == analysis_id, Analysis.user_id == current_user.id
-    ).first()
+    analysis, _project = get_accessible_analysis(analysis_id, str(current_user.id), db)
     if not analysis:
         raise HTTPException(status_code=404, detail={"error": "PRD not found", "code": "ANALYSIS_NOT_FOUND"})
 
     from app.models.uploaded_doc import UploadedDoc
+    from app.plan_config import plan_allows
     feedback_count = db.query(UploadedDoc).filter(
         UploadedDoc.project_id == analysis.project_id,
         UploadedDoc.original_name.like("Stakeholder feedback%"),
     ).count()
+
+    brief = analysis.brief
+    if brief and not plan_allows(current_user.plan, "acceptance_criteria"):
+        # Strip Given/When/Then from user stories for Free users
+        stories = brief.get("user_stories") or []
+        stripped = []
+        for s in stories:
+            if isinstance(s, dict):
+                stripped.append({k: v for k, v in s.items() if k not in ("given", "when", "then")})
+            else:
+                stripped.append(s)
+        brief = {**brief, "user_stories": stripped}
 
     return AnalysisDetail(
         id=str(analysis.id),
         project_id=str(analysis.project_id),
         question=analysis.question,
         status=analysis.status,
-        brief=analysis.brief,
+        brief=brief,
         extensions=analysis.extensions or [],
         error_message=analysis.error_message,
         share_token=analysis.share_token,
@@ -192,11 +207,10 @@ async def create_share_link(
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
-    analysis = db.query(Analysis).filter(
-        Analysis.id == analysis_id, Analysis.user_id == current_user.id
-    ).first()
+    analysis, project = get_accessible_analysis(analysis_id, str(current_user.id), db)
     if not analysis:
         raise HTTPException(status_code=404, detail={"error": "PRD not found", "code": "ANALYSIS_NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
     if analysis.status != "complete":
         raise HTTPException(status_code=400, detail={"error": "PRD is not complete yet.", "code": "NOT_COMPLETE"})
 
@@ -224,11 +238,10 @@ async def revoke_share_link(
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
-    analysis = db.query(Analysis).filter(
-        Analysis.id == analysis_id, Analysis.user_id == current_user.id
-    ).first()
+    analysis, project = get_accessible_analysis(analysis_id, str(current_user.id), db)
     if not analysis:
         raise HTTPException(status_code=404, detail={"error": "PRD not found", "code": "ANALYSIS_NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
     analysis.share_revoked_at = datetime.now(timezone.utc)
     db.commit()
     return {"success": True}
@@ -241,11 +254,10 @@ async def validate_prd(
     db: DBSession = Depends(get_db),
 ):
     """Run an LLM coverage check against the project's insights. Caches result in brief."""
-    analysis = db.query(Analysis).filter(
-        Analysis.id == analysis_id, Analysis.user_id == current_user.id
-    ).first()
+    analysis, project = get_accessible_analysis(analysis_id, str(current_user.id), db)
     if not analysis:
         raise HTTPException(status_code=404, detail={"error": "PRD not found", "code": "ANALYSIS_NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
     if analysis.status != "complete" or not analysis.brief:
         raise HTTPException(status_code=400, detail={"error": "PRD is not complete yet.", "code": "NOT_COMPLETE"})
 
@@ -306,11 +318,10 @@ async def write_doc(
     if doc_type not in DOC_WRITER_PROMPTS:
         raise HTTPException(status_code=422, detail={"error": f"Unknown doc_type: {doc_type}", "code": "INVALID_DOC_TYPE"})
 
-    analysis = db.query(Analysis).filter(
-        Analysis.id == analysis_id, Analysis.user_id == current_user.id
-    ).first()
+    analysis, project = get_accessible_analysis(analysis_id, str(current_user.id), db)
     if not analysis:
         raise HTTPException(status_code=404, detail={"error": "PRD not found", "code": "ANALYSIS_NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
     if analysis.status != "complete" or not analysis.brief:
         raise HTTPException(status_code=400, detail={"error": "PRD is not complete yet.", "code": "NOT_COMPLETE"})
 
@@ -348,9 +359,7 @@ async def get_new_insights(
     db: DBSession = Depends(get_db),
 ):
     """Return insights added to the project after this PRD was generated."""
-    analysis = db.query(Analysis).filter(
-        Analysis.id == analysis_id, Analysis.user_id == current_user.id
-    ).first()
+    analysis, _project = get_accessible_analysis(analysis_id, str(current_user.id), db)
     if not analysis:
         raise HTTPException(status_code=404, detail={"error": "PRD not found", "code": "ANALYSIS_NOT_FOUND"})
 
@@ -392,17 +401,16 @@ async def extend_prd(
     Append a new section to an existing PRD using cherry-picked insights.
     Pro only. Max 3 extensions per PRD. Does not decrement monthly PRD counter.
     """
-    if current_user.plan != "pro":
+    if current_user.plan == "free":
         raise HTTPException(
             status_code=402,
-            detail={"error": "PRD extension requires Pro", "code": "PRO_REQUIRED"},
+            detail={"error": "PRD extension requires Pro or above", "code": "PRO_REQUIRED"},
         )
 
-    analysis = db.query(Analysis).filter(
-        Analysis.id == analysis_id, Analysis.user_id == current_user.id
-    ).first()
+    analysis, project = get_accessible_analysis(analysis_id, str(current_user.id), db)
     if not analysis:
         raise HTTPException(status_code=404, detail={"error": "PRD not found", "code": "ANALYSIS_NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
     if analysis.status != "complete":
         raise HTTPException(status_code=400, detail={"error": "PRD must be complete to extend", "code": "NOT_COMPLETE"})
     if analysis.extension_count >= 3:
@@ -463,6 +471,12 @@ async def extend_prd(
     ))
     db.commit()
 
+    from app.models.prd_summary import PrdSummary
+    existing_summary = db.query(PrdSummary).filter(PrdSummary.analysis_id == analysis.id).first()
+    if existing_summary:
+        existing_summary.is_stale = True
+        db.commit()
+
     return {
         "success": True,
         "extension_count": analysis.extension_count,
@@ -477,11 +491,17 @@ async def delete_prd(
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
-    analysis = db.query(Analysis).filter(
-        Analysis.id == analysis_id, Analysis.user_id == current_user.id
-    ).first()
+    analysis, project = get_accessible_analysis(analysis_id, str(current_user.id), db)
     if not analysis:
         raise HTTPException(status_code=404, detail={"error": "PRD not found", "code": "ANALYSIS_NOT_FOUND"})
+
+    # Viewers are read-only — even if they own the analysis (e.g. downgraded from editor)
+    require_editor_role(project, str(current_user.id), db)
+
+    is_analysis_owner = str(analysis.user_id) == str(current_user.id)
+    if not is_analysis_owner:
+        # Editors can only delete their own PRDs; workspace owner can delete any
+        require_owner_role(project, str(current_user.id), db)
 
     db.delete(analysis)
     db.commit()

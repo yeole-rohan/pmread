@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import useSWR from "swr";
 import { History } from "lucide-react";
 import { apiFetch } from "@/lib/api";
@@ -9,6 +10,12 @@ interface PrdVersion {
   trigger: "creation" | "extension" | "restore";
   triggered_by: string | null;
   created_at: string;
+}
+
+interface VersionsResponse {
+  limited: boolean;
+  retention_days: number | null;
+  versions: PrdVersion[];
 }
 
 const TRIGGER_LABEL: Record<PrdVersion["trigger"], string> = {
@@ -43,18 +50,31 @@ function formatDateTime(iso: string) {
 }
 
 function useVersions(prdId: string) {
-  return useSWR<PrdVersion[]>(
+  return useSWR<VersionsResponse>(
     `/analyses/${prdId}/versions`,
-    (key: string) => apiFetch<PrdVersion[]>(key),
+    (key: string) => apiFetch<VersionsResponse>(key),
     { revalidateOnFocus: false }
+  );
+}
+
+function RetentionNudge({ days }: { days: number }) {
+  return (
+    <p className="text-[11px] text-amber-600 mt-2">
+      Showing last {days} days.{" "}
+      <Link href="/settings?upgrade=true" className="underline hover:no-underline">
+        Upgrade to Pro
+      </Link>{" "}
+      for full history.
+    </p>
   );
 }
 
 // Compact sidebar variant — fits inside the left ToC column
 export function PrdVersionHistorySidebar({ prdId }: { prdId: string }) {
-  const { data: versions, isLoading } = useVersions(prdId);
+  const { data, isLoading } = useVersions(prdId);
+  const versions = data?.versions ?? [];
 
-  if (isLoading || !versions || versions.length === 0) return null;
+  if (isLoading || versions.length === 0) return null;
 
   return (
     <div className="mt-6 pt-5 border-t border-gray-100">
@@ -84,15 +104,20 @@ export function PrdVersionHistorySidebar({ prdId }: { prdId: string }) {
           </li>
         ))}
       </ol>
+
+      {data?.limited && data.retention_days && (
+        <RetentionNudge days={data.retention_days} />
+      )}
     </div>
   );
 }
 
 // Full panel variant — bottom of main content column (shown on non-xl screens only)
 export default function PrdVersionHistory({ prdId }: { prdId: string }) {
-  const { data: versions, isLoading } = useVersions(prdId);
+  const { data, isLoading } = useVersions(prdId);
+  const versions = data?.versions ?? [];
 
-  if (isLoading || !versions || versions.length === 0) return null;
+  if (isLoading || versions.length === 0) return null;
 
   return (
     <div className="xl:hidden bg-white rounded-2xl border border-gray-100 p-6 shadow-sm">
@@ -123,6 +148,10 @@ export default function PrdVersionHistory({ prdId }: { prdId: string }) {
           </li>
         ))}
       </ol>
+
+      {data?.limited && data.retention_days && (
+        <RetentionNudge days={data.retention_days} />
+      )}
     </div>
   );
 }

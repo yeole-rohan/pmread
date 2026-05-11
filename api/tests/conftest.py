@@ -35,6 +35,11 @@ from app.models.insight import Insight  # noqa: F401
 from app.models.analysis import Analysis  # noqa: F401
 from app.models.uploaded_doc import UploadedDoc  # noqa: F401
 from app.models.waitlist import WaitlistEmail  # noqa: F401
+from app.models.workspace import Workspace  # noqa: F401
+from app.models.workspace_member import WorkspaceMember  # noqa: F401
+from app.models.prd_summary import PrdSummary  # noqa: F401
+from app.models.workspace_prd_template import WorkspacePRDTemplate  # noqa: F401
+from app.models.audit_log import AuditLog  # noqa: F401
 
 
 # ── Session-scoped engine — tables created once per test run ──────────────

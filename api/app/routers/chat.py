@@ -10,8 +10,8 @@ from sqlalchemy.orm import Session as DBSession
 from app.auth import get_current_user
 from app.database import get_db
 from app.models.insight import Insight
-from app.models.project import Project
 from app.models.user import User
+from app.project_access import get_accessible_project
 from app.ai.context import build_insight_context
 from app.ai.prompts import (
     build_chat_system_prompt,
@@ -82,10 +82,7 @@ async def chat(
     if len(question) > 1000:
         raise HTTPException(status_code=422, detail={"error": "Question too long", "code": "QUESTION_TOO_LONG"})
 
-    project = db.query(Project).filter(
-        Project.id == project_id,
-        Project.user_id == current_user.id,
-    ).first()
+    project = get_accessible_project(str(project_id), str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
 
@@ -138,10 +135,7 @@ async def clarify(
     if not question:
         raise HTTPException(status_code=422, detail={"error": "Question is required", "code": "EMPTY_QUESTION"})
 
-    project = db.query(Project).filter(
-        Project.id == project_id,
-        Project.user_id == current_user.id,
-    ).first()
+    project = get_accessible_project(str(project_id), str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
 

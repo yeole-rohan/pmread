@@ -233,6 +233,95 @@ PRO_WELCOME_HTML = """
 """
 
 
+TEAMS_WELCOME_HTML = """
+<!DOCTYPE html>
+<html>
+<body style="font-family: sans-serif; max-width: 520px; margin: 40px auto; color: #1a1a1a;">
+  <div style="margin-bottom: 24px;">
+    <span style="background: #7F77DD; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; letter-spacing: 1px;">PMREAD</span>
+  </div>
+
+  <h2 style="font-size: 22px; font-weight: 700; margin-bottom: 4px;">Your team is on PMRead Teams 🚀</h2>
+  <p style="color: #555; font-size: 15px; margin-top: 4px;">Hi {name}, your upgrade is confirmed. Here's what your whole team can do now.</p>
+
+  <div style="background: #f8f7ff; border-radius: 12px; padding: 20px 24px; margin: 24px 0;">
+    <div style="margin-bottom: 12px;">
+      <span style="font-size: 18px;">👥</span>
+      <strong style="font-size: 14px; color: #1a1a1a; margin-left: 8px;">Shared team workspace</strong>
+      <p style="font-size: 13px; color: #666; margin: 4px 0 0 30px;">Invite teammates — they see all your projects, insights, and PRDs in one shared space. Create your workspace now.</p>
+    </div>
+    <div style="margin-bottom: 12px;">
+      <span style="font-size: 18px;">📄</span>
+      <strong style="font-size: 14px; color: #1a1a1a; margin-left: 8px;">Unlimited PRDs</strong>
+      <p style="font-size: 13px; color: #666; margin: 4px 0 0 30px;">No monthly cap. Generate as many PRDs as your team needs.</p>
+    </div>
+    <div style="margin-bottom: 12px;">
+      <span style="font-size: 18px;">🎨</span>
+      <strong style="font-size: 14px; color: #1a1a1a; margin-left: 8px;">Custom PRD templates</strong>
+      <p style="font-size: 13px; color: #666; margin: 4px 0 0 30px;">Disable sections you don't use and add team-specific guidance for each section — applied on every PRD your workspace generates.</p>
+    </div>
+    <div style="margin-bottom: 12px;">
+      <span style="font-size: 18px;">📤</span>
+      <strong style="font-size: 14px; color: #1a1a1a; margin-left: 8px;">Jira, Linear &amp; Azure DevOps push</strong>
+      <p style="font-size: 13px; color: #666; margin: 4px 0 0 30px;">Push engineering tasks directly from your PRD into your team's issue tracker.</p>
+    </div>
+    <div>
+      <span style="font-size: 18px;">📅</span>
+      <strong style="font-size: 14px; color: #1a1a1a; margin-left: 8px;">Schedule Estimator</strong>
+      <p style="font-size: 13px; color: #666; margin: 4px 0 0 30px;">Turn your PRD's engineering tasks into a sprint plan — enter team size and sprint length, get a delivery estimate automatically.</p>
+    </div>
+  </div>
+
+  <p style="font-size: 14px; color: #555; margin-bottom: 24px;"><strong>First step:</strong> Go to Settings → Team Workspace and create your workspace. Then invite your teammates.</p>
+
+  <p style="margin-top: 0;">
+    <a href="{app_url}/settings"
+       style="background: #7F77DD; color: white; padding: 12px 24px;
+              border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-block;">
+      Set up workspace →
+    </a>
+  </p>
+
+  <p style="font-size: 13px; color: #888; margin-top: 24px;">
+    Questions? Reply to this email — I read every one.<br>
+    — Rohan, PMRead
+  </p>
+
+  <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;">
+  <p style="color: #aaa; font-size: 12px;">PMRead · Built in India 🇮🇳</p>
+</body>
+</html>
+"""
+
+
+WORKSPACE_INVITE_HTML = """
+<!DOCTYPE html>
+<html>
+<body style="font-family: sans-serif; max-width: 480px; margin: 40px auto; color: #1a1a1a;">
+  <div style="margin-bottom: 24px;">
+    <span style="background: #7F77DD; color: white; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; letter-spacing: 1px;">PMREAD</span>
+  </div>
+  <h2 style="font-size: 20px; font-weight: 700;">You've been invited to join a workspace</h2>
+  <p style="color: #555; font-size: 15px;">
+    <strong>{inviter_name}</strong> has invited you to join <strong>{workspace_name}</strong> on PMRead as <strong>{role}</strong>.
+  </p>
+  <p style="margin-top: 28px;">
+    <a href="{invite_url}"
+       style="background: #7F77DD; color: white; padding: 12px 24px;
+              border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 600; display: inline-block;">
+      Accept invite →
+    </a>
+  </p>
+  <p style="color: #888; font-size: 13px; margin-top: 16px;">
+    Or copy this link: <a href="{invite_url}" style="color: #7F77DD;">{invite_url}</a>
+  </p>
+  <hr style="border: none; border-top: 1px solid #eee; margin: 32px 0;">
+  <p style="color: #aaa; font-size: 12px;">PMRead · Built in India 🇮🇳</p>
+</body>
+</html>
+"""
+
+
 async def send_verification_email(email: str, token: str, name: str) -> None:
     verify_url = f"{settings.FRONTEND_URL}/api/auth/verify-email?token={token}"
 

@@ -47,4 +47,4 @@ celery_app.autodiscover_tasks([
 
 # Re-export tasks for backward-compat imports elsewhere in the codebase
 from app.tasks.extraction import extract_insights_task  # noqa: E402, F401
-from app.tasks.email_tasks import send_verification_email_task  # noqa: E402, F401
+from app.tasks.email_tasks import send_verification_email_task, send_workspace_invite_task, send_teams_welcome_email_task  # noqa: E402, F401

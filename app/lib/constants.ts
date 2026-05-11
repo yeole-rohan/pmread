@@ -1,5 +1,5 @@
 /** Monthly PRD generation limits per plan. Single source of truth for frontend. */
-export const PLAN_PRD_LIMITS: Record<string, number> = { free: 2, pro: 15 };
+export const PLAN_PRD_LIMITS: Record<string, number> = { free: 2, pro: 15, teams: 60, studio: Infinity };
 
 /** Features restricted to Pro plan. */
 export const PRO_ONLY_FEATURES = {

@@ -52,6 +52,16 @@ interface InsightsBoardProps {
   highlightId?: string | null;
 }
 
+function parseStakeholderSource(name: string): { submitter: string; section: string | null } {
+  // "Stakeholder feedback on 'Proposed Feature' — Krishna"
+  // "Stakeholder feedback — Krishna"
+  const withSection = name.match(/^Stakeholder feedback on '(.+)' — (.+)$/);
+  if (withSection) return { submitter: withSection[2], section: withSection[1] };
+  const plain = name.match(/^Stakeholder feedback — (.+)$/);
+  if (plain) return { submitter: plain[1], section: null };
+  return { submitter: name, section: null };
+}
+
 function InsightCard({ insight, onDelete, onStar, typeMeta, highlight }: {
   insight: Insight;
   onDelete?: (id: string) => void;
@@ -59,7 +69,8 @@ function InsightCard({ insight, onDelete, onStar, typeMeta, highlight }: {
   typeMeta: typeof TYPE_META[InsightType];
   highlight?: boolean;
 }) {
-  const [expanded, setExpanded] = useState(false);
+  const isStakeholder = !!insight.source_name?.startsWith("Stakeholder feedback");
+  const [expanded, setExpanded] = useState(isStakeholder);
   const [flashing, setFlashing] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const fresh = isNew(insight.created_at);
@@ -120,20 +131,37 @@ function InsightCard({ insight, onDelete, onStar, typeMeta, highlight }: {
             In PRD
           </span>
         )}
+        {insight.source_name && (() => {
+          if (isStakeholder) {
+            const { submitter, section } = parseStakeholderSource(insight.source_name);
+            return (
+              <span className="text-[10px] bg-teal-50 text-teal-700 px-1.5 py-0.5 rounded-full font-medium" title={insight.source_name}>
+                👤 {submitter}{section && <span className="text-teal-500"> · {section}</span>}
+              </span>
+            );
+          }
+          return (
+            <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded-full font-medium truncate max-w-[140px]" title={insight.source_name}>
+              {insight.source_name}
+            </span>
+          );
+        })()}
       </div>
 
-      {/* Quote toggle */}
+      {/* Quote toggle — auto-expanded for stakeholder feedback */}
       {insight.quote && (
         <div className="mt-1.5 ml-3.5">
-          <button
-            onClick={() => setExpanded((v) => !v)}
-            className="flex items-center gap-1 text-[10px] text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
-          >
-            {expanded ? <ChevronDown size={10} /> : <ChevronRight size={10} />}
-            Evidence
-          </button>
+          {!isStakeholder && (
+            <button
+              onClick={() => setExpanded((v) => !v)}
+              className="flex items-center gap-1 text-[10px] text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
+            >
+              {expanded ? <ChevronDown size={10} /> : <ChevronRight size={10} />}
+              Evidence
+            </button>
+          )}
           {expanded && (
-            <blockquote className="mt-1 pl-2 border-l-2 border-gray-200 text-[10px] text-gray-500 italic leading-relaxed">
+            <blockquote className={`mt-1 pl-2 border-l-2 text-[10px] italic leading-relaxed ${isStakeholder ? "border-teal-200 text-teal-700" : "border-gray-200 text-gray-500"}`}>
               &ldquo;{insight.quote.split("\n\n")[0]}&rdquo;
             </blockquote>
           )}

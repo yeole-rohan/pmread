@@ -13,6 +13,7 @@ from app.config import settings
 from app.ai.prompts import (
     PRD_SYSTEM_PROMPT,
     SECTION_STATUS_MESSAGES,
+    apply_workspace_template,
     build_prd_user_message,
 )
 from app.ai.context import build_insight_context
@@ -107,6 +108,22 @@ async def run_analysis(
 
         user_message = build_prd_user_message(analysis.question, context, code_context)
 
+        # ── Workspace PRD template (Teams+) ───────────────────────────────────
+        effective_system_prompt = PRD_SYSTEM_PROMPT
+        from app.models.project import Project as _Project
+        _proj = db.query(_Project).filter(_Project.id == analysis.project_id).first()
+        if _proj and _proj.workspace_id:
+            from app.models.workspace_prd_template import WorkspacePRDTemplate
+            _tmpl = db.query(WorkspacePRDTemplate).filter(
+                WorkspacePRDTemplate.workspace_id == _proj.workspace_id
+            ).first()
+            if _tmpl and (_tmpl.disabled_sections or _tmpl.section_hints):
+                effective_system_prompt = apply_workspace_template(
+                    PRD_SYSTEM_PROMPT,
+                    _tmpl.disabled_sections or [],
+                    _tmpl.section_hints or {},
+                )
+
         await emit_sse(analysis_id, {"type": "status", "message": "Reading your customer evidence..."})
 
         # ── Streaming generation (Claude → Grok fallback) ─────────────────────
@@ -127,7 +144,7 @@ async def run_analysis(
             await emit_sse(analysis_id, {"type": "chunk", "content": text})
 
         result = await stream_generation(
-            system_prompt=PRD_SYSTEM_PROMPT,
+            system_prompt=effective_system_prompt,
             user_message=user_message,
             max_tokens=4096,
             on_chunk=on_chunk,
@@ -161,6 +178,19 @@ async def run_analysis(
             trigger="creation",
             triggered_by=analysis.user_id,
         ))
+
+        # Audit log (workspace projects only)
+        if _proj and _proj.workspace_id:
+            from app.audit import audit
+            audit(
+                db,
+                workspace_id=str(_proj.workspace_id),
+                user_id=str(analysis.user_id) if analysis.user_id else None,
+                action="prd_generated",
+                resource_type="analysis",
+                resource_id=str(analysis.id),
+            )
+
         db.commit()
 
         await emit_sse(analysis_id, {"type": "complete", "analysis_id": analysis_id})

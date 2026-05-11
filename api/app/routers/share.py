@@ -1,18 +1,20 @@
 from datetime import datetime, timezone
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 from sqlalchemy.orm import Session as DBSession
 
 from app.database import get_db
 from app.models.analysis import Analysis
-from app.models.project import Project
 from app.models.uploaded_doc import UploadedDoc
 from app.schemas.analysis import split_question
 from app.worker import extract_insights_task
 
 router = APIRouter()
+limiter = Limiter(key_func=get_remote_address)
 
 PRD_SECTIONS = [
     "Problem", "Proposed Feature", "Why Worth Building", "Goals", "Non-Goals",
@@ -60,7 +62,8 @@ class FeedbackPayload(BaseModel):
 
 
 @router.post("/{token}/feedback")
-async def submit_share_feedback(token: str, body: FeedbackPayload, db: DBSession = Depends(get_db)):
+@limiter.limit("5/minute")
+async def submit_share_feedback(request: Request, token: str, body: FeedbackPayload, db: DBSession = Depends(get_db)):
     analysis = db.query(Analysis).filter(Analysis.share_token == token).first()
     if not analysis or analysis.status != "complete" or not _is_share_valid(analysis):
         raise HTTPException(status_code=404, detail={"error": "Not found.", "code": "NOT_FOUND"})

@@ -6,18 +6,21 @@ from app.auth import get_current_user
 from app.database import get_db
 from app.models.insight import Insight
 from app.models.project import Project
+from app.models.uploaded_doc import UploadedDoc
 from app.models.user import User
+from app.project_access import get_accessible_project, require_editor_role
 
 router = APIRouter()
 
 INSIGHT_TYPES = {"pain_point", "feature_request", "decision", "action_item"}
 
 
-def _insight_dict(ins: Insight) -> dict:
+def _insight_dict(ins: Insight, source_name: str | None = None) -> dict:
     return {
         "id": str(ins.id),
         "project_id": str(ins.project_id),
         "source_doc_id": str(ins.source_doc_id) if ins.source_doc_id else None,
+        "source_name": source_name,
         "type": ins.type,
         "content": ins.content,
         "quote": ins.quote,
@@ -40,9 +43,7 @@ async def list_insights(
     All insights for a project, grouped by type.
     Sorted by frequency desc — most mentioned first.
     """
-    project = db.query(Project).filter(
-        Project.id == project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(project_id, str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "PROJECT_NOT_FOUND"})
 
@@ -54,11 +55,24 @@ async def list_insights(
         q = q.filter(Insight.type == type)
     insights = q.order_by(Insight.frequency.desc(), Insight.created_at.asc()).all()
 
+    # Batch-fetch source doc names for the insights that have one
+    doc_ids = {ins.source_doc_id for ins in insights if ins.source_doc_id}
+    source_names: dict = {}
+    if doc_ids:
+        docs = db.query(UploadedDoc.id, UploadedDoc.original_name).filter(
+            UploadedDoc.id.in_(doc_ids)
+        ).all()
+        source_names = {str(d.id): d.original_name for d in docs}
+
+    def to_dict(ins: Insight) -> dict:
+        name = source_names.get(str(ins.source_doc_id)) if ins.source_doc_id else None
+        return _insight_dict(ins, source_name=name)
+
     # Group by type when no filter applied
     if not type:
         grouped: dict[str, list] = {t: [] for t in INSIGHT_TYPES}
         for ins in insights:
-            grouped[ins.type].append(_insight_dict(ins))
+            grouped[ins.type].append(to_dict(ins))
         return {
             "project_id": project_id,
             "total": len(insights),
@@ -69,7 +83,7 @@ async def list_insights(
         "project_id": project_id,
         "type": type,
         "total": len(insights),
-        "insights": [_insight_dict(ins) for ins in insights],
+        "insights": [to_dict(ins) for ins in insights],
     }
 
 
@@ -81,9 +95,7 @@ async def search_insights(
     db: DBSession = Depends(get_db),
 ):
     """Full-text search across insights for a project using PostgreSQL tsvector."""
-    project = db.query(Project).filter(
-        Project.id == project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(project_id, str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "PROJECT_NOT_FOUND"})
 
@@ -129,11 +141,10 @@ async def toggle_star(
     db: DBSession = Depends(get_db),
 ):
     """Toggle the starred flag on an insight."""
-    project = db.query(Project).filter(
-        Project.id == project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(project_id, str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "PROJECT_NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
 
     insight = db.query(Insight).filter(
         Insight.id == insight_id, Insight.project_id == project_id
@@ -154,11 +165,10 @@ async def delete_insight(
     db: DBSession = Depends(get_db),
 ):
     """Delete a single insight (e.g. if PM marks it irrelevant)."""
-    project = db.query(Project).filter(
-        Project.id == project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(project_id, str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "PROJECT_NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
 
     insight = db.query(Insight).filter(
         Insight.id == insight_id, Insight.project_id == project_id

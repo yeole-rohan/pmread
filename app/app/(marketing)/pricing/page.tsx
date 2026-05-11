@@ -2,6 +2,7 @@ import { SITE_URL } from "@/lib/site";
 import type { Metadata } from "next";
 import Link from "next/link";
 import PricingPlans from "@/components/PricingPlans";
+import PricingVsStack from "@/components/PricingVsStack";
 
 export const metadata: Metadata = {
   title: { absolute: "Pricing — PMRead" },
@@ -20,36 +21,40 @@ const CONTACT_EMAIL = "rohan.yeole@rohanyeole.com";
 
 const faqItems = [
   {
+    q: "What's the difference between Pro and Teams?",
+    a: "Pro is for individual PMs — 15 PRDs/month, all integrations, and export. Teams adds 5 seats (60 PRDs/month), a shared workspace, a team decision log, and priority support. Studio is for larger orgs needing SSO, compliance audit trails, and a dedicated success manager.",
+  },
+  {
     q: "Can I cancel anytime?",
-    a: "Yes. Cancel from Settings at any time. Your Pro access continues until the end of the current billing period — no partial-month charges.",
+    a: "Yes. Cancel from Settings at any time. Your access continues until the end of the current billing period — no partial-month charges.",
   },
   {
     q: "Are there refunds?",
-    a: "All purchases are non-refundable. You can cancel before your next billing date to avoid future charges, but we do not issue refunds for the current or past periods. If you believe there has been a billing error, contact us and we will investigate.",
+    a: "All purchases are non-refundable. You can cancel before your next billing date to avoid future charges. If you believe there has been a billing error, contact us and we will investigate.",
   },
   {
     q: "What counts as a PRD?",
-    a: "Each time you generate a new PRD document from your insights, that counts as one PRD. Editing, exporting, or re-viewing an existing PRD does not count.",
-  },
-  {
-    q: "Is my data safe?",
-    a: "Yes. Your files and insights are stored securely and are never used to train AI models. We do not share your data with third parties. See our Privacy Policy for details.",
-  },
-  {
-    q: "What payment methods do you accept?",
-    a: "We use Razorpay for payments. You can pay with UPI, credit card, debit card, or net banking. INR pricing is shown — international cards are supported.",
+    a: "Each time you generate a new PRD document from your insights, that counts as one. Editing, exporting, re-viewing, or pushing to Jira/Linear does not count.",
   },
   {
     q: "How does annual billing work?",
-    a: "Annual billing charges you for 10 months upfront (₹16,990/year), giving you 2 months free compared to monthly billing. You can toggle between monthly and annual on this page before signing up.",
+    a: "Annual billing charges you for 10 months upfront — Pro at ₹16,990/year (saving ₹3,398), Teams at ₹1,19,990/year. You can toggle between monthly and annual on this page before subscribing.",
   },
   {
     q: "What file formats are supported?",
-    a: "Free plan supports PDF, DOCX, TXT, MP3, MP4, and M4A. Pro adds Slack channel exports and GitHub repository indexing.",
+    a: "All plans support PDF, DOCX, TXT, MP3, MP4, and M4A uploads. Pro and above add Slack channel ingestion and GitHub repository indexing.",
   },
   {
-    q: "Is there a team plan?",
-    a: "Team plans are on the roadmap. If you have a team of 3 or more PMs, reach out and we can discuss pricing.",
+    q: "What payment methods do you accept?",
+    a: "We use Razorpay. You can pay with UPI, credit card, debit card, or net banking. INR pricing is shown — international cards are supported.",
+  },
+  {
+    q: "Is my data safe?",
+    a: "Yes. Your files and insights are stored securely and are never used to train AI models. We do not share your data with third parties.",
+  },
+  {
+    q: "What is Studio and who is it for?",
+    a: "Studio is for agencies, consulting firms, and enterprise teams running multiple product lines. It includes unlimited PRDs and seats, SSO/SAML, compliance audit trails, Azure DevOps integration, and a dedicated success manager. Pricing is tailored — email us to discuss.",
   },
 ];
 
@@ -81,21 +86,23 @@ export default function PricingPage() {
               Simple, transparent pricing
             </h1>
             <p className="text-xl text-gray-500">
-              Free AI PRD generator to start — upgrade when your team needs more PRDs,
-              more sources, and faster customer feedback analysis.
+              Start free. Upgrade when you need more PRDs, team collaboration, or enterprise controls.
             </p>
           </div>
         </section>
 
         {/* ── Plans + comparison table (interactive toggle) ────────────── */}
         <section className="pb-16 sm:pb-20">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6">
             <PricingPlans />
           </div>
         </section>
 
+        {/* ── Competitive justification ─────────────────────────────────── */}
+        <PricingVsStack />
+
         {/* ── Sample output trust signal ───────────────────────────────── */}
-        <section className="pb-12 sm:pb-16">
+        <section className="pt-12 pb-12 sm:pt-16 sm:pb-16">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
             <p className="text-sm text-gray-500">
               Not sure what you&apos;ll get?{" "}
