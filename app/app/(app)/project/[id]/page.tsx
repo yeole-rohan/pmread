@@ -58,6 +58,8 @@ export default function ProjectPage() {
     { revalidateOnFocus: false, dedupingInterval: 60_000 },
   );
   const currentProject = projects?.find((p) => p.id === projectId);
+  const isViewer = currentProject?.workspace_role === "viewer";
+  const canEdit = !isViewer;
 
   useEmptyProjectCleanup(projectId, loading, insightTotal, prds.length);
 
@@ -242,7 +244,7 @@ export default function ProjectPage() {
               <GithubRepoPicker
                 projectId={projectId}
                 githubConnected={!!user?.github_connected}
-                isPro={user?.plan === "pro"}
+                isPro={user?.plan !== "free"}
               />
               {tab === "insights" && (
                 <>
@@ -254,16 +256,18 @@ export default function ProjectPage() {
                   >
                     <RefreshCw size={15} className={refreshing ? "animate-spin" : ""} />
                   </button>
-                  <button
-                    onClick={() => setShowUpload(true)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#7F77DD] hover:bg-[#6b64c4] text-white text-sm font-medium rounded-lg transition-colors cursor-pointer"
-                  >
-                    <Upload size={14} />
-                    Upload files
-                  </button>
+                  {canEdit && (
+                    <button
+                      onClick={() => setShowUpload(true)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-[#7F77DD] hover:bg-[#6b64c4] text-white text-sm font-medium rounded-lg transition-colors cursor-pointer"
+                    >
+                      <Upload size={14} />
+                      Upload files
+                    </button>
+                  )}
                 </>
               )}
-              {tab === "prds" && (
+              {tab === "prds" && canEdit && (
                 <button
                   onClick={() => {
                     if (prdsUsed >= prdLimit) setShowUpgrade(true);
@@ -287,13 +291,13 @@ export default function ProjectPage() {
             />
           )}
           {tab === "prds" && (
-            <PrdList projectId={projectId} prds={prds} isPro={user?.plan === "pro"} />
+            <PrdList projectId={projectId} prds={prds} isPro={user?.plan !== "free"} />
           )}
           {tab === "ask" && (
             <AskTab
               projectId={projectId}
               hasInsights={insightTotal > 0}
-              isPro={user?.plan === "pro"}
+              isPro={user?.plan !== "free"}
               githubConnected={!!user?.github_connected}
             />
           )}
@@ -311,7 +315,7 @@ export default function ProjectPage() {
         open={showUpload}
         onClose={() => setShowUpload(false)}
         onUploaded={handleUploaded}
-        isPro={user?.plan === "pro"}
+        isPro={user?.plan !== "free"}
       />
       <GeneratePRDModal
         projectId={projectId}

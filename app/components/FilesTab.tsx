@@ -66,7 +66,7 @@ function IngestEmailSection({ projectId, initialToken }: { projectId: string; in
   const [copied, setCopied] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
 
-  const email = token ? `${token}@ingest.pmread.com` : null;
+  const email = token ? `${token}@ingest.pmread.org` : null;
 
   async function handleCopy() {
     if (!email) return;

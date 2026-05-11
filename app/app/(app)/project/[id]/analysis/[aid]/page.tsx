@@ -10,6 +10,8 @@ import CoveragePanel from "@/components/CoveragePanel";
 import DocWriterPanel from "@/components/DocWriterPanel";
 import JiraExportPanel from "@/components/JiraExportPanel";
 import PrdVersionHistory, { PrdVersionHistorySidebar } from "@/components/PrdVersionHistory";
+import ExecSummaryPanel from "@/components/ExecSummaryPanel";
+import ScheduleEstimator from "@/components/ScheduleEstimator";
 import ShareModal from "@/components/ShareModal";
 import PushModal from "@/components/PushModal";
 import PrdTableOfContents from "@/components/PrdTableOfContents";
@@ -175,14 +177,19 @@ export default function AnalysisPage() {
             Back to project
           </Link>
 
-          {isComplete && Object.values(integrations).some((i) => i.connected) && (
-            <button
-              onClick={() => setShowPush(true)}
-              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
-            >
-              Push
-            </button>
-          )}
+          {isComplete && Object.values(integrations).some((i) => i.connected) && (() => {
+            const LABELS: Record<string, string> = { jira: "Jira", linear: "Linear", azuredevops: "Azure DevOps" };
+            const connected = Object.entries(integrations).filter(([, v]) => v.connected).map(([k]) => LABELS[k] ?? k);
+            const label = connected.length === 1 ? `Push to ${connected[0]}` : "Push to project management";
+            return (
+              <button
+                onClick={() => setShowPush(true)}
+                className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                {label}
+              </button>
+            );
+          })()}
           {isComplete && (
             <button
               onClick={() => setShowShare(true)}
@@ -348,6 +355,16 @@ export default function AnalysisPage() {
         {/* PRD content */}
         {isComplete && brief && (
           <div className="space-y-4">
+            <ExecSummaryPanel
+              analysisId={analysisId}
+              isPro={user?.plan !== "free"}
+              onUpgradeRequired={() => setShowUpgrade(true)}
+            />
+            <ScheduleEstimator
+              analysisId={analysisId}
+              canUse={user?.plan === "teams" || user?.plan === "studio"}
+              onUpgrade={() => setShowUpgrade(true)}
+            />
             <CoveragePanel
               analysisId={analysisId}
               cachedValidation={(brief as any).validation ?? null}
@@ -386,6 +403,7 @@ export default function AnalysisPage() {
           analysisId={analysisId}
           integrations={integrations}
           onClose={() => setShowPush(false)}
+          onUpgradeRequired={() => { setShowPush(false); setShowUpgrade(true); }}
         />
       )}
     </div>

@@ -9,11 +9,33 @@ from app.models.analysis import Analysis
 from app.models.insight import Insight
 from app.models.project import Project
 from app.models.user import User
+from app.models.workspace_member import WorkspaceMember
 from app.schemas.analysis import split_question
 
 router = APIRouter()
 
 MAX_RESULTS = 20
+
+
+def _accessible_project_ids(user_id, db: DBSession) -> list:
+    """Return all project IDs the user can access (own + workspace membership)."""
+    own = [r[0] for r in db.query(Project.id).filter(Project.user_id == user_id).all()]
+
+    member_ws_ids = [
+        r[0] for r in
+        db.query(WorkspaceMember.workspace_id).filter(
+            WorkspaceMember.user_id == user_id,
+            WorkspaceMember.accepted_at.isnot(None),
+        ).all()
+    ]
+    ws_projects = []
+    if member_ws_ids:
+        ws_projects = [
+            r[0] for r in
+            db.query(Project.id).filter(Project.workspace_id.in_(member_ws_ids)).all()
+        ]
+
+    return list({str(i) for i in own + ws_projects})
 
 
 @router.get("")
@@ -25,20 +47,19 @@ async def search(
 ):
     """Full-text ILIKE search across insights, project names, and PRD titles."""
     term = f"%{q}%"
+    accessible_ids = _accessible_project_ids(current_user.id, db)
 
-    # Project search (always global — only user's own projects)
+    # Project search
     proj_q = db.query(Project).filter(
-        Project.user_id == current_user.id,
+        Project.id.in_(accessible_ids),
         Project.name.ilike(term),
     ).limit(5).all()
 
     projects = [{"id": str(p.id), "name": p.name} for p in proj_q]
 
     # Insight search
-    ins_q = db.query(Insight).join(
-        Project, Insight.project_id == Project.id
-    ).filter(
-        Project.user_id == current_user.id,
+    ins_q = db.query(Insight).filter(
+        Insight.project_id.in_(accessible_ids),
     )
 
     if project_id:
@@ -63,10 +84,8 @@ async def search(
     ]
 
     # PRD search — search question field, completed PRDs only
-    prd_q = db.query(Analysis).join(
-        Project, Analysis.project_id == Project.id
-    ).filter(
-        Project.user_id == current_user.id,
+    prd_q = db.query(Analysis).filter(
+        Analysis.project_id.in_(accessible_ids),
         Analysis.status == "complete",
         Analysis.question.ilike(term),
     )

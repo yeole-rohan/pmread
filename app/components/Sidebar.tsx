@@ -1,30 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { Plus, ChevronLeft, ChevronRight, Settings, LogOut, MoreHorizontal, Search } from "lucide-react";
-import { Project, User } from "@/lib/types";
+import { Project, User, Workspace, APIError } from "@/lib/types";
 import { apiFetch } from "@/lib/api";
 import { logout } from "@/lib/auth";
 import { PLAN_PRD_LIMITS } from "@/lib/constants";
 
 interface SidebarProps {
   projects: Project[];
+  workspaces?: Workspace[];
   user: User;
   onProjectCreated: (project: Project) => void;
   onProjectDeleted: (id: string) => void;
   onProjectRenamed: (id: string, name: string) => void;
   onSearchOpen?: () => void;
+  onUpgradeRequired?: () => void;
 }
 
 export default function Sidebar({
   projects,
+  workspaces = [],
   user,
   onProjectCreated,
   onProjectDeleted,
   onProjectRenamed,
   onSearchOpen,
+  onUpgradeRequired,
 }: SidebarProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -32,18 +36,50 @@ export default function Sidebar({
   const [renaming, setRenaming] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState("");
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
+  const [showDestPicker, setShowDestPicker] = useState(false);
+  const destPickerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showDestPicker) return;
+    function handleClick(e: MouseEvent) {
+      if (destPickerRef.current && !destPickerRef.current.contains(e.target as Node)) {
+        setShowDestPicker(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [showDestPicker]);
 
   const prdLimit = PLAN_PRD_LIMITS[user.plan] ?? 2;
+  const isUnlimited = !isFinite(prdLimit);
   const prdsUsed = user.prds_generated_this_month ?? 0;
-  const prdsLeft = Math.max(0, prdLimit - prdsUsed);
+  const prdsLeft = isUnlimited ? Infinity : Math.max(0, prdLimit - prdsUsed);
 
-  async function createProject() {
-    const project = await apiFetch<Project>("/projects/", {
-      method: "POST",
-      body: JSON.stringify({ name: "New Project" }),
-    });
-    onProjectCreated(project);
-    router.push(`/project/${project.id}`);
+  // Workspaces where user can create projects (editor or owner)
+  const writableWorkspaces = workspaces.filter((w) => w.my_role !== "viewer");
+
+  async function createProject(workspaceId?: string) {
+    setShowDestPicker(false);
+    try {
+      const project = await apiFetch<Project>("/projects/", {
+        method: "POST",
+        body: JSON.stringify({ name: "New Project", workspace_id: workspaceId ?? null }),
+      });
+      onProjectCreated(project);
+      router.push(`/project/${project.id}`);
+    } catch (err: unknown) {
+      if (err instanceof APIError && err.status === 402 && onUpgradeRequired) {
+        onUpgradeRequired();
+      }
+    }
+  }
+
+  function handleNewProject() {
+    if (writableWorkspaces.length === 0) {
+      createProject();
+    } else {
+      setShowDestPicker((v) => !v);
+    }
   }
 
   async function renameProject(id: string) {
@@ -72,7 +108,7 @@ export default function Sidebar({
         >
           <ChevronRight size={18} />
         </button>
-        <button onClick={createProject} className="p-1 text-gray-400 hover:text-gray-700" title="New project">
+        <button onClick={handleNewProject} className="p-1 text-gray-400 hover:text-gray-700" title="New project">
           <Plus size={18} />
         </button>
       </aside>
@@ -91,13 +127,35 @@ export default function Sidebar({
 
       {/* New project + search */}
       <div className="px-3 py-3 space-y-1.5">
-        <button
-          onClick={createProject}
-          className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[#7F77DD] hover:bg-[#6b64c4] rounded-lg transition-colors"
-        >
-          <Plus size={16} />
-          New Project
-        </button>
+        <div className="relative" ref={destPickerRef}>
+          <button
+            onClick={handleNewProject}
+            className="w-full flex items-center gap-2 px-3 py-2 text-sm font-medium text-white bg-[#7F77DD] hover:bg-[#6b64c4] rounded-lg transition-colors"
+          >
+            <Plus size={16} />
+            New Project
+          </button>
+          {showDestPicker && (
+            <div className="absolute left-0 right-0 top-full mt-1 z-20 bg-white border border-gray-200 rounded-lg shadow-lg py-1 text-sm">
+              <p className="px-3 py-1 text-xs text-gray-400 font-medium">Create in…</p>
+              <button
+                className="w-full text-left px-3 py-2 hover:bg-gray-50 text-gray-700"
+                onClick={() => createProject()}
+              >
+                Personal
+              </button>
+              {writableWorkspaces.map((ws) => (
+                <button
+                  key={ws.id}
+                  className="w-full text-left px-3 py-2 hover:bg-purple-50 text-gray-700 truncate"
+                  onClick={() => createProject(ws.id)}
+                >
+                  {ws.name}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
         <button
           onClick={onSearchOpen}
           className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors"
@@ -110,15 +168,20 @@ export default function Sidebar({
 
       {/* Project list */}
       <div className="flex-1 overflow-y-auto px-2">
-        <p className="px-2 py-1 text-xs font-medium text-gray-400 uppercase tracking-wide">
-          Projects
-        </p>
-        {projects.length === 0 ? (
-          <p className="px-2 py-2 text-xs text-gray-400">
-            No projects yet. Create one to get started.
-          </p>
-        ) : (
-          projects.map((p) => {
+        {(() => {
+          const personal = projects.filter((p) => !p.workspace_id);
+          // Group workspace projects by workspace
+          const wsMap = new Map<string, { name: string; projects: typeof projects }>();
+          for (const p of projects) {
+            if (p.workspace_id) {
+              if (!wsMap.has(p.workspace_id)) {
+                wsMap.set(p.workspace_id, { name: p.workspace_name ?? "Workspace", projects: [] });
+              }
+              wsMap.get(p.workspace_id)!.projects.push(p);
+            }
+          }
+
+          const renderProjectRow = (p: (typeof projects)[0]) => {
             const isActive = pathname.includes(`/project/${p.id}`);
             return (
               <div
@@ -144,7 +207,6 @@ export default function Sidebar({
                 ) : (
                   <span className="flex-1 text-sm truncate">{p.name}</span>
                 )}
-
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
@@ -154,7 +216,6 @@ export default function Sidebar({
                 >
                   <MoreHorizontal size={14} />
                 </button>
-
                 {menuOpen === p.id && (
                   <div
                     className="absolute right-0 top-8 z-10 bg-white border border-gray-200 rounded-lg shadow-lg py-1 min-w-[120px]"
@@ -185,8 +246,34 @@ export default function Sidebar({
                 )}
               </div>
             );
-          })
-        )}
+          };
+
+          return (
+            <>
+              {/* Personal projects */}
+              {wsMap.size > 0 && (
+                <p className="px-2 py-1 text-xs font-medium text-gray-400 uppercase tracking-wide">Personal</p>
+              )}
+              {wsMap.size === 0 && (
+                <p className="px-2 py-1 text-xs font-medium text-gray-400 uppercase tracking-wide">Projects</p>
+              )}
+              {personal.length === 0 && wsMap.size === 0 && (
+                <p className="px-2 py-2 text-xs text-gray-400">No projects yet. Create one to get started.</p>
+              )}
+              {personal.map(renderProjectRow)}
+
+              {/* Workspace groups */}
+              {Array.from(wsMap.entries()).map(([wsId, { name, projects: wps }]) => (
+                <div key={wsId} className="mt-2">
+                  <p className="px-2 py-1 text-xs font-medium text-gray-400 uppercase tracking-wide truncate">
+                    {name}
+                  </p>
+                  {wps.map(renderProjectRow)}
+                </div>
+              ))}
+            </>
+          );
+        })()}
       </div>
 
       {/* User + PRD counter */}
@@ -195,16 +282,18 @@ export default function Sidebar({
         <div className="px-2 py-1.5 bg-gray-100 rounded-lg">
           <div className="flex items-center justify-between mb-1">
             <p className="text-xs text-gray-500">PRDs this month</p>
-            <span className={`text-xs font-semibold ${prdsLeft === 0 ? "text-red-500" : "text-gray-700"}`}>
-              {prdsUsed} / {prdLimit}
+            <span className={`text-xs font-semibold ${!isUnlimited && prdsLeft === 0 ? "text-red-500" : "text-gray-700"}`}>
+              {isUnlimited ? `${prdsUsed} ∞` : `${prdsUsed} / ${prdLimit}`}
             </span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-1">
-            <div
-              className={`h-1 rounded-full transition-all ${prdsLeft === 0 ? "bg-red-400" : "bg-[#7F77DD]"}`}
-              style={{ width: `${Math.min(100, (prdsUsed / prdLimit) * 100)}%` }}
-            />
-          </div>
+          {!isUnlimited && (
+            <div className="w-full bg-gray-200 rounded-full h-1">
+              <div
+                className={`h-1 rounded-full transition-all ${prdsLeft === 0 ? "bg-red-400" : "bg-[#7F77DD]"}`}
+                style={{ width: `${Math.min(100, (prdsUsed / prdLimit) * 100)}%` }}
+              />
+            </div>
+          )}
           {user.plan === "free" && prdsLeft <= 1 && (
             <Link
               href="/settings?upgrade=true"
@@ -214,6 +303,20 @@ export default function Sidebar({
             </Link>
           )}
         </div>
+
+        {/* Teams onboarding nudge — shown until workspace is created */}
+        {["teams", "studio"].includes(user.plan) && workspaces.length === 0 && (
+          <Link
+            href="/settings"
+            className="flex items-start gap-2 px-2 py-2 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+          >
+            <span className="text-base mt-0.5">👥</span>
+            <div>
+              <p className="text-xs font-semibold text-purple-700">Set up your workspace</p>
+              <p className="text-xs text-purple-500">Invite teammates → Settings</p>
+            </div>
+          </Link>
+        )}
 
         {/* User row */}
         <div className="flex items-center gap-2">

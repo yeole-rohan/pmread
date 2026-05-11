@@ -8,6 +8,7 @@ from app.models.uploaded_doc import UploadedDoc
 from app.models.user import User
 from app.services.parser import parse_file, MAX_FILE_SIZE
 from app.worker import extract_insights_task
+from app.project_access import get_accessible_project, require_editor_role
 
 router = APIRouter()
 
@@ -25,11 +26,10 @@ async def upload_files(
     Upload files to a project. Insight extraction starts automatically in background.
     No PRD limit check — uploads are always free.
     """
-    project = db.query(Project).filter(
-        Project.id == project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(project_id, str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "PROJECT_NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
 
     if not files:
         raise HTTPException(status_code=400, detail={"error": "No files uploaded", "code": "NO_FILES"})
@@ -91,9 +91,7 @@ async def list_docs(
     db: DBSession = Depends(get_db),
 ):
     """List all uploaded files for a project with their extraction status."""
-    project = db.query(Project).filter(
-        Project.id == project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(project_id, str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "PROJECT_NOT_FOUND"})
 

@@ -26,8 +26,12 @@ class Settings(BaseSettings):
     # Razorpay
     RAZORPAY_KEY_ID: str = ""
     RAZORPAY_KEY_SECRET: str = ""
-    RAZORPAY_PRO_PLAN_ID: str = ""         # monthly plan — ₹1,699/mo, create in Razorpay dashboard
-    RAZORPAY_PRO_ANNUAL_PLAN_ID: str = ""  # annual plan  — ₹16,990/yr, create in Razorpay dashboard
+    # Pro — create plans in Razorpay dashboard at the amounts below
+    RAZORPAY_PRO_PLAN_ID: str = ""         # monthly  ₹3,999/mo
+    RAZORPAY_PRO_ANNUAL_PLAN_ID: str = ""  # annual   ₹39,990/yr (= ₹3,333/mo)
+    # Teams — minimum 3 seats bundled
+    RAZORPAY_TEAMS_PLAN_ID: str = ""       # monthly  ₹13,497/mo  (3 × ₹4,499)
+    RAZORPAY_TEAMS_ANNUAL_PLAN_ID: str = "" # annual  ₹1,25,964/yr (3 × ₹3,499 × 12)
 
     # App
     ENVIRONMENT: str = "development"
@@ -54,6 +58,13 @@ class Settings(BaseSettings):
     # Callback URL: {BACKEND_URL}/api/integrations/linear/callback
     LINEAR_CLIENT_ID: str = ""
     LINEAR_CLIENT_SECRET: str = ""
+
+    # Azure DevOps OAuth 2.0 (Teams+ only)
+    # Register at: https://app.vsaex.visualstudio.com/app/register
+    # Callback URL: {BACKEND_URL}/api/integrations/azuredevops/callback
+    # Required scopes: vso.work_write
+    AZUREDEVOPS_CLIENT_ID: str = ""
+    AZUREDEVOPS_CLIENT_SECRET: str = ""
     # Groq — fast free-tier LLM (Llama via Groq cloud); free-user chat + clarify calls
     GROQ_API_KEY: str = ""
     # VoyageAI — primary embedding provider for code (voyage-code-3, 1024-dim)

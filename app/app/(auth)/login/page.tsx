@@ -17,6 +17,7 @@ function LoginForm() {
 
   const verified = params.get("verified") === "true";
   const reset = params.get("reset") === "true";
+  const next = params.get("next");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -24,7 +25,7 @@ function LoginForm() {
     setLoading(true);
     try {
       await login(email, password, remember);
-      router.push("/dashboard");
+      router.push(next && next.startsWith("/") ? next : "/dashboard");
     } catch (err) {
       setError(err instanceof APIError ? err.message : "Login failed");
     } finally {

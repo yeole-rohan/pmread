@@ -8,8 +8,8 @@ from sqlalchemy.orm import Session as DBSession
 
 from app.auth import get_current_user
 from app.database import get_db
-from app.models.project import Project
 from app.models.user import User
+from app.project_access import get_accessible_project
 from app.services.project_events import subscribe_project_events
 
 router = APIRouter()
@@ -31,9 +31,7 @@ async def project_events(
       {"type": "github_index", "status": "indexing"|"ready"|"failed", "chunk_count": N}
       {"type": "ping"}  — keepalive every 15s
     """
-    project = db.query(Project).filter(
-        Project.id == project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(project_id, str(current_user.id), db)
     if not project:
         return StreamingResponse(
             iter([f"data: {json.dumps({'type': 'error', 'message': 'not found'})}\n\n"]),

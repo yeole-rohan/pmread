@@ -1,7 +1,11 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 from starlette.middleware.sessions import SessionMiddleware
 from sqladmin import Admin, ModelView
 from sqladmin.authentication import AuthenticationBackend
@@ -20,6 +24,11 @@ from app.models.session import Session
 from app.models.waitlist import WaitlistEmail
 from app.models.github_chunk import GithubCodeChunk
 from app.models.celery_task import CeleryTask
+from app.models.workspace import Workspace
+from app.models.workspace_member import WorkspaceMember
+from app.models.prd_summary import PrdSummary
+from app.models.workspace_prd_template import WorkspacePRDTemplate
+from app.models.audit_log import AuditLog
 from app.routers import auth, projects, analyses, stream, export, billing, waitlist
 from app.routers import uploads, insights, share, feedback as feedback_router, chat, search, ingest, events, slack as slack_router
 from app.routers import admin as admin_router
@@ -27,6 +36,9 @@ from app.routers import decisions as decisions_router
 from app.routers import ingest_email as ingest_email_router
 from app.routers import prd_versions as prd_versions_router
 from app.routers import integrations as integrations_router
+from app.routers import workspaces as workspaces_router
+from app.routers import exec_summary as exec_summary_router
+from app.routers import schedule as schedule_router
 if settings.SENTRY_DSN:
     import sentry_sdk
     from sentry_sdk.integrations.fastapi import FastApiIntegration
@@ -47,6 +59,8 @@ async def lifespan(_app: FastAPI):
     yield
 
 
+limiter = Limiter(key_func=get_remote_address)
+
 app = FastAPI(
     title="PMRead API",
     version="1.0.0",
@@ -54,6 +68,8 @@ app = FastAPI(
     redoc_url=None,
     lifespan=lifespan,
 )
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     SessionMiddleware,
@@ -262,7 +278,10 @@ app.include_router(slack_router.router, prefix="/api/projects", tags=["slack"])
 app.include_router(events.router, prefix="/api/projects", tags=["events"])
 app.include_router(decisions_router.router, prefix="/api/decisions", tags=["decisions"])
 app.include_router(prd_versions_router.router, prefix="/api/analyses", tags=["prd-versions"])
+app.include_router(exec_summary_router.router, prefix="/api/analyses", tags=["exec-summary"])
+app.include_router(schedule_router.router, prefix="/api/analyses", tags=["schedule"])
 app.include_router(integrations_router.router, prefix="/api/integrations", tags=["integrations"])
+app.include_router(workspaces_router.router, prefix="/api/workspaces", tags=["workspaces"])
 app.include_router(admin_router.router, prefix="/api/admin", tags=["admin"])
 
 

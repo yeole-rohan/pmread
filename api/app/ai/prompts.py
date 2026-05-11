@@ -251,6 +251,52 @@ Your job:
 Output clean markdown only. Start directly with the content — no preamble, no meta-commentary."""
 
 
+EXEC_SUMMARY_SYSTEM_PROMPT = """You are a senior PM writing a concise executive summary of a PRD.
+Given a PRD and the project's top customer insights, write a structured summary a VP or stakeholder can read in 60 seconds.
+
+Rules:
+- problem: 2 sentences, grounded in evidence, cite frequency if relevant
+- top_insights: exactly 3, sorted by frequency descending, use the actual insight text
+- recommendation: 1 paragraph, specific, names the feature
+- ask: 1 sentence, the decision or sign-off this PRD needs — be concrete, not "Please review"
+- Output ONLY a JSON object — no markdown fences, nothing outside the braces
+
+{
+  "problem": "2 sentences.",
+  "top_insights": [
+    {"content": "Key insight text", "frequency": 8},
+    {"content": "Second insight", "frequency": 5},
+    {"content": "Third insight", "frequency": 3}
+  ],
+  "recommendation": "1 paragraph.",
+  "ask": "1 sentence."
+}"""
+
+
+def build_exec_summary_user_message(brief: dict, insight_context: str) -> str:
+    problem = brief.get("problem", "")
+    proposed_feature = brief.get("proposed_feature", "")
+    goals = "\n".join(f"- {g}" for g in (brief.get("goals") or []))
+    return f"""## PRD
+
+**Problem:** {problem}
+
+**Proposed Feature:** {proposed_feature}
+
+**Goals:**
+{goals}
+
+---
+
+## Project's top customer insights
+
+{insight_context}
+
+---
+
+Generate the executive summary JSON now."""
+
+
 def build_extend_prd_user_message(existing_markdown: str, new_insights_context: str) -> str:
     # Truncate existing PRD to avoid exceeding context limits
     truncated = existing_markdown[:3000] + ("..." if len(existing_markdown) > 3000 else "")
@@ -267,6 +313,20 @@ def build_extend_prd_user_message(existing_markdown: str, new_insights_context: 
 ---
 
 Write the PRD update section now."""
+
+
+def apply_workspace_template(system_prompt: str, disabled_sections: list[str], section_hints: dict[str, str]) -> str:
+    """Remove disabled sections from the PRD XML template and append section hints."""
+    import re
+    result = system_prompt
+    for section in disabled_sections:
+        # Match the entire XML block for this section (handles multi-line blocks)
+        pattern = rf"\n  <{re.escape(section)}>.*?</{re.escape(section)}>"
+        result = re.sub(pattern, "", result, flags=re.DOTALL)
+    if section_hints:
+        hints_text = "\n".join(f"- {sec}: {hint}" for sec, hint in section_hints.items())
+        result = result.rstrip() + f"\n\nAdditional section guidance:\n{hints_text}"
+    return result
 
 
 def build_prd_user_message(question: str, insight_context: str, code_context: str = "") -> str:

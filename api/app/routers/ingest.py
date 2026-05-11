@@ -9,6 +9,7 @@ from app.database import get_db
 from app.models.project import Project
 from app.models.uploaded_doc import UploadedDoc
 from app.models.user import User
+from app.project_access import get_accessible_project, require_editor_role
 from app.worker import extract_insights_task
 
 router = APIRouter()
@@ -30,15 +31,13 @@ async def ingest_slack(
     db: DBSession = Depends(get_db),
 ):
     """Pull messages from a Slack channel and run insight extraction. Pro only."""
-    if current_user.plan != "pro":
-        raise HTTPException(status_code=403, detail={"error": "Slack ingestion requires a Pro plan.", "code": "PRO_REQUIRED"})
+    if current_user.plan == "free":
+        raise HTTPException(status_code=403, detail={"error": "Slack ingestion requires a Pro or Teams plan.", "code": "PRO_REQUIRED"})
 
-    project = db.query(Project).filter(
-        Project.id == body.project_id,
-        Project.user_id == current_user.id,
-    ).first()
+    project = get_accessible_project(str(body.project_id), str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
 
     limit = min(max(body.limit, 10), 1000)
     channel = body.channel.lstrip("#")
@@ -126,15 +125,13 @@ async def ingest_transcript(
     db: DBSession = Depends(get_db),
 ):
     """Ingest a plain-text call transcript (Zoom, Fireflies, Gong copy-paste). Pro only."""
-    if current_user.plan != "pro":
-        raise HTTPException(status_code=403, detail={"error": "Transcript ingestion requires a Pro plan.", "code": "PRO_REQUIRED"})
+    if current_user.plan == "free":
+        raise HTTPException(status_code=403, detail={"error": "Transcript ingestion requires a Pro or Teams plan.", "code": "PRO_REQUIRED"})
 
-    project = db.query(Project).filter(
-        Project.id == body.project_id,
-        Project.user_id == current_user.id,
-    ).first()
+    project = get_accessible_project(str(body.project_id), str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
 
     text = body.transcript.strip()
     if len(text) < 100:

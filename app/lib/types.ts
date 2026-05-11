@@ -26,6 +26,89 @@ export interface Project {
   analysis_count: number;
   last_analysis_at: string | null;
   ingest_email_token?: string | null;
+  workspace_id?: string | null;
+  workspace_name?: string | null;
+  workspace_role?: string | null;
+}
+
+export interface WorkspaceMember {
+  id: string;
+  user_id: string | null;
+  display_name: string | null;
+  email: string;
+  role: "owner" | "editor" | "viewer";
+  accepted: boolean;
+  invited_at: string;
+}
+
+export interface Workspace {
+  id: string;
+  name: string;
+  owner_id: string;
+  member_count: number;
+  my_role: "owner" | "editor" | "viewer";
+  created_at: string;
+}
+
+export interface WorkspaceDetail extends Workspace {
+  members: WorkspaceMember[];
+  project_count: number;
+  prd_count: number;
+}
+
+export interface ScheduleSprint {
+  sprint: number;
+  start_date: string;
+  end_date: string;
+  story_points: number;
+  tasks: string[];
+}
+
+export interface ScheduleEstimate {
+  total_points: number;
+  velocity_per_sprint: number;
+  total_sprints: number;
+  estimated_completion: string;
+  sprints: ScheduleSprint[];
+  critical_path: string[];
+  risks: string[];
+}
+
+export interface PRDTemplate {
+  disabled_sections: string[];
+  section_hints: Record<string, string>;
+  updated_at: string | null;
+}
+
+export interface AuditLogEntry {
+  id: string;
+  user_id: string | null;
+  action: string;
+  resource_type: string | null;
+  resource_id: string | null;
+  meta: Record<string, unknown>;
+  created_at: string;
+}
+
+export interface ExecSummaryInsight {
+  content: string;
+  frequency: number;
+}
+
+export interface ExecSummaryContent {
+  problem: string;
+  top_insights: ExecSummaryInsight[];
+  recommendation: string;
+  ask: string;
+}
+
+export interface ExecSummary {
+  id: string;
+  analysis_id: string;
+  content: ExecSummaryContent;
+  generated_at: string;
+  is_stale: boolean;
+  share_token?: string | null;
 }
 
 export type InsightType = "pain_point" | "feature_request" | "decision" | "action_item";
@@ -34,6 +117,7 @@ export interface Insight {
   id: string;
   project_id: string;
   source_doc_id: string | null;
+  source_name: string | null;
   type: InsightType;
   content: string;
   quote: string | null;

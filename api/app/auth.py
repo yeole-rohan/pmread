@@ -59,15 +59,15 @@ def generate_session_token() -> str:
 
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials | None = Depends(security),
-    token: str | None = Query(None),
+    auth_token: str | None = Query(None, alias="token"),
     db: DBSession = Depends(get_db),
 ) -> User:
     raw_token = None
 
     if credentials:
         raw_token = credentials.credentials
-    elif token:
-        raw_token = token
+    elif auth_token:
+        raw_token = auth_token
 
     if not raw_token:
         raise HTTPException(status_code=401, detail="Not authenticated")

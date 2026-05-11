@@ -13,10 +13,10 @@ from sqlalchemy.orm import Session as DBSession
 
 from app.auth import get_current_user
 from app.database import get_db
-from app.models.project import Project
 from app.models.slack_channel import SlackChannel
 from app.models.uploaded_doc import UploadedDoc
 from app.models.user import User
+from app.project_access import get_accessible_project, require_editor_role
 from app.worker import extract_insights_task
 
 router = APIRouter()
@@ -33,19 +33,9 @@ class AddChannelRequest(BaseModel):
     channel_name: str
 
 
-def _require_project(project_id: str, user: User, db: DBSession) -> Project:
-    project = db.query(Project).filter(
-        Project.id == project_id,
-        Project.user_id == user.id,
-    ).first()
-    if not project:
-        raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
-    return project
-
-
 def _require_pro(user: User):
-    if user.plan != "pro":
-        raise HTTPException(status_code=403, detail={"error": "Slack ingestion requires Pro", "code": "PRO_REQUIRED"})
+    if user.plan == "free":
+        raise HTTPException(status_code=403, detail={"error": "Slack ingestion requires Pro or Teams", "code": "PRO_REQUIRED"})
 
 
 # ── Token ─────────────────────────────────────────────────────────────────────
@@ -80,7 +70,10 @@ async def save_token(
             status_code=422,
             detail={"error": f"Slack rejected the token: {auth_data.get('error', 'unknown')}", "code": "INVALID_SLACK_TOKEN"},
         )
-    project = _require_project(project_id, current_user, db)
+    project = get_accessible_project(project_id, str(current_user.id), db)
+    if not project:
+        raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
     project.slack_bot_token = token
     db.commit()
     return {"has_token": True}
@@ -93,7 +86,10 @@ async def delete_token(
     db: DBSession = Depends(get_db),
 ):
     """Remove saved Slack bot token."""
-    project = _require_project(project_id, current_user, db)
+    project = get_accessible_project(project_id, str(current_user.id), db)
+    if not project:
+        raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
     project.slack_bot_token = None
     db.commit()
     return {"has_token": False}
@@ -109,7 +105,9 @@ async def get_channels(
 ):
     """List saved channels for the project. Returns has_token flag but never the token itself."""
     _require_pro(current_user)
-    project = _require_project(project_id, current_user, db)
+    project = get_accessible_project(project_id, str(current_user.id), db)
+    if not project:
+        raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
 
     channels = (
         db.query(SlackChannel)
@@ -141,7 +139,10 @@ async def add_channel(
 ):
     """Add a channel name to the project's Slack channel list."""
     _require_pro(current_user)
-    project = _require_project(project_id, current_user, db)
+    project = get_accessible_project(project_id, str(current_user.id), db)
+    if not project:
+        raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
 
     channel_name = body.channel_name.strip().lstrip("#").lower()
     if not channel_name or not _CHANNEL_RE.match(channel_name):
@@ -175,7 +176,10 @@ async def delete_channel(
     db: DBSession = Depends(get_db),
 ):
     """Remove a channel from the project's list."""
-    project = _require_project(project_id, current_user, db)
+    project = get_accessible_project(project_id, str(current_user.id), db)
+    if not project:
+        raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
 
     ch = db.query(SlackChannel).filter(
         SlackChannel.project_id == project.id,
@@ -200,7 +204,10 @@ async def fetch_channel(
 ):
     """Fetch messages from a saved Slack channel using the stored bot token."""
     _require_pro(current_user)
-    project = _require_project(project_id, current_user, db)
+    project = get_accessible_project(project_id, str(current_user.id), db)
+    if not project:
+        raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
 
     if not project.slack_bot_token:
         raise HTTPException(

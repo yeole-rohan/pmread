@@ -4,9 +4,9 @@ import { describe, it, expect } from "vitest";
 // Pure logic extracted from FilesTab.tsx — tested without mounting React
 // ---------------------------------------------------------------------------
 
-const INGEST_DOMAIN = "ingest.pmread.com";
+const INGEST_DOMAIN = "ingest.pmread.org";
 
-// Mirrors: const email = token ? `${token}@ingest.pmread.com` : null
+// Mirrors: const email = token ? `${token}@ingest.pmread.org` : null
 function buildIngestEmail(token: string | null | undefined): string | null {
   return token ? `${token}@${INGEST_DOMAIN}` : null;
 }
@@ -20,7 +20,7 @@ function extractTokenFromEmail(ingestEmail: string): string {
 describe("buildIngestEmail — email address construction", () => {
   it("builds correct email address from a valid token", () => {
     expect(buildIngestEmail("abc123def456789012345678901234")).toBe(
-      "abc123def456789012345678901234@ingest.pmread.com"
+      "abc123def456789012345678901234@ingest.pmread.org"
     );
   });
 
@@ -36,9 +36,9 @@ describe("buildIngestEmail — email address construction", () => {
     expect(buildIngestEmail("")).toBeNull();
   });
 
-  it("always uses ingest.pmread.com domain", () => {
+  it("always uses ingest.pmread.org domain", () => {
     const email = buildIngestEmail("sometoken");
-    expect(email).toContain("@ingest.pmread.com");
+    expect(email).toContain("@ingest.pmread.org");
   });
 
   it("token appears before the @ sign", () => {
@@ -51,12 +51,12 @@ describe("buildIngestEmail — email address construction", () => {
 // ---------------------------------------------------------------------------
 describe("extractTokenFromEmail — regenerate response parsing", () => {
   it("extracts token from full email address", () => {
-    expect(extractTokenFromEmail("abc123def456@ingest.pmread.com")).toBe("abc123def456");
+    expect(extractTokenFromEmail("abc123def456@ingest.pmread.org")).toBe("abc123def456");
   });
 
   it("handles 32-char hex token (gen_random_bytes output)", () => {
     const token = "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6";
-    const email = `${token}@ingest.pmread.com`;
+    const email = `${token}@ingest.pmread.org`;
     expect(extractTokenFromEmail(email)).toBe(token);
   });
 
@@ -67,7 +67,7 @@ describe("extractTokenFromEmail — regenerate response parsing", () => {
   });
 
   it("does not include the @ character in the extracted token", () => {
-    const token = extractTokenFromEmail("mytoken@ingest.pmread.com");
+    const token = extractTokenFromEmail("mytoken@ingest.pmread.org");
     expect(token).not.toContain("@");
   });
 });

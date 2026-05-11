@@ -11,6 +11,7 @@ from app.database import get_db
 from app.models.project import Project
 from app.models.uploaded_doc import UploadedDoc
 from app.models.user import User
+from app.project_access import get_accessible_project, require_editor_role
 from app.worker import extract_insights_task
 
 # Webhook endpoint registered under /api/ingest
@@ -158,13 +159,12 @@ async def regenerate_ingest_token(
     db: DBSession = Depends(get_db),
 ):
     """Regenerate the ingest email token for a project."""
-    project = db.query(Project).filter(
-        Project.id == project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(project_id, str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "PROJECT_NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
 
     project.ingest_email_token = secrets.token_hex(16)
     db.commit()
 
-    return {"ingest_email": f"{project.ingest_email_token}@ingest.pmread.com"}
+    return {"ingest_email": f"{project.ingest_email_token}@ingest.pmread.org"}

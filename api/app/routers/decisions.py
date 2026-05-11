@@ -10,6 +10,7 @@ from app.database import get_db
 from app.models.decision import Decision, DecisionEvidenceLink
 from app.models.project import Project
 from app.models.user import User
+from app.project_access import get_accessible_project, require_editor_role
 
 router = APIRouter()
 
@@ -65,9 +66,7 @@ async def list_decisions(
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
-    project = db.query(Project).filter(
-        Project.id == project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(project_id, str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "PROJECT_NOT_FOUND"})
 
@@ -91,11 +90,10 @@ async def create_decision(
     current_user: User = Depends(get_current_user),
     db: DBSession = Depends(get_db),
 ):
-    project = db.query(Project).filter(
-        Project.id == body.project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(str(body.project_id), str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=404, detail={"error": "Project not found", "code": "PROJECT_NOT_FOUND"})
+    require_editor_role(project, str(current_user.id), db)
 
     # Free plan limit check
     if current_user.plan == "free":
@@ -140,12 +138,10 @@ async def update_decision(
     if not decision:
         raise HTTPException(status_code=404, detail={"error": "Decision not found", "code": "DECISION_NOT_FOUND"})
 
-    # Verify ownership via project
-    project = db.query(Project).filter(
-        Project.id == decision.project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(str(decision.project_id), str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=403, detail={"error": "Forbidden", "code": "FORBIDDEN"})
+    require_editor_role(project, str(current_user.id), db)
 
     if body.title is not None:
         decision.title = body.title
@@ -183,12 +179,10 @@ async def delete_decision(
     if not decision:
         raise HTTPException(status_code=404, detail={"error": "Decision not found", "code": "DECISION_NOT_FOUND"})
 
-    # Verify ownership via project
-    project = db.query(Project).filter(
-        Project.id == decision.project_id, Project.user_id == current_user.id
-    ).first()
+    project = get_accessible_project(str(decision.project_id), str(current_user.id), db)
     if not project:
         raise HTTPException(status_code=403, detail={"error": "Forbidden", "code": "FORBIDDEN"})
+    require_editor_role(project, str(current_user.id), db)
 
     db.delete(decision)
     db.commit()
