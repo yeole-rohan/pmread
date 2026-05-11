@@ -80,6 +80,16 @@ class Settings(BaseSettings):
     # Storage
     EXPORTS_DIR: str = "./exports"
 
+    # Google Indexing API — used by `scripts/google_index_submit.py`
+    # Path to the service account JSON key (must be GSC Owner for the property).
+    GOOGLE_INDEXING_SERVICE_ACCOUNT_FILE: str = ""
+    GOOGLE_INDEXING_SITEMAP_URL: str = "https://pmread.org/sitemap.xml"
+
+    # IndexNow key (served at https://pmread.org/<key>.txt)
+    INDEXNOW_KEY: str = ""
+    # Bing Webmaster Tools API key
+    BING_API_KEY: str = ""
+
     class Config:
         env_file = ".env"
         extra = "ignore"

@@ -139,6 +139,9 @@ jobs:
             sleep 3
             systemctl is-active pmread-stage-worker || (echo "Worker failed to start" && exit 1)
 
+            echo "--- Submitting sitemap to search engines (stage: dry-run) ---"
+            cd api && python scripts/indexnow_submit.py --dry-run && cd ..
+
             echo "--- Stage deploy complete ---"
 
   # ── Prod deploy — triggered only by merge (push) into main ───────────────
@@ -189,5 +192,8 @@ jobs:
             echo "--- Verifying worker ---"
             sleep 3
             systemctl is-active pmread-prod-worker || (echo "Worker failed to start" && exit 1)
+
+            echo "--- Submitting sitemap to search engines ---"
+            cd api && python scripts/indexnow_submit.py && cd ..
 
             echo "--- Prod deploy complete ---"
