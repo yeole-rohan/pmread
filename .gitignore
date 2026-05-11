@@ -19,6 +19,16 @@ app/out/
 *.log
 .env
 
+# Google / GCP service account keys — never commit these
+pmread.json
+*-service-account.json
+*_service_account.json
+*credentials*.json
+*serviceaccount*.json
+
+# Exported user files
+api/exports/
+
 # Local-only docs (not for repo)
 deploy.md
 call.md
