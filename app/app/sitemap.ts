@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL as BASE } from "@/lib/site";
+import { getAllPosts } from "@/lib/blog";
+import { TEMPLATES } from "@/lib/templates";
 
 // Static pages — update lastModified whenever the page content changes
 const STATIC_PAGES: MetadataRoute.Sitemap = [
@@ -66,76 +68,21 @@ const COMPARE_PAGES: MetadataRoute.Sitemap = [
   priority: 0.8,
 }));
 
-// Template pages — high volume keywords
+// Template pages — driven by TEMPLATES data, auto-includes new templates
 const TEMPLATE_PAGES: MetadataRoute.Sitemap = [
-  // Index
-  "/templates",
-  // Tier 1 — highest volume
-  "/templates/prd-template",
-  "/templates/okr-template",
-  "/templates/product-roadmap-template",
-  "/templates/buyer-persona-template",
-  "/templates/user-story-template",
-  // Tier 2 — in sitemap, added 2026-04-16
-  "/templates/product-launch-checklist",
-  "/templates/competitive-analysis",
-  "/templates/go-to-market-template",
-  "/templates/release-notes-template",
-  "/templates/acceptance-criteria",
-  "/templates/product-brief-template",
-  // Tier 3 — Discovery & Research
-  "/templates/lean-canvas",
-  "/templates/north-star-metric",
-  "/templates/jobs-to-be-done",
-  "/templates/customer-journey-map",
-  "/templates/empathy-map",
-  "/templates/user-interview-script",
-  "/templates/kano-model",
-  "/templates/stakeholder-map",
-  "/templates/problem-statement-canvas",
-  // Tier 4 — Planning & Agile
-  "/templates/rice-scoring",
-  "/templates/moscow-method",
-  "/templates/ab-test-plan",
-  "/templates/sprint-retrospective",
-  "/templates/decision-log",
-  "/templates/risk-register",
-  // Tier 5 — PM × Engineering (differentiators)
-  "/templates/spec-to-django",
-  "/templates/spec-to-react",
-  "/templates/api-design-spec",
-  "/templates/technical-debt-scorecard",
-  "/templates/feature-flag-decision",
-  "/templates/architecture-decision-record",
-  "/templates/engineering-kickoff",
-  "/templates/design-review-checklist",
-  "/templates/post-mortem",
-  // Tier 6 — PM × AI (differentiators)
-  "/templates/ai-feature-spec",
-  "/templates/llm-evaluation-scorecard",
-  "/templates/ai-product-risk",
-  "/templates/responsible-ai-checklist",
-  "/templates/prompt-design-template",
-  // Tier 7 — PM × India (differentiators)
-  "/templates/india-gtm",
-  "/templates/unit-economics",
-  "/templates/fundraising-prd",
-  "/templates/b2b-saas-pricing",
-  // Tier 8 — Metrics & Growth
-  "/templates/aarrr-metrics",
-  "/templates/weekly-pm-report",
-  "/templates/churn-analysis",
-  "/templates/experiment-design",
-  "/templates/product-health-dashboard",
-  // Tier 9 — Growth / Launch
-  "/templates/customer-onboarding-checklist",
-  "/templates/feature-announcement",
-].map((path) => ({
-  url: `${BASE}${path}`,
-  lastModified: new Date("2026-04-16"),
-  changeFrequency: "monthly" as const,
-  priority: 0.8,
-}));
+  {
+    url: `${BASE}/templates`,
+    lastModified: new Date("2026-04-16"),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  },
+  ...TEMPLATES.map((t) => ({
+    url: `${BASE}/templates/${t.slug}`,
+    lastModified: new Date("2026-04-16"),
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  })),
+];
 
 // Glossary pages
 const GLOSSARY_PAGES: MetadataRoute.Sitemap = [
@@ -215,21 +162,7 @@ const INTEGRATION_PAGES: MetadataRoute.Sitemap = [
   priority: 0.6,
 }));
 
-// Blog slugs — add as posts are published
-// Batch 1 (published 2026-04-24): 10 high-volume evergreen posts
-const BATCH_1_BLOG_SLUGS = [
-  "how-to-write-a-prd",
-  "how-to-write-user-stories",
-  "how-to-measure-product-market-fit",
-  "north-star-metric",
-  "how-to-build-product-roadmap",
-  "feature-prioritization-guide",
-  "jobs-to-be-done-vs-personas",
-  "customer-feedback-analysis",
-  "feature-prioritization",
-  "okr-guide-product-managers",
-] as const;
-
+// Blog pages — driven by filesystem, auto-includes every .md file in content/blog/
 const BLOG_PAGES: MetadataRoute.Sitemap = [
   {
     url: `${BASE}/blog`,
@@ -237,13 +170,12 @@ const BLOG_PAGES: MetadataRoute.Sitemap = [
     changeFrequency: "weekly",
     priority: 0.8,
   },
-  ...BATCH_1_BLOG_SLUGS.map((slug) => ({
-    url: `${BASE}/blog/${slug}`,
-    lastModified: new Date("2026-04-24"),
+  ...getAllPosts().map((post) => ({
+    url: `${BASE}/blog/${post.slug}`,
+    lastModified: new Date(post.updatedAt ?? post.publishedAt),
     changeFrequency: "monthly" as const,
     priority: 0.7,
   })),
-  // Author pages
   {
     url: `${BASE}/author/rohan-yeole`,
     lastModified: new Date("2026-04-24"),
