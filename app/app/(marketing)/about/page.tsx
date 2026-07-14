@@ -40,16 +40,9 @@ const TEAM = [
   {
     name: "Rohan Yeole",
     role: "Founder",
-    bio: "[ Short 2-3 sentence bio. Where you've worked, what you've shipped, why you built PMRead. ]",
+    bio: "Senior software engineer with 7+ years building backend and AI systems — Python, Django, FastAPI, RAG pipelines. Previously shipped products across Data Axle, Media.net, and PropertyPistol, and co-founded Cruncher.in. Built PMRead solo after watching PMs (and himself) waste hours turning scattered customer calls into specs nobody trusted.",
     initials: "RY",
     linkedin: "https://linkedin.com/in/yeole-rohan",
-  },
-  {
-    name: "[ Team member ]",
-    role: "[ Role ]",
-    bio: "[ Short bio placeholder — add when team grows. ]",
-    initials: "TM",
-    linkedin: "#",
   },
 ];
 

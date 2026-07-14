@@ -213,20 +213,20 @@ const PRO_PLAN_FEATURES = [
   "Priority support",
 ];
 
-const TESTIMONIALS = [
-  {
-    quote: "I used to spend half a day writing a PRD after every round of user interviews. PMRead cut that to 20 minutes — and the citations make engineers trust the requirements instead of questioning them.",
-    name: "Priya Sharma",
-    title: "Senior Product Manager",
-    avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=PriyaSharma&backgroundColor=b6e3f4&radius=50",
-  },
-  {
-    quote: "The frequency ranking killed our loudest-voice problem overnight. Now I can say '14 of 20 users mentioned this' instead of 'someone important asked for this'. Roadmap credibility went up immediately.",
-    name: "Arjun Mehta",
-    title: "Head of Product",
-    avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=ArjunMehta&backgroundColor=c0aede&radius=50",
-  },
-];
+// const TESTIMONIALS = [
+//   {
+//     quote: "I used to spend half a day writing a PRD after every round of user interviews. PMRead cut that to 20 minutes — and the citations make engineers trust the requirements instead of questioning them.",
+//     name: "Priya Sharma",
+//     title: "Senior Product Manager",
+//     avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=PriyaSharma&backgroundColor=b6e3f4&radius=50",
+//   },
+//   {
+//     quote: "The frequency ranking killed our loudest-voice problem overnight. Now I can say '14 of 20 users mentioned this' instead of 'someone important asked for this'. Roadmap credibility went up immediately.",
+//     name: "Arjun Mehta",
+//     title: "Head of Product",
+//     avatar: "https://api.dicebear.com/9.x/avataaars/svg?seed=ArjunMehta&backgroundColor=c0aede&radius=50",
+//   },
+// ];
 
 const PM_STAGES = [
   { label: "Customer research & calls",    traditional: 120, pmread: 120, tradLabel: "2 hr",   pmLabel: "2 hr",    auto: false, color: "#94a3b8" },
@@ -605,7 +605,7 @@ export default function HomePage() {
         </section>
 
         {/* ── Testimonials ─────────────────────────────────────────────── */}
-        <section className="py-12 sm:py-16">
+        {/* <section className="py-12 sm:py-16">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 text-center mb-8">
               PMs ship faster with PMRead
@@ -619,9 +619,9 @@ export default function HomePage() {
                   <blockquote className="text-gray-600 text-sm leading-relaxed mb-5 italic">
                     &ldquo;{quote}&rdquo;
                   </blockquote>
-                  <figcaption className="flex items-center gap-3">
+                  <figcaption className="flex items-center gap-3"> */}
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={avatar} alt={name} width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0" />
+                    {/* <img src={avatar} alt={name} width={40} height={40} className="w-10 h-10 rounded-full flex-shrink-0" />
                     <div>
                       <p className="text-sm font-semibold text-gray-900">{name}</p>
                       <p className="text-xs text-gray-400">{title}</p>
@@ -631,7 +631,7 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* ── Final CTA ────────────────────────────────────────────────── */}
         <section className="py-12 sm:py-16 bg-[#7F77DD]">
